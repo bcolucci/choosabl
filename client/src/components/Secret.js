@@ -1,39 +1,32 @@
-import React from 'react'
-import firebase from 'firebase'
+import React, { Component } from 'react'
 import { getSecret } from '../api'
 
 const defaultSecret = '*'.repeat(10)
 
-export default class extends React.PureComponent {
-
+export default class extends Component {
   state = {
     secret: defaultSecret
   }
 
-  componentWillMount() {
-    this.removeAuthListener = firebase.auth().onAuthStateChanged(async user => {
-      if (!user) {
-        this.setState({ secret: defaultSecret })
-        return
-      }
-      const token = await firebase.auth().currentUser.getIdToken(true)
-      const secret = await getSecret(token)
-      this.setState({ user, secret })
-    })
+  componentWillReceiveProps ({ user }) {
+    this.resetSecret()
+    if (user) {
+      this.loadSecret(user)
+    }
   }
 
-  componentWillUnmount() {
-    this.removeAuthListener()
+  resetSecret () {
+    this.setState({ secret: defaultSecret })
   }
 
-  render() {
+  async loadSecret (user) {
+    const token = await user.getIdToken()
+    const secret = await getSecret(token)
+    this.setState({ secret })
+  }
+
+  render () {
     const { secret } = this.state
-    return (
-      <div>
-        <p>Secret:</p>
-        <pre>{JSON.stringify(secret, null, 2)}</pre>
-      </div>
-    )
+    return <pre>{JSON.stringify(secret, null, 2)}</pre>
   }
-
 }

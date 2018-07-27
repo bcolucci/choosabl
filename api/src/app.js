@@ -4,6 +4,8 @@ import hello from './hello'
 import secret from './secret'
 import messagesRouter from './messages'
 
+console.log(process.env)
+
 const app = express()
 app.use(cors({ origin: true }))
 
