@@ -1,4 +1,8 @@
 import { https } from 'firebase-functions'
-import app from './src/app'
+import hello from './src/hello'
+import messages from './src/messages'
+import secret from './src/secret'
 
-exports.choosabl = https.onRequest(app)
+exports.hello = https.onRequest(hello)
+exports.messages = https.onRequest(messages)
+exports.secret = https.onRequest(secret)

@@ -3,7 +3,7 @@
   "version": "0.1.0-alpha",
   "private": true,
   "scripts": {
-    "serve": "firebase serve --only functions",
+    "serve": "sudo firebase serve --only functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
