@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "firebase": "^5.3.0",
+    "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-materialize": "^2.3.3",

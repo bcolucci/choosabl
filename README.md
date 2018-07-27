@@ -28,3 +28,12 @@ CTRL + P + "ext install numso.prettier-standard-vscode"
 
     # starts the client
     cd client && npm start
+
+# Some links for the development
+
+| Lien             | URL                                    |
+|------------------|----------------------------------------|
+| Firebase console | https://console.firebase.google.com    |
+| Material UI      | https://react-materialize.github.io    |
+| Icons            | https://www.google.com/design/icons/   |
+| Social colors    | https://www.materialui.co/socialcolors |
