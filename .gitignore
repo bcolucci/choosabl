@@ -1,0 +1,6 @@
+functions/
+build/
+client/build/
+node_modules/
+npm-debug.log
+backend/firebase-debug.log

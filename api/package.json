@@ -1,0 +1,37 @@
+{
+  "name": "choosabl-api",
+  "version": "0.1.0-alpha",
+  "private": true,
+  "scripts": {
+    "serve": "firebase serve --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "format": "prettier-standard '**/*.js'",
+    "prepackage:functions": "rimraf ../functions && npm run format",
+    "package:functions": "babel . --out-dir ../functions --copy-files --ignore node_modules/",
+    "postpackage:functions": "cd ../functions && npm install --only=production"
+  },
+  "dependencies": {
+    "casual": "^1.5.19",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "firebase-admin": "~5.13.0",
+    "firebase-functions": "^2.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0-beta.54",
+    "@babel/core": "^7.0.0-beta.54",
+    "@babel/preset-env": "^7.0.0-beta.54",
+    "husky": "^0.14.3",
+    "prettier-standard": "^8.0.1",
+    "rimraf": "^2.6.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run format",
+      "pre-push": "npm run format"
+    }
+  }
+}
