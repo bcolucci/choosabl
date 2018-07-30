@@ -3,7 +3,7 @@
   "version": "0.1.0-alpha",
   "private": true,
   "author": "Brice Colucci <brice.colucci@gmail.com>",
-  "homepage": "https://github.com/bcolucci/choosabl/tree/master/client",
+  "homepage": "https://choosabl-1e2ea.firebaseapp.com/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
