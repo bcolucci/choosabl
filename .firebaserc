@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "choosabl-1e2ea"
+    "default": "choosabl-1e2ea",
+    "test": "choosabl-test"
   }
 }

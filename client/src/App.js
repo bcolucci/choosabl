@@ -15,6 +15,7 @@ import i18n from './utils/initializeI18n'
 import FlagIcon from './components/FlagIcon'
 import ProtectedRoutes from './components/ProtectedRoutes'
 import Account from './screens/Account'
+import { getSecret } from './api'
 
 import './styles/App.css'
 
@@ -35,8 +36,13 @@ export default withStyles(
 
       componentWillMount () {
         i18n.on('languageChanged', this.onLanguageChanged)
-        this.removeAuthListener = auth().onAuthStateChanged(user => {
+        this.removeAuthListener = auth().onAuthStateChanged(async user => {
           this.setState({ user })
+          if (user) {
+            const token = await user.getIdToken()
+            const secret = await getSecret(token)
+            console.log(secret)
+          }
         })
       }
 

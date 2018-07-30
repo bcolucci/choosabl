@@ -1,9 +1,23 @@
 
 # Choosabl
 
-# Setup for development
+![logo](https://github.com/bcolucci/choosabl/blob/master/client/public/logo254.png?raw=true)
 
-**Current version is available here: https://choosabl-1e2ea.firebaseapp.com**
+# Links referential
+
+| Lien             | URL                                      |
+|------------------|------------------------------------------|
+| **PROD**         | https://choosabl-1e2ea.firebaseapp.com   |
+| **TEST**         | https://choosabl-test.firebaseapp.com    |
+|------------------|------------------------------------------|
+| Firebase console | https://console.firebase.google.com      |
+| Material UI      | https://material-ui.com/demos/buttons/   |
+| Icons            | https://www.google.com/design/icons/     |
+| I18n             | https://github.com/i18next/react-i18next |
+| Social colors    | https://www.materialui.co/socialcolors   |
+| Flags            | https://github.com/wiredmax/react-flags  |
+
+# Setup for development
 
 ## Select a "good" node version to work with
 
@@ -40,21 +54,15 @@
 
     npm run deploy
 
-## API documentation
+# Switch environment
 
-https://github.com/bcolucci/choosabl/blob/master/api
+    # prod (default)
+    npm run switch:prod
 
-## Client documentation
+    # test
+    npm run switch:test
 
-https://github.com/bcolucci/choosabl/blob/master/client
+# Documentation
 
-# Some links for the development
-
-| Lien             | URL                                      |
-|------------------|------------------------------------------|
-| Firebase console | https://console.firebase.google.com      |
-| Material UI      | https://material-ui.com/demos/buttons/   |
-| Icons            | https://www.google.com/design/icons/     |
-| I18n             | https://github.com/i18next/react-i18next |
-| Social colors    | https://www.materialui.co/socialcolors   |
-| Flags            | https://github.com/wiredmax/react-flags  |
+* API: https://github.com/bcolucci/choosabl/blob/master/api
+* Client: https://github.com/bcolucci/choosabl/blob/master/client

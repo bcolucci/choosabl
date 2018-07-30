@@ -3,5 +3,5 @@ build/
 client/build/
 node_modules/
 npm-debug.log
-api/firebase-debug.log
+firebase-debug.log
 api/tmp-*.zip
