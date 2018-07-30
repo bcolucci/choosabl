@@ -8,6 +8,8 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
+    "test": "ava src/*.spec.js",
+    "dev": "npm test -- --watch",
     "format": "prettier-standard '**/*.js'",
     "prepackage:functions": "rimraf ../functions && npm run format",
     "package:functions": "babel . --out-dir ../functions --copy-files --ignore node_modules/",
@@ -25,9 +27,19 @@
     "@babel/cli": "^7.0.0-beta.54",
     "@babel/core": "^7.0.0-beta.54",
     "@babel/preset-env": "^7.0.0-beta.54",
+    "@babel/register": "^7.0.0-beta.55",
+    "ava": "^1.0.0-beta.6",
+    "firebase-functions-test": "^0.1.3",
     "husky": "^0.14.3",
     "prettier-standard": "^8.0.1",
     "rimraf": "^2.6.2"
+  },
+  "ava": {
+    "failFast": true,
+    "failWithoutAssertions": false,
+    "require": [
+      "@babel/register"
+    ]
   },
   "husky": {
     "hooks": {
