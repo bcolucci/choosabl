@@ -3,6 +3,8 @@
 
 # Setup for development
 
+**Current version is available here: https://choosabl-1e2ea.firebaseapp.com**
+
 ## Select a "good" node version to work with
 
     sudo npm i -g n \

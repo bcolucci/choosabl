@@ -41,6 +41,7 @@ export default withStyles(
       handleSignOut = () => {
         auth().signOut()
         this.handleCloseUserMenu()
+        window.location.replace('/')
       }
 
       handleCloseUserMenu = () => {

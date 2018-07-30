@@ -1,5 +1,16 @@
 {
   "hosting": {
-    "public": "client/build"
+    "public": "client/build",
+    "headers": [
+      {
+        "source": "/service-worker.js",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      }
+    ]
   }
 }
