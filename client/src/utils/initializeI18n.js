@@ -6,17 +6,21 @@ import { reactI18nextModule } from 'react-i18next'
 const defaultNS = 'commons'
 const debug = process.env.NODE_ENV !== 'production'
 
-i18n.use(Backend).use(LanguageDetector).use(reactI18nextModule).init({
-  fallbackLng: 'en',
-  ns: [defaultNS],
-  defaultNS,
-  debug,
-  interpolation: {
-    escapeValue: false
-  },
-  react: {
-    wait: true
-  }
-})
+let initialized = false
+if (!initialized) {
+  i18n.use(Backend).use(LanguageDetector).use(reactI18nextModule).init({
+    fallbackLng: 'en_GB',
+    ns: [defaultNS, 'langs'],
+    defaultNS,
+    debug,
+    interpolation: {
+      escapeValue: false
+    },
+    react: {
+      wait: true
+    }
+  })
+  initialized = true
+}
 
 export default i18n

@@ -11,6 +11,8 @@ import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import AccountIcon from '@material-ui/icons/AccountCircle'
 import { withStyles, withIntl } from './utils/combinedWith'
+import i18n from './utils/initializeI18n'
+import FlagIcon from './components/FlagIcon'
 import ProtectedRoutes from './components/ProtectedRoutes'
 import Account from './screens/Account'
 
@@ -21,18 +23,29 @@ export default withStyles(
     class extends Component {
       state = {
         user: null,
-        menuEl: null
+        lang: null,
+        userMenuEl: null,
+        langMenuEl: null
+      }
+
+      constructor (props) {
+        super(props)
+        this.state.lang = i18n.language
       }
 
       componentWillMount () {
+        i18n.on('languageChanged', this.onLanguageChanged)
         this.removeAuthListener = auth().onAuthStateChanged(user => {
           this.setState({ user })
         })
       }
 
       componentWillUnmount () {
+        i18n.off('languageChanged', this.onLanguageChanged)
         this.removeAuthListener()
       }
+
+      onLanguageChanged = lang => this.setState({ lang })
 
       handleSignInWithProvider = async provider => {
         await auth().signInWithPopup(provider)
@@ -40,25 +53,27 @@ export default withStyles(
 
       handleSignOut = () => {
         auth().signOut()
-        this.handleCloseUserMenu()
+        this.handleCloseMenus()
         window.location.replace('/')
       }
 
-      handleCloseUserMenu = () => {
-        this.setState({ menuEl: null })
-      }
+      handleCloseMenus = () =>
+        this.setState({
+          userMenuEl: null,
+          langMenuEl: null
+        })
 
       renderUserMenu () {
-        const { menuEl } = this.state
+        const { userMenuEl } = this.state
         const { t } = this.props
         return (
-          <ClickAwayListener onClickAway={this.handleCloseUserMenu}>
+          <ClickAwayListener onClickAway={this.handleCloseMenus}>
             <Menu
-              anchorEl={menuEl}
-              open={!!menuEl}
-              onClose={this.handleCloseUserMenu}
+              anchorEl={userMenuEl}
+              open={!!userMenuEl}
+              onClose={this.handleCloseMenus}
             >
-              <MenuItem onClick={this.handleCloseUserMenu}>
+              <MenuItem onClick={this.handleCloseMenus}>
                 <Link to='/account'>
                   {t('my-account')}
                 </Link>
@@ -71,9 +86,38 @@ export default withStyles(
         )
       }
 
+      renderLangMenu () {
+        const { t } = this.props
+        const { lang, langMenuEl } = this.state
+        return (
+          <ClickAwayListener onClickAway={this.handleCloseMenus}>
+            <Menu
+              anchorEl={langMenuEl}
+              open={!!langMenuEl}
+              onClose={this.handleCloseMenus}
+            >
+              {['en_GB', 'fr_FR'].map(l => (
+                <MenuItem
+                  key={l}
+                  selected={l === lang}
+                  onClick={() => {
+                    i18n.changeLanguage(l)
+                    this.handleCloseMenus()
+                  }}
+                >
+                  <FlagIcon value={l} />
+                  {t(`langs:${l}`)}
+                </MenuItem>
+              ))}
+            </Menu>
+          </ClickAwayListener>
+        )
+      }
+
       renderHeader () {
-        const { user, menuEl } = this.state
-        const { classes } = this.props
+        const { lang, user } = this.state
+        const { userMenuEl, langMenuEl } = this.state
+        const { t, classes } = this.props
         const authenticated = !!user
         return (
           <header className={classes.root}>
@@ -100,15 +144,28 @@ export default withStyles(
                   <div>
                     <Button
                       color='inherit'
-                      aria-owns={menuEl ? 'fade-menu' : null}
+                      aria-owns={userMenuEl ? 'fade-menu' : null}
                       aria-haspopup='true'
                       onClick={({ currentTarget }) =>
-                        this.setState({ menuEl: currentTarget })}
+                        this.setState({ userMenuEl: currentTarget })}
                     >
                       <Avatar src={user.photoURL} />
                     </Button>
                     {this.renderUserMenu()}
                   </div>}
+                <div>
+                  <Button
+                    color='inherit'
+                    aria-owns={langMenuEl ? 'fade-menu' : null}
+                    aria-haspopup='true'
+                    onClick={({ currentTarget }) =>
+                      this.setState({ langMenuEl: currentTarget })}
+                  >
+                    <FlagIcon value={lang} />
+                    {t(`langs:${lang}`)}
+                  </Button>
+                  {this.renderLangMenu()}
+                </div>
               </Toolbar>
             </AppBar>
           </header>

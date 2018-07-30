@@ -11,3 +11,7 @@ ul[role="menu"] a {
   text-decoration: none;
   color: inherit;
 }
+
+img.lang_flag {
+  margin-right: 5px;
+}

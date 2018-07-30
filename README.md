@@ -50,9 +50,11 @@ https://github.com/bcolucci/choosabl/blob/master/client
 
 # Some links for the development
 
-| Lien             | URL                                    |
-|------------------|----------------------------------------|
-| Firebase console | https://console.firebase.google.com    |
-| Material UI      | https://material-ui.com/demos/buttons/ |
-| Icons            | https://www.google.com/design/icons/   |
-| Social colors    | https://www.materialui.co/socialcolors |
+| Lien             | URL                                      |
+|------------------|------------------------------------------|
+| Firebase console | https://console.firebase.google.com      |
+| Material UI      | https://material-ui.com/demos/buttons/   |
+| Icons            | https://www.google.com/design/icons/     |
+| I18n             | https://github.com/i18next/react-i18next |
+| Social colors    | https://www.materialui.co/socialcolors   |
+| Flags            | https://github.com/wiredmax/react-flags  |

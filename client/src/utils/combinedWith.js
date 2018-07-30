@@ -16,7 +16,7 @@ export const withStyles = (component, styles = {}) =>
   })(component)
 
 export const withIntl = (component, namespaces = []) =>
-  bindIntl(['commons', ...namespaces])(component)
+  bindIntl(['commons', 'langs', ...namespaces])(component)
 
 export default (component, opts = {}) =>
   withRouter(withStyles(withIntl(component, opts.namespaces), opts.styles))
