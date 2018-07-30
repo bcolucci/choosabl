@@ -117,7 +117,7 @@ export default withStyles(
       renderHeader () {
         const { lang, user } = this.state
         const { userMenuEl, langMenuEl } = this.state
-        const { t, classes } = this.props
+        const { classes } = this.props
         const authenticated = !!user
         return (
           <header className={classes.root}>
@@ -161,8 +161,7 @@ export default withStyles(
                     onClick={({ currentTarget }) =>
                       this.setState({ langMenuEl: currentTarget })}
                   >
-                    <FlagIcon value={lang} />
-                    {t(`langs:${lang}`)}
+                    <FlagIcon value={lang} style={{ marginRight: '-5px' }} />
                   </Button>
                   {this.renderLangMenu()}
                 </div>
