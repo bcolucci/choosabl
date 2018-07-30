@@ -1,6 +1,6 @@
-import firebase from 'firebase'
+import { initializeApp } from 'firebase'
 
-firebase.initializeApp({
+initializeApp({
   apiKey: 'AIzaSyBtyDnuJU66_TWu7Gbggn3TnwT4575dSuw',
   authDomain: 'choosabl-1e2ea.firebaseapp.com',
   databaseURL: 'https://choosabl-1e2ea.firebaseio.com',

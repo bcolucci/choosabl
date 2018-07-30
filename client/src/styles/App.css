@@ -1,0 +1,13 @@
+body {
+  margin: 0;
+  background-color: #eee;
+}
+
+main {
+  padding: 1em;
+}
+
+ul[role="menu"] a {
+  text-decoration: none;
+  color: inherit;
+}

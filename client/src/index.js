@@ -1,9 +1,12 @@
 import './utils/initializeFirebase'
 
 import React from 'react'
-import ReactDOM from 'react-dom'
-import App from './components/App'
+import { render } from 'react-dom'
+import App from './App'
 import registerServiceWorker from './utils/registerServiceWorker'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+import './utils/initializeI18n'
+
+render(<App />, document.querySelector('#root'))
+
 registerServiceWorker()

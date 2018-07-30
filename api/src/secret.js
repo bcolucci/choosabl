@@ -1,19 +1,14 @@
 import express from 'express'
 import cors from 'cors'
-import { auth } from 'firebase-admin'
+import firebase from 'firebase-admin'
+import { createFirebaseAuth } from 'express-firebase-auth'
 
 const app = express()
 app.use(cors({ origin: true }))
+app.use(createFirebaseAuth({ firebase }))
 
 app.get('/', async (req, res) => {
-  const { token } = req.headers
-  if (!token) {
-    res.status(403)
-    res.end('Token required')
-    return
-  }
-  const decodedToken = await auth().verifyIdToken(token)
-  res.json(decodedToken)
+  res.json({ secret: 'Your are authenticated' })
 })
 
 export default app

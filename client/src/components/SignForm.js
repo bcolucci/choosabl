@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import { Col, Row, Input, Button } from 'react-materialize'
 
 export default class extends PureComponent {
   static propTypes = {
