@@ -15,9 +15,10 @@
       && cd api && npm install \
       && cd ../client && npm install
 
-## Install Prettier on Visual Code
+## Install Visual Code deps
 
-CTRL + P + "ext install numso.prettier-standard-vscode"
+    CTRL + P + "ext install aeschli.vscode-css-formatter"
+    CTRL + P + "ext install numso.prettier-standard-vscode"
 
 ## Run on local
 
@@ -28,6 +29,22 @@ CTRL + P + "ext install numso.prettier-standard-vscode"
 
     # starts the client
     cd client && npm start
+
+## Build
+
+    npm run build
+
+## Deploy
+
+    npm run deploy
+
+## API documentation
+
+https://github.com/bcolucci/choosabl/blob/master/api
+
+## Client documentation
+
+https://github.com/bcolucci/choosabl/blob/master/client
 
 # Some links for the development
 

@@ -2,6 +2,8 @@
   "name": "choosabl-api",
   "version": "0.1.0-alpha",
   "private": true,
+  "author": "Brice Colucci <brice.colucci@gmail.com>",
+  "homepage": "https://github.com/bcolucci/choosabl/tree/master/api",
   "scripts": {
     "serve": "sudo firebase serve --only functions",
     "shell": "firebase functions:shell",

@@ -2,7 +2,8 @@
   "name": "choosable",
   "version": "0.1.0-alpha",
   "private": true,
-  "homepage": "https://choosabl-1e2ea.firebaseapp.com/",
+  "author": "Brice Colucci <brice.colucci@gmail.com>",
+  "homepage": "https://github.com/bcolucci/choosabl/tree/master/client",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
