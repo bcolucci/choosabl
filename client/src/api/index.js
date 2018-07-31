@@ -5,10 +5,8 @@ const apiURL = (() => {
       return 'https://us-central1-choosabl-1e2ea.cloudfunctions.net'
     case 'choosabl-test.firebaseapp.com':
       return 'https://us-central1-choosabl-test.cloudfunctions.net'
-    case 'localhost':
-      return 'http://localhost:5000/choosabl-1e2ea/us-central1'
     default:
-      throw new Error('Unknown host for API base URL.')
+      return 'http://localhost:5000/choosabl-1e2ea/us-central1'
   }
 })()
 

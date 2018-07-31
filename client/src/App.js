@@ -14,6 +14,7 @@ import { withStyles, withIntl } from './utils/combinedWith'
 import i18n from './utils/initializeI18n'
 import FlagIcon from './components/FlagIcon'
 import ProtectedRoutes from './components/ProtectedRoutes'
+import SignInDialog from './components/SignInDialog'
 import Account from './screens/Account'
 import { getSecret } from './api'
 
@@ -26,7 +27,8 @@ export default withStyles(
         user: null,
         lang: null,
         userMenuEl: null,
-        langMenuEl: null
+        langMenuEl: null,
+        isSignInDiagOpened: false
       }
 
       constructor (props) {
@@ -51,10 +53,9 @@ export default withStyles(
         this.removeAuthListener()
       }
 
-      onLanguageChanged = lang => this.setState({ lang })
-
-      handleSignInWithProvider = async provider => {
-        await auth().signInWithPopup(provider)
+      onLanguageChanged = lang => {
+        auth().languageCode = lang.substr(0, 2)
+        this.setState({ lang })
       }
 
       handleSignOut = () => {
@@ -123,6 +124,7 @@ export default withStyles(
       renderHeader () {
         const { lang, user } = this.state
         const { userMenuEl, langMenuEl } = this.state
+        const { isSignInDiagOpened } = this.state
         const { classes } = this.props
         const authenticated = !!user
         return (
@@ -139,10 +141,7 @@ export default withStyles(
                 {!authenticated &&
                   <Button
                     color='inherit'
-                    onClick={() =>
-                      this.handleSignInWithProvider(
-                        new auth.GoogleAuthProvider()
-                      )}
+                    onClick={() => this.setState({ isSignInDiagOpened: true })}
                   >
                     <AccountIcon />
                   </Button>}
@@ -173,6 +172,10 @@ export default withStyles(
                 </div>
               </Toolbar>
             </AppBar>
+            <SignInDialog
+              open={isSignInDiagOpened}
+              onClose={() => this.setState({ isSignInDiagOpened: false })}
+            />
           </header>
         )
       }

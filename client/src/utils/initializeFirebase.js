@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase'
+import { initializeApp, auth } from 'firebase'
 
 initializeApp(
   (() => {
@@ -13,7 +13,7 @@ initializeApp(
           storageBucket: 'choosabl-1e2ea.appspot.com',
           messagingSenderId: '489139856067'
         }
-      case 'choosabl-test.firebaseapp.com':
+      default:
         return {
           apiKey: 'AIzaSyDE8wmOiZHERl10cW5u8rUBy-UqFXAQ_3w',
           authDomain: 'choosabl-test.firebaseapp.com',
@@ -22,8 +22,8 @@ initializeApp(
           storageBucket: 'choosabl-test.appspot.com',
           messagingSenderId: '201683634396'
         }
-      default:
-        throw new Error('Unknown host for Firebase initialization.')
     }
   })()
 )
+
+auth().useDeviceLanguage()
