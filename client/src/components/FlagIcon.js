@@ -3,6 +3,10 @@ import Flag from 'react-flags'
 
 export default class extends PureComponent {
   render () {
+    const { value } = this.props
+    if (!value) {
+      return null
+    }
     return (
       <Flag
         basePath=''

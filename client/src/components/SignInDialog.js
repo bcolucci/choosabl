@@ -23,8 +23,8 @@ export default withAll(
     render () {
       const { t } = this.props
       return (
-        <Dialog aria-labelledby='simple-dialog-title' {...this.props}>
-          <DialogTitle id='simple-dialog-title'>Sign In</DialogTitle>
+        <Dialog {...this.props}>
+          <DialogTitle>Sign In</DialogTitle>
           <div>
             <List>
               <ListItem

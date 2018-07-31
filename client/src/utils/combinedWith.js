@@ -12,6 +12,10 @@ export const withStyles = (component, styles = {}) =>
     flex: {
       flexGrow: 1
     },
+    container: {
+      display: 'flex',
+      flexWrap: 'wrap'
+    },
     ...styles
   })(component)
 

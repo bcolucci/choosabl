@@ -26,9 +26,9 @@
     "firebase-functions": "^2.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.54",
-    "@babel/core": "^7.0.0-beta.54",
-    "@babel/preset-env": "^7.0.0-beta.54",
+    "@babel/cli": "^7.0.0-beta.55",
+    "@babel/core": "^7.0.0-beta.55",
+    "@babel/preset-env": "^7.0.0-beta.55",
     "@babel/register": "^7.0.0-beta.55",
     "ava": "^1.0.0-beta.6",
     "firebase-functions-test": "^0.1.3",
