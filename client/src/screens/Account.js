@@ -16,10 +16,14 @@ export default withAll(
       const { t, classes, user } = this.props
       return (
         <div>
-          <Typography variant='headline' gutterBottom>
+          <Typography variant='headline'>
             {t('my-account')}
           </Typography>
-          <p>{user.email}</p>
+          <p>
+            <Typography>
+              {user.email}
+            </Typography>
+          </p>
           <form className={classes.container} noValidate>
             <TextField
               type='date'

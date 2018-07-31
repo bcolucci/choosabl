@@ -14,10 +14,6 @@ export default class extends Component {
     if (!user) {
       return null
     }
-    return (
-      <div>
-        {this.props.children}
-      </div>
-    )
+    return <div>{this.props.children}</div>
   }
 }

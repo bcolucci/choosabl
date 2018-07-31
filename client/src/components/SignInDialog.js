@@ -30,7 +30,8 @@ export default withAll(
               <ListItem
                 button
                 onClick={() =>
-                  this.handleSignInWithProvider(new auth.GoogleAuthProvider())}
+                  this.handleSignInWithProvider(new auth.GoogleAuthProvider())
+                }
               >
                 <ListItemAvatar>
                   <SocialIcon url='https://google.com' />
@@ -44,9 +45,8 @@ export default withAll(
               <ListItem
                 button
                 onClick={() =>
-                  this.handleSignInWithProvider(
-                    new auth.FacebookAuthProvider()
-                  )}
+                  this.handleSignInWithProvider(new auth.FacebookAuthProvider())
+                }
               >
                 <ListItemAvatar>
                   <SocialIcon url='https://facebook.com' />

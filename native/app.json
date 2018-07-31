@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "Choosabl",
+    "description": "Let the community choose for you.",
+    "slug": "choosabl",
+    "version": "0.1.0",
+    "privacy": "unlisted",
+    "sdkVersion": "29.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "githubUrl": "https://github.com/bcolucci/choosabl.com",
+    "orientation": "portrait",
+    "primaryColor": "#4574ba",
+    "icon": "./assets/images/logo.png",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#4574ba"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "notification": {
+      "icon": "./assets/images/notif.png",
+      "color": "#4574ba",
+      "androidMode": "default"
+    },
+    "updates": {
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    },
+    "ios": {
+      "bundleIdentifier": "com.choosable",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.choosabl"
+    },
+    "androidStatusBar": {
+      "barStyle": "dark-content",
+      "backgroundColor": "#4574ba"
+    }
+  }
+}
