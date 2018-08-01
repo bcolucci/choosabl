@@ -1,9 +1,12 @@
 {
+  "home": "Accueil",
+  "battles": "Battles",
   "sign-in": "Se Connecter",
   "sign-in-with-provider": "Se connecter avec {{provider}}",
   "sign-out": "Se déconnecter",
   "sign-up": "Créer un compte",
-  "my-account": "Mon Compte",
+  "profile": "Profil",
+  "plan": "Abonnement",
   "birthday": "Date de naissance",
   "play": "Jouer",
   "select": "Sélectionner",

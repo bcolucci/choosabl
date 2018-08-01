@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Grid from '@material-ui/core/Grid'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Snackbar from '@material-ui/core/Snackbar'
+import Divider from '@material-ui/core/Divider'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
@@ -59,13 +60,15 @@ export default withAll(
       const { loading, showSavedMsg } = this.state
       const { username, birthday, gender } = this.state
       if (loading) {
-        return <LinearProgress />
+        return <LinearProgress color='secondary' />
       }
       return (
-        <div>
-          <Typography variant='headline'>{t('my-account')}</Typography>
-          <Typography>{user.email}</Typography>
-          <br />
+        <div className='with-padding'>
+          <Typography variant='headline'>{t('profile')}</Typography>
+          <Divider />
+          <p>
+            <Typography>{user.email}</Typography>
+          </p>
           <Snackbar
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             open={showSavedMsg}

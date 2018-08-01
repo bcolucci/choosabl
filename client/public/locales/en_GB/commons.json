@@ -1,9 +1,12 @@
 {
+  "home": "Home",
+  "battles": "Battles",
   "sign-in": "Sign In",
   "sign-in-with-provider": "Sign In with {{provider}}",
   "sign-out": "Logout",
   "sign-up": "Sign Up",
-  "my-account": "My Account",
+  "profile": "Profile",
+  "plan": "Plan",
   "birthday": "Birthday",
   "play": "Play",
   "select": "Select",

@@ -2,10 +2,6 @@ body {
   margin: 0;
 }
 
-main {
-  padding: 1em;
-}
-
 ul[role="menu"] a {
   text-decoration: none;
   color: inherit;
@@ -13,4 +9,8 @@ ul[role="menu"] a {
 
 img.lang_flag {
   margin-right: 5px;
+}
+
+.with-padding {
+  padding: 1em;
 }

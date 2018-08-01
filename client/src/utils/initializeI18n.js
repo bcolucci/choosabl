@@ -8,18 +8,22 @@ const debug = process.env.NODE_ENV !== 'production'
 
 let initialized = false
 if (!initialized) {
-  i18n.use(Backend).use(LanguageDetector).use(reactI18nextModule).init({
-    fallbackLng: 'en_GB',
-    ns: [defaultNS, 'langs', 'profile'],
-    defaultNS,
-    debug,
-    interpolation: {
-      escapeValue: false
-    },
-    react: {
-      wait: true
-    }
-  })
+  i18n
+    .use(Backend)
+    .use(LanguageDetector)
+    .use(reactI18nextModule)
+    .init({
+      fallbackLng: 'en_GB',
+      ns: [defaultNS, 'langs', 'profile'],
+      defaultNS,
+      debug,
+      interpolation: {
+        escapeValue: false
+      },
+      react: {
+        wait: true
+      }
+    })
   initialized = true
 }
 
