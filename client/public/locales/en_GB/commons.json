@@ -5,5 +5,11 @@
   "sign-up": "Sign Up",
   "my-account": "My Account",
   "birthday": "Birthday",
-  "play": "Play"
+  "play": "Play",
+  "select": "Select",
+  "woman": "Woman",
+  "man": "Man",
+  "other": "Other",
+  "username": "Username",
+  "save": "Save"
 }

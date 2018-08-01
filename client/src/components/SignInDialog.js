@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types'
 import { auth } from 'firebase'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -11,6 +12,11 @@ import withAll from '../utils/combinedWith'
 
 export default withAll(
   class extends PureComponent {
+    static propTypes = {
+      open: PropTypes.bool,
+      onClose: PropTypes.func
+    }
+
     handleSignInWithProvider = async provider => {
       try {
         await auth().signInWithPopup(provider)
@@ -21,17 +27,16 @@ export default withAll(
     }
 
     render () {
-      const { t } = this.props
+      const { t, open, onClose } = this.props
       return (
-        <Dialog {...this.props}>
+        <Dialog open={open} onClose={onClose}>
           <DialogTitle>Sign In</DialogTitle>
           <div>
             <List>
               <ListItem
                 button
                 onClick={() =>
-                  this.handleSignInWithProvider(new auth.GoogleAuthProvider())
-                }
+                  this.handleSignInWithProvider(new auth.GoogleAuthProvider())}
               >
                 <ListItemAvatar>
                   <SocialIcon url='https://google.com' />
@@ -45,8 +50,9 @@ export default withAll(
               <ListItem
                 button
                 onClick={() =>
-                  this.handleSignInWithProvider(new auth.FacebookAuthProvider())
-                }
+                  this.handleSignInWithProvider(
+                    new auth.FacebookAuthProvider()
+                  )}
               >
                 <ListItemAvatar>
                   <SocialIcon url='https://facebook.com' />

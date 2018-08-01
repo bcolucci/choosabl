@@ -12,7 +12,7 @@ export default class extends PureComponent {
         basePath=''
         format='png'
         pngSize={32}
-        name={this.props.value.substr(-2)}
+        name={value.substr(-2)}
         className='lang_flag'
       />
     )

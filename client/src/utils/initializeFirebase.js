@@ -13,7 +13,8 @@ initializeApp(
           storageBucket: 'choosabl-1e2ea.appspot.com',
           messagingSenderId: '489139856067'
         }
-      default:
+      case 'localhost:3000':
+      case 'choosabl-test.firebaseapp.com':
         return {
           apiKey: 'AIzaSyDE8wmOiZHERl10cW5u8rUBy-UqFXAQ_3w',
           authDomain: 'choosabl-test.firebaseapp.com',
@@ -22,6 +23,8 @@ initializeApp(
           storageBucket: 'choosabl-test.appspot.com',
           messagingSenderId: '201683634396'
         }
+      default:
+        throw new Error('Unknown host (Firebase).')
     }
   })()
 )

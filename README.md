@@ -5,16 +5,17 @@
 
 # Links referential
 
-| Lien             | URL                                      |
-|------------------|------------------------------------------|
-| **PROD**         | https://choosabl-1e2ea.firebaseapp.com   |
-| **TEST**         | https://choosabl-test.firebaseapp.com    |
-| Firebase console | https://console.firebase.google.com      |
-| Material UI      | https://material-ui.com/demos/buttons/   |
-| Icons            | https://www.google.com/design/icons/     |
-| I18n             | https://react.i18next.com/ |
-| Social colors    | https://www.materialui.co/socialcolors   |
-| Flags            | https://github.com/wiredmax/react-flags  |
+| Lien             | URL                                         |
+|------------------|---------------------------------------------|
+| **PROD**         | https://choosabl-1e2ea.firebaseapp.com      |
+| **TEST**         | https://choosabl-test.firebaseapp.com       |
+| Firebase console | https://console.firebase.google.com         |
+| Material UI      | https://material-ui.com/demos/buttons/      |
+| Material Pickers | https://material-ui-pickers.firebaseapp.com |
+| Icons            | https://www.google.com/design/icons/        |
+| I18n             | https://react.i18next.com/                  |
+| Social colors    | https://www.materialui.co/socialcolors      |
+| Flags            | https://github.com/wiredmax/react-flags     |
 
 # Setup for development
 

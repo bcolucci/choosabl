@@ -119,37 +119,33 @@ export default withStyles(
                 >
                   <a title={`v${version}`}>choosabl</a>
                 </Typography>
-                {!authenticated && (
+                {!authenticated &&
                   <Button
                     color='inherit'
                     onClick={() => this.setState({ isSignInDiagOpened: true })}
                   >
                     <AccountIcon />
-                  </Button>
-                )}
-                {authenticated && (
+                  </Button>}
+                {authenticated &&
                   <div>
                     <Button
                       color='inherit'
                       aria-owns={userMenuEl ? 'fade-menu' : null}
                       aria-haspopup='true'
                       onClick={({ currentTarget }) =>
-                        this.setState({ userMenuEl: currentTarget })
-                      }
+                        this.setState({ userMenuEl: currentTarget })}
                     >
                       <Avatar src={user.photoURL} />
                     </Button>
                     {this.renderUserMenu()}
-                  </div>
-                )}
+                  </div>}
                 <div>
                   <Button
                     color='inherit'
                     aria-owns={langMenuEl ? 'fade-menu' : null}
                     aria-haspopup='true'
                     onClick={({ currentTarget }) =>
-                      this.setState({ langMenuEl: currentTarget })
-                    }
+                      this.setState({ langMenuEl: currentTarget })}
                   >
                     <FlagIcon value={lang} style={{ marginRight: '-5px' }} />
                   </Button>

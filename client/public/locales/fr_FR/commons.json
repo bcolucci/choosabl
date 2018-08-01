@@ -5,5 +5,11 @@
   "sign-up": "Créer un compte",
   "my-account": "Mon Compte",
   "birthday": "Date de naissance",
-  "play": "Jouer"
+  "play": "Jouer",
+  "select": "Sélectionner",
+  "woman": "Femme",
+  "man": "Homme",
+  "other": "Autre",
+  "username": "Pseudonyme",
+  "save": "Sauvegarder"
 }

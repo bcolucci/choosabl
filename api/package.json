@@ -11,13 +11,13 @@
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
     "test": "ava src/*.spec.js",
-    "dev": "npm test -- --watch",
     "format": "prettier-standard '**/*.js'",
-    "prepackage:functions": "rimraf ../functions && npm run format",
-    "package:functions": "babel . --out-dir ../functions --copy-files --ignore node_modules/",
+    "build": "rimraf ../functions && babel . --out-dir ../functions --copy-files --ignore node_modules/",
+    "package:functions": "npm run build",
     "postpackage:functions": "cd ../functions && npm install --only=production"
   },
   "dependencies": {
+    "body-parser": "^1.18.3",
     "casual": "^1.5.19",
     "cors": "^2.8.4",
     "express": "^4.16.3",
@@ -34,7 +34,8 @@
     "firebase-functions-test": "^0.1.3",
     "husky": "^0.14.3",
     "prettier-standard": "^8.0.1",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "watch": "^1.0.2"
   },
   "ava": {
     "failFast": true,
