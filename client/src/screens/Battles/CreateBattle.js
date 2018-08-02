@@ -37,7 +37,8 @@ export default withAll(
           <FileInput
             readAs='buffer'
             onChange={file =>
-              this.setState({ [field]: { ...photoResetAttrs(), file } })}
+              this.setState({ [field]: { ...photoResetAttrs(), file } })
+            }
             onProgress={({ loaded, total, target }) => {
               if (loaded === total) {
                 const base64 = Buffer.from(target.result).toString('base64')
@@ -60,12 +61,13 @@ export default withAll(
           />
           <div style={{ marginTop: '5px' }}>
             {photo.loading && this.renderProgressBar(photo.loading)}
-            {photo.base64 &&
+            {photo.base64 && (
               <img
                 alt={photo.file.name}
                 src={`data:${photo.file.type};base64,${photo.base64}`}
                 style={{ width: '45%' }}
-              />}
+              />
+            )}
           </div>
         </Grid>
       )
