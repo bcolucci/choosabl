@@ -13,10 +13,10 @@ export default withAll(
       return (
         <Grid container className={classes.root + ' with-padding'}>
           <Grid item xs={12} style={{ textAlign: 'center' }}>
-            <img src={avatar1} />
+            <img alt={avatar1.split('/').pop()} src={avatar1} />
           </Grid>
           <Grid item xs={12} style={{ textAlign: 'center' }}>
-            <img src={avatar2} />
+            <img alt={avatar2.split('/').pop()} src={avatar2} />
           </Grid>
         </Grid>
       )

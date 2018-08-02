@@ -12,6 +12,9 @@ const commonStyles = theme => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap'
+  },
+  spaced: {
+    padding: theme.spacing.unit * 2
   }
 })
 

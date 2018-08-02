@@ -118,11 +118,6 @@ export default withAll(
     }
   },
   {
-    namespaces: ['profile'],
-    styles: theme => ({
-      spaced: {
-        padding: theme.spacing.unit * 2
-      }
-    })
+    namespaces: ['profile']
   }
 )
