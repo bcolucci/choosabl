@@ -18,9 +18,7 @@ export default withAll(
         <div className={classes.root + ' with-padding'}>
           <Card>
             <CardContent>
-              <Typography color='textSecondary'>
-                {battle.name}
-              </Typography>
+              <Typography color='textSecondary'>{battle.name}</Typography>
               <Grid container style={{ marginTop: '0.5em' }}>
                 <Grid item xs={6} style={{ textAlign: 'center' }}>
                   <img
