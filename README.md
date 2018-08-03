@@ -10,13 +10,24 @@
 | **PROD**         | [https://choosabl-1e2ea.firebaseapp.com]()
 | **TEST**         | [https://choosabl-test.firebaseapp.com]() 
 | Console          | [https://console.firebase.google.com]() 
-| Material UI      | [https://material-ui.com/demos/button]() 
+| Material UI      | [https://material-ui.com/demos/app-bar]() 
 | Material Pickers | [https://material-ui-pickers.firebaseapp.com]() 
 | Icons            | [https://www.google.com/design/icons/]() 
 | I18n             | [https://react.i18next.com/]()     
 | Social colors    | [https://www.materialui.co/socialcolors]()
 | Flags            | [https://github.com/wiredmax/react-flags]()
 | Large images     | [https://commons.wikimedia.org/w/index.php?title=Category:Large_images#mw-category-media]()
+
+---
+
+Open usefull links for development:
+
+    google-chrome \
+      https://console.firebase.google.com \
+      https://material-ui.com/demos/app-bar/ \
+      https://www.google.com/design/icons/ \
+      http://localhost:3000/
+
 
 # Setup for development
 

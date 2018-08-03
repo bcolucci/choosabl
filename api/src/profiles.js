@@ -12,16 +12,16 @@ app.use(cors({ origin: true }))
 app.use(bodyParser.json())
 app.use(createFirebaseAuth({ firebase }))
 
-app.get('/:uid', async (req, res) => {
-  const { uid } = req.params
-  const profile = await profilesRef.doc(uid).get()
+app.get('/', async (req, res) => {
+  const UserUID = req.header('UserUID')
+  const profile = await profilesRef.doc(UserUID).get()
   res.json((profile.exists && profile.data()) || {})
 })
 
-app.put('/:uid', async (req, res) => {
-  const { uid } = req.params
+app.put('/', async (req, res) => {
+  const UserUID = req.header('UserUID')
   const { username, birthday, gender } = req.body
-  await profilesRef.doc(uid).set({ username, birthday, gender })
+  await profilesRef.doc(UserUID).set({ username, birthday, gender })
   res.end()
 })
 

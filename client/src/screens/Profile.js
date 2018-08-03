@@ -10,7 +10,7 @@ import { subYears } from 'date-fns'
 import { DatePicker } from 'material-ui-pickers'
 import withAll from '../utils/combinedWith'
 import GenderPicker from '../components/GenderPicker'
-import { profiles } from '../api'
+import * as profilesAPI from '../api/profiles'
 
 const maxBirthdayDate = subYears(new Date(), 14)
 
@@ -26,7 +26,7 @@ export default withAll(
 
     async componentWillMount () {
       const { username, birthday, gender } = this.state
-      const profile = await profiles.getUserProfile()
+      const profile = await profilesAPI.getCurrent()
       this.setState({
         loading: false,
         username: profile.username || username,
@@ -47,7 +47,7 @@ export default withAll(
 
     handleSave = async () => {
       const { username, birthday, gender } = this.state
-      await profiles.updateUserProfile({
+      await profilesAPI.updateCurrent({
         username,
         birthday,
         gender

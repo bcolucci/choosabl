@@ -14,27 +14,18 @@ const apiURL = (() => {
   }
 })()
 
-export const profiles = {}
-
-profiles.getUserProfile = async () => {
-  const user = auth().currentUser
-  const token = await user.getIdToken(Math.random() > 0.5)
-  return await (await fetch(`${apiURL}/profiles/${user.uid}`, {
-    headers: {
-      Authorization: token
-    }
-  })).json()
-}
-
-profiles.updateUserProfile = async profile => {
-  const user = auth().currentUser
-  const token = await user.getIdToken(Math.random() > 0.5)
-  await fetch(`${apiURL}/profiles/${user.uid}`, {
-    method: 'PUT',
+export const authFetch = async (uri, customs = {}) => {
+  const { currentUser } = auth()
+  const token = await currentUser.getIdToken(Math.random() > 0.9)
+  const params = {
     headers: {
       'Content-Type': 'application/json',
+      UserUID: currentUser.uid,
       Authorization: token
-    },
-    body: JSON.stringify(profile)
-  })
+    }
+  }
+  if (customs.body) {
+    customs.body = JSON.stringify(customs.body)
+  }
+  return fetch(`${apiURL}/${uri}`, { ...params, ...customs })
 }
