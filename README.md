@@ -43,6 +43,21 @@ Open usefull links for development:
       && cd api && npm install \
       && cd ../client && npm install
 
+## Install gsutil
+
+    curl https://sdk.cloud.google.com | bash
+    [...]
+    cd [choosabl-path]
+    gcloud init
+
+## Set CORS
+
+    gcloud config set project choosabl-1e2ea \
+      && gsutil cors set cors.json gs://choosabl-1e2ea.appspot.com
+    
+    gcloud config set project choosabl-test \
+      && gsutil cors set cors.json gs://choosabl-test.appspot.com
+
 ## Install Visual Code deps
 
     CTRL + P + "ext install aeschli.vscode-css-formatter"

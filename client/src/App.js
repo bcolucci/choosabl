@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { auth } from 'firebase'
-import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
+import MuiPickersUtilsProvider
+  from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
 import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { withStyles, withIntl } from './utils/combinedWith'
@@ -11,7 +12,9 @@ import Home from './screens/Home'
 import Vote from './screens/Vote'
 import Battles from './screens/Battles'
 import Profile from './screens/Profile'
+import { createCurrentProfile } from './api/profiles'
 
+import 'react-image-crop/dist/ReactCrop.css'
 import './styles/App.css'
 
 export default withStyles(
@@ -22,9 +25,16 @@ export default withStyles(
       }
 
       componentWillMount () {
-        this.removeAuthListener = auth().onAuthStateChanged(user =>
+        this.removeAuthListener = auth().onAuthStateChanged(async user => {
+          if (user) {
+            const profileCreatedKey = `profileCreated-${user.uid}`
+            if (!localStorage.getItem(profileCreatedKey)) {
+              await createCurrentProfile()
+              localStorage.setItem(profileCreatedKey, '1')
+            }
+          }
           this.setState({ user })
-        )
+        })
       }
 
       componentWillUnmount () {
@@ -42,14 +52,38 @@ export default withStyles(
                 <main>
                   <ProtectedRoutes user={user}>
                     <Route
+                      exact
                       path='/vote'
                       render={props => <Vote {...props} user={user} />}
                     />
                     <Route
+                      exact
                       path='/battles'
                       render={props => <Battles {...props} user={user} />}
                     />
                     <Route
+                      exact
+                      path='/battles/actives'
+                      render={props => (
+                        <Battles {...props} user={user} menu={0} />
+                      )}
+                    />
+                    <Route
+                      exact
+                      path='/battles/drafts'
+                      render={props => (
+                        <Battles {...props} user={user} menu={1} />
+                      )}
+                    />
+                    <Route
+                      exact
+                      path='/battles/create'
+                      render={props => (
+                        <Battles {...props} user={user} menu={2} />
+                      )}
+                    />
+                    <Route
+                      exact
                       path='/profile'
                       render={props => <Profile {...props} user={user} />}
                     />

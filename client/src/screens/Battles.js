@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
@@ -14,11 +15,24 @@ import * as battlesAPI from '../api/battles'
 
 export default withAll(
   class extends Component {
+    static propTypes = {
+      menu: PropTypes.number
+    }
+
+    static defaultProps = {
+      menu: 0
+    }
+
     state = {
       menu: 0,
       actives: [],
       drafts: [],
       loading: true
+    }
+
+    constructor (props) {
+      super(props)
+      this.state.menu = props.menu
     }
 
     async componentWillMount () {
@@ -28,44 +42,68 @@ export default withAll(
       this.setState({ actives, drafts, loading: false })
     }
 
+    moveBattle = dest => (battle, remove = false) => {
+      const from = dest === 'actives' ? 'drafts' : 'actives'
+      this.setState({
+        [from]: this.state[from].filter(b => b.id !== battle.id)
+      })
+      if (!remove) {
+        this.setState({ [dest]: [battle, ...this.state[dest]] })
+      }
+    }
+
     render () {
-      const { classes } = this.props
+      const { t, classes } = this.props
       const { menu, loading, actives, drafts } = this.state
       if (loading) {
         return <LinearProgress color='secondary' />
       }
+      const moveBattle = this.moveBattle.bind(this)
       return (
         <div>
           <AppBar position='static' color='default'>
-            <Tabs
-              fullWidth
-              value={menu}
-              onChange={(e, menu) => this.setState({ menu })}
-            >
+            <Tabs fullWidth value={menu}>
               <Tab
-                label='Active'
+                label={t('battles:Actives')}
+                href='/battles/actives'
                 className={classes.tab}
                 icon={
-                  <Badge badgeContent={actives.length} color='secondary'>
+                  <Badge badgeContent={actives.length} color='default'>
                     <VisibilityIcon />{' '}
                   </Badge>
                 }
               />
               <Tab
-                label='Draft'
+                label={t('battles:Drafts')}
+                href='/battles/drafts'
                 className={classes.tab}
                 icon={
-                  <Badge badgeContent={drafts.length} color='secondary'>
+                  <Badge badgeContent={drafts.length} color='default'>
                     <DraftIcon />
                   </Badge>
                 }
               />
-              <Tab label='Create' className={classes.tab} icon={<AddIcon />} />
+              <Tab
+                label={t('Create')}
+                href='/battles/create'
+                className={classes.tab}
+                icon={<AddIcon />}
+              />
             </Tabs>
           </AppBar>
           <div className='with-padding'>
-            {menu === 0 && <ListBattles active battles={actives} />}
-            {menu === 1 && <ListBattles active={false} battles={drafts} />}
+            {menu === 0 &&
+              <ListBattles
+                active
+                battles={actives}
+                moveBattle={moveBattle('drafts')}
+              />}
+            {menu === 1 &&
+              <ListBattles
+                active={false}
+                battles={drafts}
+                moveBattle={moveBattle('actives')}
+              />}
             {menu === 2 && <CreateBattle />}
           </div>
         </div>

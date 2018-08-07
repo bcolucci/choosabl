@@ -1,3 +1,5 @@
+throw new Error('Should not be used anymore.')
+
 const max = 87
 
 const randomAvatar = (sex, exclude) => {

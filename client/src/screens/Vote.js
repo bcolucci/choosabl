@@ -1,22 +1,66 @@
 import React, { PureComponent } from 'react'
 import Grid from '@material-ui/core/Grid'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import { storage } from 'firebase'
 import withAll from '../utils/combinedWith'
-import randomAvatar from '../utils/randomAvatar'
+import { getAvailablesForCurrentUser } from '../api/battles'
 
 export default withAll(
   class extends PureComponent {
+    state = {
+      battles: [],
+      current: null,
+      loading: true
+    }
+
+    async componentWillMount () {
+      const battles = await getAvailablesForCurrentUser()
+      const current = battles[0]
+      if (current) {
+        const [photo1, photo2] = await this.downloadPhotos(current)
+        Object.assign(current, { photo1, photo2 })
+      }
+      this.setState({
+        battles,
+        current,
+        loading: false
+      })
+    }
+
+    async downloadPhotos (battle) {
+      const [url1, url2] = await Promise.all([
+        storage().ref(battle.photo1Path).getDownloadURL(),
+        storage().ref(battle.photo2Path).getDownloadURL()
+      ])
+      const [res1, res2] = await Promise.all([fetch(url1), fetch(url2)])
+      return await Promise.all([res1.text(), res2.text()])
+    }
+
     render () {
       const { classes } = this.props
-      const sex = Math.random() > 0.5 ? 'm' : 'f'
-      const avatar1 = randomAvatar(sex)
-      const avatar2 = randomAvatar(sex, avatar1)
+      const { loading, current } = this.state
+      if (loading) {
+        return <LinearProgress color='secondary' />
+      }
+      if (!current) {
+        return <p>No battle found.</p>
+      }
+      console.log(current)
       return (
-        <Grid container className={classes.root + ' with-padding'}>
-          <Grid item xs={12} style={{ textAlign: 'center' }}>
-            <img alt={avatar1.split('/').pop()} src={avatar1} />
+        <Grid container className={classes.root}>
+          <Grid item xs={6}>
+            <img
+              src={`data:${current.file1.type};base64,${current.photo1}`}
+              alt={`${current.name} first choice`}
+              style={{ width: '100%' }}
+            />
           </Grid>
-          <Grid item xs={12} style={{ textAlign: 'center' }}>
-            <img alt={avatar2.split('/').pop()} src={avatar2} />
+          <Grid item xs={6}>
+            <img
+              src={`data:${current.file2.type};base64,${current.photo2}`}
+              alt={`${current.name} second choice`}
+              style={{ width: '100%' }}
+            />
           </Grid>
         </Grid>
       )

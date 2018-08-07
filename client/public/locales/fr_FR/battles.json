@@ -2,5 +2,9 @@
   "activeBattles": "Battles Actives",
   "draftBattles": "Battles Brouillon",
   "createBattle": "Créer une nouvelle Battle",
-  "name": "Nom"
+  "name": "Nom",
+  "Activate": "Activer",
+  "Desactivate": "Désactiver",
+  "Actives": "Actives",
+  "Drafts": "Brouillons"
 }
