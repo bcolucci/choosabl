@@ -78,8 +78,14 @@ export default withAll(
       const photo2Path = photoPath(user.uid, file2.name)
       try {
         await Promise.all([
-          storage().ref(photo1Path).putString(photo1.base64, 'base64').then(),
-          storage().ref(photo2Path).putString(photo2.base64, 'base64').then()
+          storage()
+            .ref(photo1Path)
+            .putString(photo1.base64, 'base64')
+            .then(),
+          storage()
+            .ref(photo2Path)
+            .putString(photo2.base64, 'base64')
+            .then()
         ])
       } catch (err) {
         this.showErr(err.message)
@@ -147,12 +153,13 @@ export default withAll(
           <FileInput
             readAs='buffer'
             onChange={file =>
-              this.setState({ [field]: { ...photoResetAttrs(), file } })}
+              this.setState({ [field]: { ...photoResetAttrs(), file } })
+            }
             onProgress={this.handlePhotoUploadProgress(num)}
           />
           <div style={{ marginTop: '5px' }}>
             {photo.loading && this.renderProgressBar(photo.loading)}
-            {photo.base64 &&
+            {photo.base64 && (
               <ReactCrop
                 crop={crop}
                 onImageLoaded={({ width, height }) =>
@@ -161,11 +168,13 @@ export default withAll(
                       this.state[cropField],
                       width / height
                     )
-                  })}
+                  })
+                }
                 onChange={this.handlePhotoCrop(cropField)}
                 style={{ width: '100%', height: photoHeight }}
                 src={`data:${photo.file.type};base64,${photo.base64}`}
-              />}
+              />
+            )}
           </div>
         </Grid>
       )

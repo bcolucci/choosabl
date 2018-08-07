@@ -29,8 +29,12 @@ export default withAll(
 
     async downloadPhotos (battle) {
       const [url1, url2] = await Promise.all([
-        storage().ref(battle.photo1Path).getDownloadURL(),
-        storage().ref(battle.photo2Path).getDownloadURL()
+        storage()
+          .ref(battle.photo1Path)
+          .getDownloadURL(),
+        storage()
+          .ref(battle.photo2Path)
+          .getDownloadURL()
       ])
       const [res1, res2] = await Promise.all([fetch(url1), fetch(url2)])
       return await Promise.all([res1.text(), res2.text()])

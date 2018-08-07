@@ -92,18 +92,20 @@ export default withAll(
             </Tabs>
           </AppBar>
           <div className='with-padding'>
-            {menu === 0 &&
+            {menu === 0 && (
               <ListBattles
                 active
                 battles={actives}
                 moveBattle={moveBattle('drafts')}
-              />}
-            {menu === 1 &&
+              />
+            )}
+            {menu === 1 && (
               <ListBattles
                 active={false}
                 battles={drafts}
                 moveBattle={moveBattle('actives')}
-              />}
+              />
+            )}
             {menu === 2 && <CreateBattle />}
           </div>
         </div>

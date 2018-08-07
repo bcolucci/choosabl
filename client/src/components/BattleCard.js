@@ -55,8 +55,7 @@ export default withAll(
                   color='primary'
                   onClick={this.handleToggleBattleStatus}
                 >
-                  {active ? <ToggleOffIcon /> : <ToggleOnIcon />}
-                  {' '}
+                  {active ? <ToggleOffIcon /> : <ToggleOnIcon />}{' '}
                   {active ? t('battles:Desactivate') : t('battles:Activate')}
                 </Button>
                 <Button
