@@ -1,9 +1,7 @@
 [
   {
     "origin": [
-      "http://localhost:3000",
       "https://choosabl.com",
-      "https://choosabl-test.firebaseapp.com",
       "https://choosabl-1e2ea.firebaseapp.com"
     ],
     "maxAgeSeconds": 3600,
