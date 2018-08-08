@@ -6,7 +6,7 @@ initializeApp(
       case 'choosabl.com':
       case 'choosabl-1e2ea.firebaseapp.com':
         return {
-          apiKey: 'AIzaSyBtyDnuJU66_TWu7Gbggn3TnwT4575dSuw',
+          apiKey: 'AIzaSyCBxztWJoF0DFBwvJ0GfuKnF7IKCOnQkm4',
           authDomain: 'choosabl-1e2ea.firebaseapp.com',
           databaseURL: 'https://choosabl-1e2ea.firebaseio.com',
           projectId: 'choosabl-1e2ea',
@@ -16,7 +16,7 @@ initializeApp(
       case 'localhost:3000':
       case 'choosabl-test.firebaseapp.com':
         return {
-          apiKey: 'AIzaSyDE8wmOiZHERl10cW5u8rUBy-UqFXAQ_3w',
+          apiKey: 'AIzaSyDDFhTCTsO33jjjp9XL6VnH2sm0D-n8ZPg',
           authDomain: 'choosabl-test.firebaseapp.com',
           databaseURL: 'https://choosabl-test.firebaseio.com',
           projectId: 'choosabl-test',

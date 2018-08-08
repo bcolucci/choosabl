@@ -47,16 +47,12 @@ export default withAll(
 
     handleSave = async () => {
       const { username, birthday, gender } = this.state
-      await profilesAPI.updateCurrent({
-        username,
-        birthday,
-        gender
-      })
+      await profilesAPI.updateCurrent({ username, birthday, gender })
       this.setState({ showSavedMsg: true })
     }
 
     render () {
-      const { t, classes, user } = this.props
+      const { t, classes /*, user */ } = this.props
       const { loading, showSavedMsg } = this.state
       const { username, birthday, gender } = this.state
       if (loading) {
@@ -65,10 +61,10 @@ export default withAll(
       return (
         <div className='with-padding'>
           <Typography variant='headline'>{t('profile')}</Typography>
-          <Divider />
-          <p>
+          <Divider style={{ marginBottom: '1em' }} />
+          {/* <p>
             <Typography>{user.email}</Typography>
-          </p>
+          </p> */}
           <Snackbar
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             open={showSavedMsg}

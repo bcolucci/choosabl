@@ -9,8 +9,11 @@
       "Content-Type"
     ],
     "method": [
+      "HEAD",
       "GET",
-      "HEAD"
+      "PUT",
+      "POST",
+      "DELETE"
     ]
   }
 ]

@@ -17,6 +17,7 @@
 | Social colors    | [https://www.materialui.co/socialcolors]()
 | Flags            | [https://github.com/wiredmax/react-flags]()
 | Large images     | [https://commons.wikimedia.org/w/index.php?title=Category:Large_images#mw-category-media]()
+| Vision Console   | [https://beta-dot-custom-vision.appspot.com]()
 
 ---
 
