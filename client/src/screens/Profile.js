@@ -96,15 +96,17 @@ export default withAll(
               />
             </Grid>
             <Grid item xs={12} className={classes.spaced}>
-              {saving
-                ? <CircularProgress />
-                : <Button
+              {saving ? (
+                <CircularProgress />
+              ) : (
+                <Button
                   variant='contained'
                   color='primary'
                   onClick={this.handleSave}
-                  >
+                >
                   {t('save')}
-                </Button>}
+                </Button>
+              )}
             </Grid>
           </Grid>
         </div>
