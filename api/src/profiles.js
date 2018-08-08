@@ -9,14 +9,16 @@ import create from './profiles/create'
 import update from './profiles/update'
 
 const app = express()
+const auth = createFirebaseAuth({ firebase })
+
 app.use(cors({ origin: true }))
 app.use(bodyParser.json())
-app.use(createFirebaseAuth({ firebase }))
 app.use(populateCollections())
 
-app.get('/', get)
+app.get('/ping', (_, res) => res.end())
+app.get('/', auth, get)
 
-app.post('/', create)
-app.put('/', update)
+app.post('/', auth, create)
+app.put('/', auth, update)
 
 export default app

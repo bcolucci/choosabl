@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Snackbar from '@material-ui/core/Snackbar'
 import SuccessIcon from '@material-ui/icons/Done'
 import ErrorIcon from '@material-ui/icons/ReportProblem'
@@ -50,7 +51,8 @@ export default withAll(
       photo2: photoResetAttrs(),
       crop2: cropOpts(),
       msg: null,
-      loading: false
+      loading: false,
+      saving: false
     }
 
     showErr = contents => this.setState({ msg: { type: 'error', contents } })
@@ -73,23 +75,17 @@ export default withAll(
       if (!isTypeImage(file1.type) || !isTypeImage(file2.type)) {
         return this.showErr('Invalid image.')
       }
-      this.setState({ loading: true })
+      this.setState({ saving: true })
       const photo1Path = photoPath(user.uid, file1.name)
       const photo2Path = photoPath(user.uid, file2.name)
       try {
         await Promise.all([
-          storage()
-            .ref(photo1Path)
-            .putString(photo1.base64, 'base64')
-            .then(),
-          storage()
-            .ref(photo2Path)
-            .putString(photo2.base64, 'base64')
-            .then()
+          storage().ref(photo1Path).putString(photo1.base64, 'base64').then(),
+          storage().ref(photo2Path).putString(photo2.base64, 'base64').then()
         ])
       } catch (err) {
         this.showErr(err.message)
-        return this.setState({ loading: false })
+        return this.setState({ saving: false })
       }
       try {
         await battlesAPI.createForCurrentUser(
@@ -109,8 +105,8 @@ export default withAll(
       } catch (err) {
         this.showErr(err.message)
       }
-      this.setState({ loading: false })
-      setTimeout(() => window.location.replace('/battles/drafts'), 1000)
+      this.setState({ saving: false })
+      setTimeout(() => window.location.replace('/battles/drafts'), 1500)
     }
 
     renderProgressBar = ({ loaded, total }) => {
@@ -153,13 +149,12 @@ export default withAll(
           <FileInput
             readAs='buffer'
             onChange={file =>
-              this.setState({ [field]: { ...photoResetAttrs(), file } })
-            }
+              this.setState({ [field]: { ...photoResetAttrs(), file } })}
             onProgress={this.handlePhotoUploadProgress(num)}
           />
           <div style={{ marginTop: '5px' }}>
             {photo.loading && this.renderProgressBar(photo.loading)}
-            {photo.base64 && (
+            {photo.base64 &&
               <ReactCrop
                 crop={crop}
                 onImageLoaded={({ width, height }) =>
@@ -168,13 +163,11 @@ export default withAll(
                       this.state[cropField],
                       width / height
                     )
-                  })
-                }
+                  })}
                 onChange={this.handlePhotoCrop(cropField)}
                 style={{ width: '100%', height: photoHeight }}
                 src={`data:${photo.file.type};base64,${photo.base64}`}
-              />
-            )}
+              />}
           </div>
         </Grid>
       )
@@ -204,7 +197,7 @@ export default withAll(
 
     render () {
       const { t, classes } = this.props
-      const { name, loading } = this.state
+      const { name, saving, loading } = this.state
       if (loading) {
         return <LinearProgress color='secondary' />
       }
@@ -226,13 +219,15 @@ export default withAll(
             {this.renderPhotoUploader(1)}
             {this.renderPhotoUploader(2)}
             <Grid item xs={12} className={classes.spaced}>
-              <Button
-                variant='contained'
-                color='primary'
-                onClick={this.handleSave}
-              >
-                {t('save')}
-              </Button>
+              {saving
+                ? <CircularProgress />
+                : <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={this.handleSave}
+                  >
+                  {t('save')}
+                </Button>}
             </Grid>
           </Grid>
         </div>

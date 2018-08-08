@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { auth } from 'firebase'
-import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
+import MuiPickersUtilsProvider
+  from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
 import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { withStyles, withIntl } from './utils/combinedWith'
 import Header from './components/Header'
@@ -20,19 +22,19 @@ export default withStyles(
   withIntl(
     class extends Component {
       state = {
-        user: null
+        user: null,
+        loading: true
       }
 
       componentWillMount () {
         this.removeAuthListener = auth().onAuthStateChanged(async user => {
           if (user) {
-            const profileCreatedKey = `profileCreated-${user.uid}`
-            if (!localStorage.getItem(profileCreatedKey)) {
+            if (!localStorage.getItem(user.uid)) {
               await createCurrentProfile()
-              localStorage.setItem(profileCreatedKey, '1')
+              localStorage.setItem(user.uid, '1')
             }
           }
-          this.setState({ user })
+          this.setState({ user, loading: false })
         })
       }
 
@@ -41,7 +43,10 @@ export default withStyles(
       }
 
       render () {
-        const { user } = this.state
+        const { user, loading } = this.state
+        if (loading) {
+          return <LinearProgress />
+        }
         return (
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <CssBaseline />

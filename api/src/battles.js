@@ -13,18 +13,20 @@ import remove from './battles/remove'
 import isUserBattle from './battles/isUserBattleHandler'
 
 const app = express()
+const auth = createFirebaseAuth({ firebase })
 
 app.use(cors({ origin: true }))
 app.use(bodyParser.json())
-app.use(createFirebaseAuth({ firebase }))
 app.use(populateCollections())
-app.get(`/${idreg('battleUID')}?`, get)
-app.get('/availableForVote', availableForVote)
 
-app.post('/', create)
+app.get('/ping', (_, res) => res.end())
+app.get(`/${idreg('battleUID')}?`, auth, get)
+app.get('/availableForVote', auth, availableForVote)
 
-app.put(`/${idreg('battleUID')}/toggleStatus`, isUserBattle, toggleStatus)
+app.post('/', auth, create)
 
-app.delete(`/${idreg('battleUID')}`, isUserBattle, remove)
+app.put(`/${idreg('battleUID')}/toggleStatus`, auth, isUserBattle, toggleStatus)
+
+app.delete(`/${idreg('battleUID')}`, auth, isUserBattle, remove)
 
 export default app

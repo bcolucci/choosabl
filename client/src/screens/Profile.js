@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Grid from '@material-ui/core/Grid'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Snackbar from '@material-ui/core/Snackbar'
 import Divider from '@material-ui/core/Divider'
 import Typography from '@material-ui/core/Typography'
@@ -18,6 +19,7 @@ export default withAll(
   class extends Component {
     state = {
       loading: true,
+      saving: false,
       username: '',
       birthday: null,
       gender: '',
@@ -35,25 +37,19 @@ export default withAll(
       })
     }
 
-    handleChange = field => e => {
-      switch (e.constructor.name) {
-        case 'SyntheticEvent':
-          return this.setState({ [field]: e.target.value })
-        case 'Date':
-        default:
-          this.setState({ [field]: e })
-      }
-    }
+    handleChange = (field, synthetic = true) => e =>
+      this.setState({ [field]: synthetic ? e.target.value : e })
 
     handleSave = async () => {
+      this.setState({ saving: true })
       const { username, birthday, gender } = this.state
       await profilesAPI.updateCurrent({ username, birthday, gender })
-      this.setState({ showSavedMsg: true })
+      this.setState({ showSavedMsg: true, saving: false })
     }
 
     render () {
       const { t, classes /*, user */ } = this.props
-      const { loading, showSavedMsg } = this.state
+      const { loading, saving, showSavedMsg } = this.state
       const { username, birthday, gender } = this.state
       if (loading) {
         return <LinearProgress color='secondary' />
@@ -90,7 +86,7 @@ export default withAll(
                 initialFocusedDate={maxBirthdayDate}
                 maxDate={maxBirthdayDate}
                 minDate={subYears(maxBirthdayDate, 100)}
-                onChange={this.handleChange('birthday')}
+                onChange={this.handleChange('birthday', false)}
               />
             </Grid>
             <Grid item xs={12} className={classes.spaced}>
@@ -100,13 +96,15 @@ export default withAll(
               />
             </Grid>
             <Grid item xs={12} className={classes.spaced}>
-              <Button
-                variant='contained'
-                color='primary'
-                onClick={this.handleSave}
-              >
-                {t('save')}
-              </Button>
+              {saving
+                ? <CircularProgress />
+                : <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={this.handleSave}
+                  >
+                  {t('save')}
+                </Button>}
             </Grid>
           </Grid>
         </div>

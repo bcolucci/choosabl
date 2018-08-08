@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { auth } from 'firebase'
 
 export default class extends Component {
   state = {
@@ -11,9 +12,9 @@ export default class extends Component {
 
   render () {
     const { user } = this.state
-    if (!user) {
+    if (!user && !auth().currentUser) {
       const { location } = window
-      if (location.host !== 'localhost:3000' && location.pathname !== '/') {
+      if (location.pathname !== '/') {
         location.replace('/')
       }
       return null

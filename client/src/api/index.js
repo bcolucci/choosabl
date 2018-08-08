@@ -14,6 +14,13 @@ const apiURL = (() => {
   }
 })()
 
+export const wakeUpAllAPI = () =>
+  Promise.all([
+    fetch(`${apiURL}/profiles/ping`),
+    fetch(`${apiURL}/battles/ping`),
+    fetch(`${apiURL}/votes/ping`)
+  ])
+
 export const authFetch = async (uri, customs = {}) => {
   const { currentUser } = auth()
   const token = await currentUser.getIdToken(Math.random() > 0.9)

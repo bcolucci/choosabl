@@ -9,13 +9,15 @@ import create from './votes/create'
 import idreg from './utils/idreg'
 
 const app = express()
+const auth = createFirebaseAuth({ firebase })
+
 app.use(cors({ origin: true }))
 app.use(bodyParser.json())
-app.use(createFirebaseAuth({ firebase }))
 app.use(populateCollections())
 
-app.get(`/${idreg('battleUID')}`, get)
+app.get('/ping', (_, res) => res.end())
+app.get(`/${idreg('battleUID')}`, auth, get)
 
-app.post(`/${idreg('battleUID')}/:voteFor(0|1)`, create)
+app.post(`/${idreg('battleUID')}/:voteFor(0|1)`, auth, create)
 
 export default app
