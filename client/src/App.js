@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { auth } from 'firebase'
-import MuiPickersUtilsProvider
-  from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
+import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
 import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import CssBaseline from '@material-ui/core/CssBaseline'
