@@ -35,7 +35,7 @@ Open usefull links for development:
 ## Select a "good" node version to work with
 
     sudo npm i -g n \
-      && sudo n 6.11.5
+      && sudo n 8.11.1
 
 ## Retrieve the code and install deps
 

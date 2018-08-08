@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  background-color: #4574ba;
 }
 
 ul[role="menu"] a {
@@ -13,4 +14,9 @@ img.lang_flag {
 
 .with-padding {
   padding: 0.5em;
+}
+
+#loading {
+  text-align: center;
+  margin-top: 25%;
 }

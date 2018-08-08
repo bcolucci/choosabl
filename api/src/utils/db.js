@@ -1,8 +1,6 @@
-import admin from 'firebase-admin'
+import { firestore } from 'firebase-admin'
 
-admin.initializeApp()
-
-const db = admin.firestore()
+const db = firestore()
 db.settings({ timestampsInSnapshots: true })
 
 const profilesRef = db.collection('profiles')
