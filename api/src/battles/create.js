@@ -1,6 +1,6 @@
 import { storage } from 'firebase-admin'
 // import vision from '@google-cloud/vision'
-import sharp from 'sharp'
+// import sharp from 'sharp'
 import uuid from 'uuid/v4'
 
 // const cropHints = async path => {
@@ -20,14 +20,12 @@ import uuid from 'uuid/v4'
 //   }
 // }
 
-const resizePhoto = async (path, crop) => {
-  const bucket = storage().bucket()
-  const [buffer] = await bucket.file(path).download()
-  const resized = await sharp(buffer)
-    .resize(250)
-    .toBuffer()
-  await bucket.file(path).save(resized.toString('base64'))
-}
+// const resizePhoto = async path => {
+//   const bucket = storage().bucket()
+//   const [buffer] = await bucket.file(path).download()
+//   const resized = await sharp(buffer).resize(250).toBuffer()
+//   await bucket.file(path).save(resized.toString('base64'))
+// }
 
 export default async (req, res) => {
   const { battlesRef } = res.locals
@@ -36,17 +34,18 @@ export default async (req, res) => {
   const { battle /*, crops */ } = req.body
   const now = new Date().getTime()
   // await cropHints(battle.photo1Path)
+  const doc = {
+    ...battle,
+    id,
+    user: userUID,
+    active: false,
+    createdAt: now,
+    updatedAt: now
+  }
   await Promise.all([
-    resizePhoto(battle.photo1Path, crops.crop1),
-    resizePhoto(battle.photo2Path, crops.crop2),
-    battlesRef.doc(id).set({
-      ...battle,
-      id,
-      user: userUID,
-      active: false,
-      createdAt: now,
-      updatedAt: now
-    })
+    // resizePhoto(battle.photo1Path),
+    // resizePhoto(battle.photo2Path),
+    battlesRef.doc(id).set(doc)
   ])
-  res.end()
+  res.json(doc)
 }

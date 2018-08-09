@@ -27,6 +27,8 @@ const photoPath = (userUID, fileName) =>
 
 const isTypeImage = type => type.substr(0, 6) === 'image/'
 
+const maxPhotoSize = 300 * 1000 // 300kB
+
 export default withAll(
   class extends Component {
     state = {
@@ -59,6 +61,9 @@ export default withAll(
       if (!isTypeImage(file1.type) || !isTypeImage(file2.type)) {
         return this.showErr('Invalid image.')
       }
+      if (file1.size > maxPhotoSize || file2.size > maxPhotoSize) {
+        return this.showErr('Photos size should be <= 300kB')
+      }
       this.setState({ saving: true })
       const photo1Path = photoPath(user.uid, file1.name)
       const photo2Path = photoPath(user.uid, file2.name)
@@ -73,11 +78,6 @@ export default withAll(
             .putString(photo2.base64, 'base64')
             .then()
         ])
-      } catch (err) {
-        this.showErr(err.message)
-        return this.setState({ saving: false })
-      }
-      try {
         await battlesAPI.createForCurrentUser({
           name: trimName,
           photo1Path,
@@ -86,11 +86,11 @@ export default withAll(
           file2: fileInfo(file2)
         })
         this.showSuccess('Battle has been created in drafts.')
+        setTimeout(() => window.location.replace('/battles/drafts'), 1500)
       } catch (err) {
         this.showErr(err.message)
       }
       this.setState({ saving: false })
-      setTimeout(() => window.location.replace('/battles/drafts'), 1500)
     }
 
     renderProgressBar = ({ loaded, total }) => {

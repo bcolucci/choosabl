@@ -2,12 +2,12 @@ import { storage } from 'firebase'
 import { authFetch } from '.'
 import cacheNS from '../cacheNS'
 
-const bufToB64 = b => new Buffer(b, 'binary').toString('base64')
+const bufToB64 = b => String(new Buffer(b, 'binary'))
 
 export const getAllForCurrentUser = async () => {
   const cache = cacheNS('battles:getAllForCurrentUser')
-  const obj = cache.get()
-  if (obj) {
+  const obj = cache.get([])
+  if (obj && obj.length) {
     return obj
   }
   const res = await authFetch('battles/')
@@ -22,8 +22,10 @@ export const getOneForCurrentUser = async id => {
 }
 
 export const createForCurrentUser = async battle => {
-  await authFetch('battles/', { method: 'POST', body: { battle } })
-  cacheNS('battles-getAllForCurrentUser').unset()
+  const res = await authFetch('battles/', { method: 'POST', body: { battle } })
+  const newBattle = await res.json()
+  const cache = cacheNS('battles:getAllForCurrentUser')
+  cache.set([newBattle, ...cache.get([])])
 }
 
 export const toggleBattleStatus = async battle => {
@@ -61,13 +63,16 @@ export const downloadPhotos = async battle => {
       .getDownloadURL()
   ])
   const [res1, res2] = await Promise.all([fetch(url1), fetch(url2)])
-  const images = await (async () => {
-    const buffers = await Promise.all([res1.arrayBuffer(), res2.arrayBuffer()])
-    return buffers.map(bufToB64)
-  })()
+  const images = (await Promise.all([
+    res1.arrayBuffer(),
+    res2.arrayBuffer()
+  ])).map(bufToB64)
   // cache.set(images)
   return images
 }
 
-export const deleteOne = async battle =>
+export const deleteOne = battle => {
   authFetch(`battles/${battle.id}`, { method: 'DELETE' })
+  const cache = cacheNS('battles:getAllForCurrentUser')
+  cache.set(cache.get([]).filter(b => b.id !== battle.id))
+}

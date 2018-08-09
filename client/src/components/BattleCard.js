@@ -6,7 +6,8 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
 import Typography from '@material-ui/core/Typography'
-import LinearProgress from '@material-ui/core/LinearProgress'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Divider from '@material-ui/core/Divider'
 import DeleteIcon from '@material-ui/icons/DeleteOutline'
 import ToggleOnIcon from '@material-ui/icons/ToggleOn'
 import ToggleOffIcon from '@material-ui/icons/ToggleOff'
@@ -40,38 +41,44 @@ export default withAll(
       moveBattle(battle)
     }
 
+    renderPhoto = (file, base64) => {
+      const { onPreview } = this.props
+      return (
+        <Grid item xs={6} style={{ textAlign: 'center' }}>
+          <a onClick={() => onPreview(file, base64)}>
+            <img
+              src={`data:${file.type};base64,${base64}`}
+              style={{ height: 120, maxWidth: 140 }}
+              alt={file.name}
+            />
+          </a>
+        </Grid>
+      )
+    }
+
     render () {
       const { loading, photos } = this.state
       const { t, classes } = this.props
       const { active, battle } = this.props
-      const { onDelete, onPreview } = this.props
-      const imgStyle = { height: 120, maxWidth: 140 }
+      const { onDelete } = this.props
       return (
         <Card className={classes.spaced}>
           <CardContent>
-            <Typography color='textSecondary'>{battle.name}</Typography>
+            <Typography variant='headline' gutterBottom>
+              {battle.name}
+            </Typography>
+            <Divider />
             {loading ? (
-              <LinearProgress color='secondary' />
+              <div style={{ textAlign: 'center' }}>
+                <CircularProgress
+                  color='primary'
+                  style={{ margin: '50px 0' }}
+                />
+              </div>
             ) : (
               <Grid container style={{ marginTop: '0.5em' }}>
-                <Grid item xs={6} style={{ textAlign: 'center' }}>
-                  <a onClick={() => onPreview(battle.file1, photos[0])}>
-                    <img
-                      src={`data:${battle.file1.type};base64,${photos[0]}`}
-                      style={imgStyle}
-                      alt='bla bla bla 1'
-                    />
-                  </a>
-                </Grid>
-                <Grid item xs={6} style={{ textAlign: 'center' }}>
-                  <a onClick={() => onPreview(battle.file2, photos[1])}>
-                    <img
-                      src={`data:${battle.file2.type};base64,${photos[1]}`}
-                      style={imgStyle}
-                      alt='bla bla bla 2'
-                    />
-                  </a>
-                </Grid>
+                {this.renderPhoto(battle.file1, photos[0])}
+                {this.renderPhoto(battle.file2, photos[1])}
               </Grid>
             )}
             <CardActions>
@@ -80,16 +87,22 @@ export default withAll(
                 color='primary'
                 onClick={this.handleToggleBattleStatus}
               >
-                {active ? <ToggleOffIcon /> : <ToggleOnIcon />}{' '}
+                {active ? (
+                  <ToggleOffIcon color='secondary' />
+                ) : (
+                  <ToggleOnIcon />
+                )}{' '}
                 {active ? t('battles:Desactivate') : t('battles:Activate')}
               </Button>
-              <Button
-                variant='outlined'
-                color='secondary'
-                onClick={() => onDelete(battle)}
-              >
-                <DeleteIcon />
-              </Button>
+              {!active && (
+                <Button
+                  variant='outlined'
+                  color='secondary'
+                  onClick={() => onDelete(battle)}
+                >
+                  <DeleteIcon />
+                </Button>
+              )}
             </CardActions>
           </CardContent>
         </Card>
