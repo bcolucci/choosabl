@@ -10,11 +10,14 @@ export default async (req, res) => {
       battlesRef.doc(battleUID).delete(),
       bucket.file(battle.photo1Path).delete(),
       bucket.file(battle.photo2Path).delete(),
-      votesRef.where('battle', '==', battleUID).get().then(votesSnap => {
-        const batch = db.batch()
-        votesSnap.forEach(snap => batch.delete(snap.ref))
-        return batch.commit()
-      })
+      votesRef
+        .where('battle', '==', battleUID)
+        .get()
+        .then(votesSnap => {
+          const batch = db.batch()
+          votesSnap.forEach(snap => batch.delete(snap.ref))
+          return batch.commit()
+        })
     ])
   } catch (err) {}
   res.end()

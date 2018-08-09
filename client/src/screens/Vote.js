@@ -1,12 +1,11 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import Grid from '@material-ui/core/Grid'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import { storage } from 'firebase'
 import withAll from '../utils/combinedWith'
-import { getAvailablesForCurrentUser } from '../api/battles'
+import * as battlesAPI from '../api/battles'
 
 export default withAll(
-  class extends PureComponent {
+  class extends Component {
     state = {
       battles: [],
       current: null,
@@ -14,30 +13,13 @@ export default withAll(
     }
 
     async componentWillMount () {
-      const battles = await getAvailablesForCurrentUser()
+      const battles = await battlesAPI.getAvailablesForCurrentUser()
       const current = battles[0]
       if (current) {
-        const [photo1, photo2] = await this.downloadPhotos(current)
+        const [photo1, photo2] = await battlesAPI.downloadPhotos(current)
         Object.assign(current, { photo1, photo2 })
       }
-      this.setState({
-        battles,
-        current,
-        loading: false
-      })
-    }
-
-    async downloadPhotos (battle) {
-      const [url1, url2] = await Promise.all([
-        storage()
-          .ref(battle.photo1Path)
-          .getDownloadURL(),
-        storage()
-          .ref(battle.photo2Path)
-          .getDownloadURL()
-      ])
-      const [res1, res2] = await Promise.all([fetch(url1), fetch(url2)])
-      return await Promise.all([res1.text(), res2.text()])
+      this.setState({ battles, current, loading: false })
     }
 
     render () {
@@ -47,11 +29,11 @@ export default withAll(
         return <LinearProgress color='secondary' />
       }
       if (!current) {
-        return <p>No battle found.</p>
+        return <p className={classes.spaced}>No battle found.</p>
       }
       console.log(current)
       return (
-        <Grid container className={classes.root}>
+        <Grid container className={classes.spaced}>
           <Grid item xs={6}>
             <img
               src={`data:${current.file1.type};base64,${current.photo1}`}

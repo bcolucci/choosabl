@@ -3,7 +3,7 @@ import { BrowserRouter, Route } from 'react-router-dom'
 import { auth } from 'firebase'
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
 import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { withStyles, withIntl } from './utils/combinedWith'
 import Header from './components/Header'
@@ -14,8 +14,7 @@ import Battles from './screens/Battles'
 import Profile from './screens/Profile'
 import { createCurrentProfile } from './api/profiles'
 
-import 'react-image-crop/dist/ReactCrop.css'
-import './styles/App.css'
+import './App.css'
 
 export default withStyles(
   withIntl(
@@ -44,13 +43,7 @@ export default withStyles(
       render () {
         const { user, loading } = this.state
         if (loading) {
-          return (
-            <div id='loading'>
-              <img alt='loading app...' src='/logo254.png' />
-              <br />
-              <CircularProgress style={{ color: 'white' }} />
-            </div>
-          )
+          return <LinearProgress color='primary' />
         }
         return (
           <MuiPickersUtilsProvider utils={DateFnsUtils}>

@@ -20,7 +20,6 @@
     "postpackage:functions": "cd ../functions && npm install --only=production"
   },
   "dependencies": {
-    "@google-cloud/vision": "^0.21.0",
     "body-parser": "^1.18.3",
     "casual": "^1.5.19",
     "cors": "^2.8.4",

@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-// import Divider from '@material-ui/core/Divider'
-// import Typography from '@material-ui/core/Typography'
 import BattleCard from '../../components/BattleCard'
 import withAll from '../../utils/combinedWith'
-import { deleteOne } from '../../api/battles'
+import PhotoPreviewDialog from '../../components/PhotoPreviewDialog'
+import * as battlesAPI from '../../api/battles'
 
 export default withAll(
   class extends Component {
@@ -15,24 +14,24 @@ export default withAll(
     }
 
     state = {
+      preview: null,
       deleted: []
     }
 
     handleDeleteBattle = async battle => {
-      deleteOne(battle)
+      battlesAPI.deleteOne(battle)
       this.props.moveBattle(battle, true)
       this.setState({ deleted: [...this.state.deleted, battle.id] })
     }
 
+    handlePreview = (file, base64) =>
+      this.setState({ preview: { file, base64 } })
+
     render () {
-      const { deleted } = this.state
-      const { t, active, battles, moveBattle } = this.props
+      const { preview, deleted } = this.state
+      const { active, battles, moveBattle } = this.props
       return (
-        <div className='with-padding'>
-          {/* <Typography variant='headline'>
-            {t(`battles:${active ? 'active' : 'draft'}Battles`)}
-          </Typography>
-          <Divider /> */}
+        <section>
           {battles
             .filter(battle => !deleted.includes(battle.id))
             .map((battle, idx) => (
@@ -42,9 +41,18 @@ export default withAll(
                 battle={battle}
                 moveBattle={moveBattle}
                 onDelete={this.handleDeleteBattle}
+                onPreview={this.handlePreview}
               />
             ))}
-        </div>
+          {preview && (
+            <PhotoPreviewDialog
+              open={!!preview}
+              file={preview.file}
+              base64={preview.base64}
+              onClose={() => this.setState({ preview: null })}
+            />
+          )}
+        </section>
       )
     }
   },

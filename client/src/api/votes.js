@@ -2,7 +2,8 @@ import { authFetch } from '.'
 
 export const getForBattle = async battleId => {
   const res = await authFetch(`votes/${battleId}`)
-  return await res.json()
+  const votes = await res.json()
+  return votes
 }
 
 export const voteForBattle = async (battleId, vote) => {

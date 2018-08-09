@@ -1,8 +1,16 @@
 import { authFetch } from '.'
+import cacheNS from '../cacheNS'
 
 export const getCurrent = async () => {
+  const cache = cacheNS('profiles:getCurrent')
+  const obj = cache.get()
+  if (obj) {
+    return obj
+  }
   const res = await authFetch('profiles/')
-  return await res.json()
+  const profile = await res.json()
+  cache.set(profile)
+  return profile
 }
 
 export const createCurrentProfile = async () => {
@@ -10,5 +18,6 @@ export const createCurrentProfile = async () => {
 }
 
 export const updateCurrent = async profile => {
-  await authFetch('profiles/', { method: 'PUT', body: profile })
+  await authFetch('profiles/', { method: 'PUT', body: { profile } })
+  cacheNS('profiles:getCurrent').set(profile)
 }

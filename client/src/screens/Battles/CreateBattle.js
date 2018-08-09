@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { auth, storage } from 'firebase'
 import Grid from '@material-ui/core/Grid'
-import Divider from '@material-ui/core/Divider'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
@@ -11,7 +10,6 @@ import Snackbar from '@material-ui/core/Snackbar'
 import SuccessIcon from '@material-ui/icons/Done'
 import ErrorIcon from '@material-ui/icons/ReportProblem'
 import FileInput from 'react-simple-file-input'
-import ReactCrop, { makeAspectCrop } from 'react-image-crop'
 import withAll from '../../utils/combinedWith'
 import * as battlesAPI from '../../api/battles'
 
@@ -29,40 +27,26 @@ const photoPath = (userUID, fileName) =>
 
 const isTypeImage = type => type.substr(0, 6) === 'image/'
 
-const photoHeight = 120
-const photoRatio = 2 / 3
-
-const cropOpts = () => ({
-  x: 0,
-  y: 0,
-  width: 200,
-  maxWidth: 200,
-  height: Math.floor(200 / photoRatio),
-  aspect: photoRatio
-})
-
 export default withAll(
   class extends Component {
     state = {
       name: '',
       battlesID: [],
       photo1: photoResetAttrs(),
-      crop1: cropOpts(),
       photo2: photoResetAttrs(),
-      crop2: cropOpts(),
       msg: null,
       loading: false,
       saving: false
     }
 
     showErr = contents => this.setState({ msg: { type: 'error', contents } })
+
     showSuccess = contents =>
       this.setState({ msg: { type: 'success', contents } })
 
     handleSave = async () => {
       const user = auth().currentUser
       const { name, photo1, photo2 } = this.state
-      const { crop1, crop2 } = this.state
       const trimName = name.trim()
       const file1 = photo1.file
       const file2 = photo2.file
@@ -94,19 +78,13 @@ export default withAll(
         return this.setState({ saving: false })
       }
       try {
-        await battlesAPI.createForCurrentUser(
-          {
-            name: trimName,
-            photo1Path,
-            photo2Path,
-            file1: fileInfo(file1),
-            file2: fileInfo(file2)
-          },
-          {
-            crop1,
-            crop2
-          }
-        )
+        await battlesAPI.createForCurrentUser({
+          name: trimName,
+          photo1Path,
+          photo2Path,
+          file1: fileInfo(file1),
+          file2: fileInfo(file2)
+        })
         this.showSuccess('Battle has been created in drafts.')
       } catch (err) {
         this.showErr(err.message)
@@ -140,15 +118,10 @@ export default withAll(
       })
     }
 
-    handlePhotoCrop = cropField => crop =>
-      this.setState({ [cropField]: { ...this.state[cropField], ...crop } })
-
     renderPhotoUploader = num => {
       const { classes } = this.props
       const field = `photo${num}`
-      const cropField = `crop${num}`
       const photo = this.state[field]
-      const crop = this.state[cropField]
       return (
         <Grid item xs={12} className={classes.spaced}>
           <Typography>Photo {num}</Typography>
@@ -159,24 +132,16 @@ export default withAll(
             }
             onProgress={this.handlePhotoUploadProgress(num)}
           />
-          <div style={{ marginTop: '5px' }}>
+          <div style={{ marginTop: '0.5em' }}>
             {photo.loading && this.renderProgressBar(photo.loading)}
-            {photo.base64 && (
-              <ReactCrop
-                crop={crop}
-                onImageLoaded={({ width, height }) =>
-                  this.setState({
-                    [cropField]: makeAspectCrop(
-                      this.state[cropField],
-                      width / height
-                    )
-                  })
-                }
-                onChange={this.handlePhotoCrop(cropField)}
-                style={{ width: '100%', height: photoHeight }}
-                src={`data:${photo.file.type};base64,${photo.base64}`}
-              />
-            )}
+            {photo.base64 &&
+              isTypeImage(photo.file.type) && (
+                <img
+                  alt='first choice'
+                  src={`data:${photo.file.type};base64,${photo.base64}`}
+                  style={{ height: 120 }}
+                />
+              )}
           </div>
         </Grid>
       )
@@ -212,10 +177,6 @@ export default withAll(
       }
       return (
         <div className='with-padding'>
-          <Typography variant='headline'>
-            {t('battles:createBattle')}
-          </Typography>
-          <Divider />
           {this.renderMsg()}
           <Grid container>
             <Grid item xs={12} className={classes.spaced}>
