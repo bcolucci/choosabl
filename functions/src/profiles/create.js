@@ -1,6 +1,6 @@
-import sillyname from 'sillyname'
+const sillyname = require('sillyname')
 
-export default async (req, res) => {
+module.exports = async (req, res) => {
   const { profilesRef } = res.locals
   const userUID = req.header('UserUID')
   const profileSnap = await profilesRef.doc(userUID).get()

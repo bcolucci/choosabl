@@ -1,4 +1,4 @@
-export default async (req, res) => {
+module.exports = async (req, res) => {
   const { battlesRef, profilesRef, votesRef } = res.locals
   const userUID = req.header('UserUID')
   const { battleUID } = req.params

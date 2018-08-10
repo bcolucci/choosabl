@@ -1,7 +1,7 @@
-import { storage } from 'firebase-admin'
+// import { storage } from 'firebase-admin'
 // import vision from '@google-cloud/vision'
 // import sharp from 'sharp'
-import uuid from 'uuid/v4'
+const uuid = require('uuid/v4')
 
 // const cropHints = async path => {
 //   const { storageBucket } = storage().app.options
@@ -27,7 +27,7 @@ import uuid from 'uuid/v4'
 //   await bucket.file(path).save(resized.toString('base64'))
 // }
 
-export default async (req, res) => {
+module.exports = async (req, res) => {
   const { battlesRef } = res.locals
   const userUID = req.header('UserUID')
   const id = uuid()

@@ -41,7 +41,7 @@ Open usefull links for development:
 
     git clone https://github.com/bcolucci/choosabl.git
     cd choosabl \
-      && cd api && npm install \
+      && cd functions && npm install \
       && cd ../client && npm install
 
 ## Install gsutil
@@ -69,9 +69,7 @@ Open usefull links for development:
 ## Run on local
 
     # starts the server side
-    cd api \
-      && npm run package:functions \
-      && sudo npm run serve
+    cd functions && sudo npm run serve
 
     # starts the client
     cd client && npm start

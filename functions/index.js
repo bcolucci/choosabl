@@ -1,0 +1,5 @@
+require('./init')
+const { https } = require('firebase-functions')
+module.exports.profiles = https.onRequest(require('./src/profiles'))
+module.exports.battles = https.onRequest(require('./src/battles'))
+module.exports.votes = https.onRequest(require('./src/votes'))

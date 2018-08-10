@@ -1,4 +1,4 @@
-export default async (req, res) => {
+module.exports = async (req, res) => {
   const { votesRef } = res.locals
   const { battleUID } = req.params
   const votes = []

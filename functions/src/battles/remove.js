@@ -1,6 +1,6 @@
-import { storage } from 'firebase-admin'
+const { storage } = require('firebase-admin')
 
-export default async (req, res) => {
+module.exports = async (req, res) => {
   const { db, battlesRef, votesRef } = res.locals
   const { battleUID } = req.params
   const { battle } = res.locals

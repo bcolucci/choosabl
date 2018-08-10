@@ -18,7 +18,7 @@ export default withAll(
       deleted: []
     }
 
-    handleDeleteBattle = async battle => {
+    handleDeleteBattle = battle => {
       battlesAPI.deleteOne(battle)
       this.props.moveBattle(battle, true)
       this.setState({ deleted: [...this.state.deleted, battle.id] })
