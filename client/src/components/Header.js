@@ -110,7 +110,8 @@ export default withAll(
 
     render () {
       const { user, classes, history } = this.props
-      const { lang, userMenuEl, langMenuEl, isSignInDiagOpened } = this.state
+      const { lang, userMenuEl, langMenuEl } = this.state
+      const { isSignInDiagOpened } = this.state
       const authenticated = !!user
       return (
         <header className={classes.root}>
@@ -171,10 +172,12 @@ export default withAll(
               </div>
             </Toolbar>
           </AppBar>
-          <SignInDialog
-            open={isSignInDiagOpened}
-            onClose={() => this.setState({ isSignInDiagOpened: false })}
-          />
+          {!authenticated && (
+            <SignInDialog
+              open={isSignInDiagOpened}
+              onClose={() => this.setState({ isSignInDiagOpened: false })}
+            />
+          )}
         </header>
       )
     }

@@ -14,12 +14,14 @@ const apiURL = (() => {
   }
 })()
 
-export const wakeUpAllAPI = () =>
-  Promise.all([
-    fetch(`${apiURL}/profiles/ping`),
-    fetch(`${apiURL}/battles/ping`),
-    fetch(`${apiURL}/votes/ping`)
+export const wakeUpAllAPI = () => {
+  const opts = { cache: 'no-cache' }
+  return Promise.all([
+    fetch(`${apiURL}/profiles/ping`, opts),
+    fetch(`${apiURL}/battles/ping`, opts),
+    fetch(`${apiURL}/votes/ping`, opts)
   ])
+}
 
 export const authFetch = async (uri, customs = {}) => {
   const { currentUser } = auth()

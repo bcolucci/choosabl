@@ -1,6 +1,6 @@
 import { storage } from 'firebase'
 import { authFetch } from '.'
-import cacheNS from '../cacheNS'
+import cacheNS from '../utils/cacheNS'
 
 const bufToB64 = b => new Buffer(b, 'binary').toString('base64')
 

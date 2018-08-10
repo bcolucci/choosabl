@@ -6,3 +6,11 @@ ul[role="menu"] a {
   text-decoration: none;
   color: inherit;
 }
+
+.snackbar-success>div {
+  background-color: #388E3C;
+}
+
+.snackbar-error>div {
+  background-color: #E64A19;
+}

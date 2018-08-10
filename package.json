@@ -4,7 +4,6 @@
   "author": "Brice Colucci <brice.colucci@gmail.com>",
   "homepage": "https://github.com/bcolucci/choosabl",
   "scripts": {
-    "build": "cd api && npm run package:functions && cd .. && cd client && npm run build",
     "deploy": "firebase deploy",
     "switch:prod": "firebase use default",
     "switch:test": "firebase use test"

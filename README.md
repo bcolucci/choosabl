@@ -76,7 +76,7 @@ Open usefull links for development:
 
 ## Build
 
-    npm run build
+    cd api && npm run build
 
 ## Deploy
 

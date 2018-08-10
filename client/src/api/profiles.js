@@ -1,5 +1,5 @@
 import { authFetch } from '.'
-import cacheNS from '../cacheNS'
+import cacheNS from '../utils/cacheNS'
 
 export const getCurrent = async () => {
   const cache = cacheNS('profiles:getCurrent')

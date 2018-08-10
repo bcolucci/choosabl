@@ -69,7 +69,7 @@ export default withAll(
                 className={classes.tab}
                 icon={
                   <Badge badgeContent={actives.length} color='default'>
-                    <VisibilityIcon />{' '}
+                    <VisibilityIcon />
                   </Badge>
                 }
               />
@@ -91,7 +91,7 @@ export default withAll(
               />
             </Tabs>
           </AppBar>
-          <div className='with-padding'>
+          <div className={classes.spaced}>
             {menu === 0 && (
               <ListBattles
                 active

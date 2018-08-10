@@ -6,9 +6,6 @@ import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import Snackbar from '@material-ui/core/Snackbar'
-import SuccessIcon from '@material-ui/icons/Done'
-import ErrorIcon from '@material-ui/icons/ReportProblem'
 import FileInput from 'react-simple-file-input'
 import withAll from '../../utils/combinedWith'
 import * as battlesAPI from '../../api/battles'
@@ -36,33 +33,28 @@ export default withAll(
       battlesID: [],
       photo1: photoResetAttrs(),
       photo2: photoResetAttrs(),
-      msg: null,
       loading: false,
       saving: false
     }
 
-    showErr = contents => this.setState({ msg: { type: 'error', contents } })
-
-    showSuccess = contents =>
-      this.setState({ msg: { type: 'success', contents } })
-
     handleSave = async () => {
       const user = auth().currentUser
+      const { showSuccess, showErr } = this.props
       const { name, photo1, photo2 } = this.state
       const trimName = name.trim()
       const file1 = photo1.file
       const file2 = photo2.file
       if (!trimName.length) {
-        return this.showErr('Name is required.')
+        return showErr('Name is required.')
       }
       if (!file1 || !file2) {
-        return this.showErr('Two photos are required.')
+        return showErr('Two photos are required.')
       }
       if (!isTypeImage(file1.type) || !isTypeImage(file2.type)) {
-        return this.showErr('Invalid image.')
+        return showErr('Invalid image.')
       }
       if (file1.size > maxPhotoSize || file2.size > maxPhotoSize) {
-        return this.showErr('Photos size should be <= 300kB')
+        return showErr('Photos size should be <= 300kB')
       }
       this.setState({ saving: true })
       const photo1Path = photoPath(user.uid, file1.name)
@@ -85,10 +77,10 @@ export default withAll(
           file1: fileInfo(file1),
           file2: fileInfo(file2)
         })
-        this.showSuccess('Battle has been created in drafts.')
+        showSuccess('Battle has been created in drafts.')
         setTimeout(() => window.location.replace('/battles/drafts'), 1500)
       } catch (err) {
-        this.showErr(err.message)
+        showErr(err.message)
       }
       this.setState({ saving: false })
     }
@@ -126,6 +118,7 @@ export default withAll(
         <Grid item xs={12} className={classes.spaced}>
           <Typography>Photo {num}</Typography>
           <FileInput
+            required
             readAs='buffer'
             onChange={file =>
               this.setState({ [field]: { ...photoResetAttrs(), file } })
@@ -147,28 +140,6 @@ export default withAll(
       )
     }
 
-    renderMsg = () => {
-      const { t } = this.props
-      const { msg } = this.state
-      if (!msg) {
-        return null
-      }
-      return (
-        <Snackbar
-          open
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          onClose={() => this.setState({ msg: null })}
-          ContentProps={{ 'aria-describedby': 'message-id' }}
-          message={
-            <p id='message-id'>
-              {msg.type === 'success' ? <SuccessIcon /> : <ErrorIcon />}
-              {t(`battles:${msg.contents}`)}
-            </p>
-          }
-        />
-      )
-    }
-
     render () {
       const { t, classes } = this.props
       const { name, saving, loading } = this.state
@@ -176,11 +147,13 @@ export default withAll(
         return <LinearProgress color='secondary' />
       }
       return (
-        <div className='with-padding'>
-          {this.renderMsg()}
+        <div className={classes.spaced}>
           <Grid container>
             <Grid item xs={12} className={classes.spaced}>
               <TextField
+                autoFocus
+                fullWidth
+                required
                 label={t('battles:name')}
                 value={name}
                 onChange={({ target }) => this.setState({ name: target.value })}
