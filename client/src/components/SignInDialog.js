@@ -41,7 +41,8 @@ class SignInDialog extends Component {
     fullScreen: false,
     email: '',
     password: '',
-    saving: false
+    saving: false,
+    focusEmail: false
   }
 
   constructor (props) {
@@ -119,11 +120,17 @@ class SignInDialog extends Component {
   renderSignInWithEmail () {
     const { classes } = this.props
     const { email, password } = this.state
-    const { tab, saving } = this.state
+    const { tab, focusEmail, saving } = this.state
     const handleClose = () =>
-      this.setState({ panel: 'SignIn', tab: 'signIn', fullScreen: false })
-    setImmediate(() =>
-      window.document.querySelector('input[type=email]').focus()
+      this.setState({
+        panel: 'SignIn',
+        tab: 'signIn',
+        focusEmail: true,
+        fullScreen: false
+      })
+    setImmediate(
+      () =>
+        focusEmail && window.document.querySelector('input[type=email]').focus()
     )
     return (
       <div>
@@ -166,7 +173,7 @@ class SignInDialog extends Component {
                   type='email'
                   value={email}
                   onChange={({ target }) =>
-                    this.setState({ email: target.value })
+                    this.setState({ email: target.value, focusEmail: false })
                   }
                 />
               </Grid>
@@ -180,7 +187,10 @@ class SignInDialog extends Component {
                     type='password'
                     value={password}
                     onChange={({ target }) =>
-                      this.setState({ password: target.value })
+                      this.setState({
+                        password: target.value,
+                        focusEmail: false
+                      })
                     }
                   />
                 </Grid>
