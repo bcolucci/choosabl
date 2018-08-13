@@ -7,7 +7,7 @@ export default () => WrappedComponent => {
       msg: null
     }
 
-    showErr (message) {
+    showError (message) {
       this.setState({ msg: { type: 'error', message } })
     }
 
@@ -26,11 +26,13 @@ export default () => WrappedComponent => {
         <div>
           <WrappedComponent
             {...this.props}
-            showErr={this.showErr.bind(this)}
+            showError={this.showError.bind(this)}
             showSuccess={this.showSuccess.bind(this)}
             closeMsg={onClose}
           />
-          {msg && <MsgSnackbar {...this.props} {...msg} onClose={onClose} />}
+          {msg && (
+            <MsgSnackbar {...this.props} {...msg} open onClose={onClose} />
+          )}
         </div>
       )
     }

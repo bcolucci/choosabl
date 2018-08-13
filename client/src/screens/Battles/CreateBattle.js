@@ -39,22 +39,22 @@ class CreateBattle extends Component {
 
   handleSave = async () => {
     const user = auth().currentUser
-    const { showSuccess, showErr } = this.props
+    const { showSuccess, showError } = this.props
     const { name, photo1, photo2 } = this.state
     const trimName = name.trim()
     const file1 = photo1.file
     const file2 = photo2.file
     if (!trimName.length) {
-      return showErr('Name is required.')
+      return showError('Name is required.')
     }
     if (!file1 || !file2) {
-      return showErr('Two photos are required.')
+      return showError('Two photos are required.')
     }
     if (!isTypeImage(file1.type) || !isTypeImage(file2.type)) {
-      return showErr('Invalid image.')
+      return showError('Invalid image.')
     }
     if (file1.size > maxPhotoSize || file2.size > maxPhotoSize) {
-      return showErr('Photos size should be <= 300kB')
+      return showError('Photos size should be <= 300kB')
     }
     this.setState({ saving: true })
     const photo1Path = photoPath(user.uid, file1.name)
@@ -80,7 +80,7 @@ class CreateBattle extends Component {
       showSuccess('Battle has been created in drafts.')
       setTimeout(() => window.location.replace('/battles/drafts'), 1500)
     } catch (err) {
-      showErr(err.message)
+      showError(err.message)
     }
     this.setState({ saving: false })
   }

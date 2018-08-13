@@ -64,22 +64,37 @@ class App extends Component {
                 <Route
                   exact
                   path='/battles/actives'
-                  render={props => <Battles {...props} user={user} menu={0} />}
+                  render={props => (
+                    <Battles {...props} user={user} tab='actives' />
+                  )}
                 />
                 <Route
                   exact
                   path='/battles/drafts'
-                  render={props => <Battles {...props} user={user} menu={1} />}
+                  render={props => (
+                    <Battles {...props} user={user} tab='drafts' />
+                  )}
                 />
                 <Route
                   exact
                   path='/battles/create'
-                  render={props => <Battles {...props} user={user} menu={2} />}
+                  render={props => (
+                    <Battles {...props} user={user} tab='create' />
+                  )}
                 />
                 <Route
                   exact
                   path='/profile'
-                  render={props => <Profile {...props} user={user} />}
+                  render={props => (
+                    <Profile {...props} user={user} tab='profile' />
+                  )}
+                />
+                <Route
+                  exact
+                  path='/profile/password'
+                  render={props => (
+                    <Profile {...props} user={user} tab='updatePassword' />
+                  )}
                 />
               </ProtectedRoutes>
               <Route exact path='/' component={Home} />

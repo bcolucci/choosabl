@@ -15,23 +15,18 @@ import * as battlesAPI from '../api/battles'
 
 class Battles extends Component {
   static propTypes = {
-    menu: PropTypes.number
+    tab: PropTypes.string
   }
 
   static defaultProps = {
-    menu: 0
+    tab: 'actives'
   }
 
   state = {
-    menu: 0,
+    menu: null,
     actives: [],
     drafts: [],
     loading: true
-  }
-
-  constructor (props) {
-    super(props)
-    this.state.menu = props.menu
   }
 
   async componentWillMount () {
@@ -53,15 +48,16 @@ class Battles extends Component {
 
   render () {
     const { t, classes } = this.props
-    const { menu, loading, actives, drafts } = this.state
+    const { loading, actives, drafts } = this.state
     if (loading) {
       return <LinearProgress color='secondary' />
     }
+    const { tab } = this.props
     const moveBattle = this.moveBattle.bind(this)
     return (
       <div>
         <AppBar position='static' color='default'>
-          <Tabs fullWidth value={menu}>
+          <Tabs fullWidth value={['actives', 'drafts', 'create'].indexOf(tab)}>
             <Tab
               label={t('battles:Actives')}
               href='/battles/actives'
@@ -91,21 +87,21 @@ class Battles extends Component {
           </Tabs>
         </AppBar>
         <div className={classes.spaced}>
-          {menu === 0 && (
+          {tab === 'drafts' && (
             <ListBattles
               active
               battles={actives}
               moveBattle={moveBattle('drafts')}
             />
           )}
-          {menu === 1 && (
+          {tab === 'actives' && (
             <ListBattles
               active={false}
               battles={drafts}
               moveBattle={moveBattle('actives')}
             />
           )}
-          {menu === 2 && <CreateBattle />}
+          {tab === 'create' && <CreateBattle />}
         </div>
       </div>
     )

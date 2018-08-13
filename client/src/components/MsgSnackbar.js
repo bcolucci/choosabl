@@ -4,16 +4,34 @@ import Snackbar from '@material-ui/core/Snackbar'
 
 class MsgSnackbar extends Component {
   static propTypes = {
+    open: PropTypes.bool,
     type: PropTypes.string,
     message: PropTypes.string,
-    onClose: PropTypes.func.isRequired
+    onClose: PropTypes.func.isRequired,
+    timeout: PropTypes.number
+  }
+
+  static defaultProps = {
+    timeout: 4000
+  }
+
+  state = {
+    open: true
+  }
+
+  componentWillReceiveProps ({ open }) {
+    this.setState({ open })
   }
 
   render () {
-    const { type, message, onClose } = this.props
+    const { open } = this.state
+    const { type, message, onClose, timeout } = this.props
+    if (timeout && timeout > 0) {
+      setTimeout(() => this.setState({ open: false }), timeout)
+    }
     return (
       <Snackbar
-        open
+        open={open}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         onClose={onClose}
         ContentProps={{ 'aria-describedby': 'message-id' }}

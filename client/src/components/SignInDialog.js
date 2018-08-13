@@ -55,14 +55,14 @@ class SignInDialog extends Component {
     try {
       await auth().signInWithRedirect(provider)
     } catch (err) {
-      this.props.showErr(err.message)
+      this.props.showError(err.message)
       this.setState({ saving: false })
     }
   }
 
   handleSignIn = async () => {
     this.setState({ saving: true })
-    const { showSuccess, showErr } = this.props
+    const { showSuccess, showError } = this.props
     const { tab, email, password } = this.state
     try {
       switch (tab) {
@@ -74,7 +74,6 @@ class SignInDialog extends Component {
             password
           )
           await user.sendEmailVerification()
-          showSuccess('Account created! Please check your emails.')
           break
         case 'forgot':
           await auth().sendPasswordResetEmail(email)
@@ -85,7 +84,7 @@ class SignInDialog extends Component {
           throw unexpectedTabErr
       }
     } catch (err) {
-      showErr(err.message)
+      showError(err.message)
     }
     this.setState({ saving: false })
   }
