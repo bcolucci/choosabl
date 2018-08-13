@@ -7,10 +7,10 @@ ul[role="menu"] a {
   color: inherit;
 }
 
-.snackbar-success>div {
-  background-color: #388E3C;
+.errorBg, .errorBg>div {
+  background-color: #E64A19 !important
 }
 
-.snackbar-error>div {
-  background-color: #E64A19;
+.successBg, .successBg>div {
+  background-color: #388E3C !important
 }

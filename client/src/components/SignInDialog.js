@@ -12,6 +12,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContentText from '@material-ui/core/DialogContentText'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
@@ -19,105 +20,154 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
 import { SocialIcon } from 'react-social-icons'
-import withAll from '../utils/combinedWith'
+import withAll from '../utils/with'
 
-export default withAll(
-  class extends Component {
-    static propTypes = {
-      open: PropTypes.bool,
-      panel: PropTypes.string,
-      onClose: PropTypes.func
+const unexpectedTabErr = new Error('Unexpected tab.')
+
+class SignInDialog extends Component {
+  static propTypes = {
+    open: PropTypes.bool,
+    panel: PropTypes.string,
+    onClose: PropTypes.func
+  }
+
+  static defaultProps = {
+    panel: 'SignIn'
+  }
+
+  state = {
+    panel: null,
+    tab: 'signIn',
+    fullScreen: false,
+    email: '',
+    password: '',
+    saving: false
+  }
+
+  constructor (props) {
+    super(props)
+    this.state.panel = props.panel
+  }
+
+  handleSignInWithProvider = async provider => {
+    try {
+      await auth().signInWithPopup(provider)
+      window.location.replace('/')
+    } catch (err) {
+      window.alert(err.message)
     }
+  }
 
-    static defaultProps = {
-      panel: 'SignIn'
-    }
-
-    state = {
-      panel: null,
-      signUp: false,
-      fullScreen: false,
-      email: '',
-      password: ''
-    }
-
-    constructor (props) {
-      super(props)
-      this.state.panel = props.panel
-    }
-
-    handleSignInWithProvider = async provider => {
-      try {
-        await auth().signInWithPopup(provider)
-        window.location.replace('/')
-      } catch (err) {
-        window.alert(err.message)
+  handleSignIn = async () => {
+    this.setState({ saving: true })
+    const { showSuccess, showErr } = this.props
+    const { tab, email, password } = this.state
+    try {
+      switch (tab) {
+        case 'signIn':
+          return await auth().signInWithEmailAndPassword(email, password)
+        case 'signUp':
+          await auth().createUserWithEmailAndPassword(email, password)
+          showSuccess('Account created! Please check your emails.')
+          setTimeout(async () => {
+            const { user } = await auth().signInWithEmailAndPassword(
+              email,
+              password
+            )
+            await user.sendEmailVerification()
+          }, 3000)
+          break
+        case 'forgot':
+          await auth().sendPasswordResetEmail(email)
+          showSuccess('Recovering email sent!')
+          this.setState({ tab: 'signIn' })
+          break
+        default:
+          throw unexpectedTabErr
       }
+    } catch (err) {
+      showErr(err.message)
     }
+    this.setState({ saving: false })
+  }
 
-    handleSignIn = async () => {
-      const { showSuccess, showErr } = this.props
-      const { email, password } = this.state
-      try {
-        await auth().signInWithEmailAndPassword(email, password)
-      } catch (err) {
-        return showErr(err.message)
-      }
-      showSuccess('OKAY')
+  handleForgetMyPassword = async () => {}
+
+  contextMessage () {
+    const { tab } = this.state
+    switch (tab) {
+      case 'signIn':
+        return <span>Sign In with your existing account.</span>
+      case 'signUp':
+        return (
+          <span>
+            Create an account with your email address. You'll receive a
+            confirmation email.
+          </span>
+        )
+      case 'forgot':
+        return (
+          <span>
+            Enter your email in order for use to send you a recovering email.
+          </span>
+        )
+      default:
+        throw unexpectedTabErr
     }
+  }
 
-    renderSignInWithEmail () {
-      const { t, classes } = this.props
-      const { signUp, email, password } = this.state
-      const handleClose = () =>
-        this.setState({
-          panel: 'SignIn',
-          signUp: false,
-          fullScreen: false
-        })
-      return (
-        <div>
-          <AppBar style={{ position: 'relative' }}>
-            <Toolbar>
-              <IconButton color='inherit' onClick={handleClose}>
-                <CloseIcon />
-              </IconButton>
-              <Typography
-                variant='title'
-                color='inherit'
-                className={classes.flex}
-              >
-                Sign {signUp ? 'Up' : 'In'}
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          <div className={classes.spaced}>
-            <DialogContent>
-              <DialogContentText>
-                {!signUp ? (
-                  <span>Sign In with your existing account.</span>
-                ) : (
-                  <span>
-                    Create an account with your email address. You'll receive a
-                    confirmation email.
-                  </span>
-                )}
-              </DialogContentText>
-              <br />
-              <Grid container>
-                <Grid item xs={12} className={classes.spaced}>
-                  <TextField
-                    autoFocus
-                    fullWidth
-                    required
-                    label='Email Address'
-                    type='email'
-                    value={email}
-                    onChange={({ target }) =>
-                      this.setState({ email: target.value })
-                    }
-                  />
-                </Grid>
+  renderSignInWithEmail () {
+    const { classes } = this.props
+    const { email, password } = this.state
+    const { tab, saving } = this.state
+    const handleClose = () =>
+      this.setState({ panel: 'SignIn', tab: 'signIn', fullScreen: false })
+    return (
+      <div>
+        <AppBar style={{ position: 'relative' }}>
+          <Toolbar>
+            <IconButton color='inherit' onClick={handleClose}>
+              <CloseIcon />
+            </IconButton>
+            <Typography
+              variant='title'
+              color='inherit'
+              className={classes.flex}
+            >
+              {(() => {
+                switch (tab) {
+                  case 'signIn':
+                    return 'Sign In'
+                  case 'signUp':
+                    return 'Sign Up'
+                  case 'forgot':
+                    return 'Recover password'
+                  default:
+                    throw unexpectedTabErr
+                }
+              })()}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <div className={classes.spaced}>
+          <DialogContent>
+            <DialogContentText>{this.contextMessage()}</DialogContentText>
+            <br />
+            <Grid container>
+              <Grid item xs={12} className={classes.spaced}>
+                <TextField
+                  autoFocus
+                  fullWidth
+                  required
+                  label='Email Address'
+                  type='email'
+                  value={email}
+                  onChange={({ target }) =>
+                    this.setState({ email: target.value })
+                  }
+                />
+              </Grid>
+              {tab !== 'forgot' && (
                 <Grid item xs={12} className={classes.spaced}>
                   <TextField
                     fullWidth
@@ -131,117 +181,141 @@ export default withAll(
                     }
                   />
                 </Grid>
-              </Grid>
-            </DialogContent>
-            <DialogActions style={{ justifyContent: 'center' }}>
+              )}
+            </Grid>
+          </DialogContent>
+          <DialogActions style={{ justifyContent: 'center' }}>
+            {saving ? (
+              <CircularProgress />
+            ) : (
               <Button
                 onClick={this.handleSignIn}
                 color='primary'
                 variant='contained'
               >
-                Sign {signUp ? 'Up' : 'In'}
+                {(() => {
+                  switch (tab) {
+                    case 'signIn':
+                      return 'Sign In'
+                    case 'signUp':
+                      return 'Create account'
+                    case 'forgot':
+                      return 'Send email'
+                    default:
+                      throw unexpectedTabErr
+                  }
+                })()}
               </Button>
-              <Button onClick={handleClose} color='primary'>
-                Cancel
-              </Button>
-            </DialogActions>
-            {!signUp && (
-              <div style={{ marginTop: '1.5em', textAlign: 'center' }}>
-                <Button
-                  onClick={() => this.setState({ signUp: true })}
-                  color='primary'
-                >
-                  No account ? Create one now!
-                </Button>
-              </div>
             )}
-          </div>
-        </div>
-      )
-    }
-
-    renderSignIn () {
-      const { t, classes } = this.props
-      return (
-        <div>
-          <DialogTitle>Sign In</DialogTitle>
-          <DialogContent>
-            <div>
-              <p style={{ textAlign: 'center' }}>
-                <Button
-                  color='primary'
-                  onClick={() =>
-                    this.setState({
-                      panel: 'SignInWithEmail',
-                      fullScreen: true
-                    })
-                  }
-                >
-                  {t('sign-in-with-provider', {
-                    provider: 'email'
-                  })}
-                </Button>
-              </p>
-              <List>
-                <ListItem
-                  button
-                  dense
-                  onClick={() =>
-                    this.handleSignInWithProvider(new auth.GoogleAuthProvider())
-                  }
-                >
-                  <ListItemAvatar className={classes.socialIcon}>
-                    <SocialIcon url='https://google.com' />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={t('sign-in-with-provider', {
-                      provider: 'Google'
-                    })}
-                  />
-                </ListItem>
-                <ListItem
-                  button
-                  dense
-                  onClick={() =>
-                    this.handleSignInWithProvider(
-                      new auth.FacebookAuthProvider()
-                    )
-                  }
-                >
-                  <ListItemAvatar className={classes.socialIcon}>
-                    <SocialIcon url='https://facebook.com' />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={t('sign-in-with-provider', {
-                      provider: 'Facebook'
-                    })}
-                  />
-                </ListItem>
-              </List>
+            <Button onClick={handleClose} color='primary'>
+              Cancel
+            </Button>
+          </DialogActions>
+          {tab === 'signIn' && (
+            <div style={{ marginTop: '1.5em', textAlign: 'center' }}>
+              <Button
+                onClick={() => this.setState({ tab: 'forgot' })}
+                color='primary'
+              >
+                Forgot password?
+              </Button>
+              <Button
+                onClick={() => this.setState({ tab: 'signUp' })}
+                color='primary'
+              >
+                No account ? Create one now!
+              </Button>
             </div>
-          </DialogContent>
+          )}
         </div>
-      )
-    }
+      </div>
+    )
+  }
 
-    render () {
-      const { open, onClose } = this.props
-      const { panel, fullScreen } = this.state
-      return (
-        <Dialog
-          open={open}
-          fullScreen={fullScreen}
-          onClose={() => {
-            this.setState({ panel: 'SignIn', fullScreen: false })
-            onClose()
-          }}
-        >
-          {this[`render${panel}`]()}
-        </Dialog>
-      )
-    }
-  },
-  {
+  renderSignIn () {
+    const { t, classes } = this.props
+    return (
+      <div>
+        <DialogTitle>Sign In</DialogTitle>
+        <DialogContent>
+          <div>
+            <p style={{ textAlign: 'center' }}>
+              <Button
+                color='primary'
+                onClick={() =>
+                  this.setState({
+                    panel: 'SignInWithEmail',
+                    fullScreen: true
+                  })
+                }
+              >
+                {t('sign-in-with-provider', {
+                  provider: 'email'
+                })}
+              </Button>
+            </p>
+            <List>
+              <ListItem
+                button
+                dense
+                onClick={() =>
+                  this.handleSignInWithProvider(new auth.GoogleAuthProvider())
+                }
+              >
+                <ListItemAvatar className={classes.socialIcon}>
+                  <SocialIcon url='https://google.com' />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={t('sign-in-with-provider', {
+                    provider: 'Google'
+                  })}
+                />
+              </ListItem>
+              <ListItem
+                button
+                dense
+                onClick={() =>
+                  this.handleSignInWithProvider(new auth.FacebookAuthProvider())
+                }
+              >
+                <ListItemAvatar className={classes.socialIcon}>
+                  <SocialIcon url='https://facebook.com' />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={t('sign-in-with-provider', {
+                    provider: 'Facebook'
+                  })}
+                />
+              </ListItem>
+            </List>
+          </div>
+        </DialogContent>
+      </div>
+    )
+  }
+
+  render () {
+    const { open, onClose } = this.props
+    const { panel, fullScreen } = this.state
+    return (
+      <Dialog
+        open={open}
+        fullScreen={fullScreen}
+        onClose={() => {
+          this.setState({ panel: 'SignIn', fullScreen: false })
+          onClose()
+        }}
+      >
+        {this[`render${panel}`]()}
+      </Dialog>
+    )
+  }
+}
+
+export default withAll(SignInDialog, {
+  withIntl: true,
+  withMsgSnack: true,
+  withStyles: {
     styles: theme => ({
       socialIcon: {
         width: '32px !important',
@@ -249,4 +323,4 @@ export default withAll(
       }
     })
   }
-)
+})

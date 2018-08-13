@@ -13,7 +13,7 @@ const remove = require('./battles/remove')
 const isUserBattle = require('./battles/isUserBattleHandler')
 
 const app = express()
-const auth = createFirebaseAuth({ firebase })
+const auth = createFirebaseAuth({ firebase, checkEmailVerified: true })
 
 app.use(cors({ origin: true }))
 app.use(bodyParser.json())

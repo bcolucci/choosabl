@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Snackbar from '@material-ui/core/Snackbar'
+import withStyles from '../utils/with/withStyles'
 
-export default class extends Component {
+class MsgSnackbar extends Component {
   static propTypes = {
     type: PropTypes.string,
     message: PropTypes.string,
@@ -10,16 +11,18 @@ export default class extends Component {
   }
 
   render () {
-    const { t, type, message, onClose } = this.props
+    const { classes, type, message, onClose } = this.props
     return (
       <Snackbar
         open
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         onClose={onClose}
         ContentProps={{ 'aria-describedby': 'message-id' }}
-        className={`snackbar-${type}`}
-        message={<p id='message-id'>{t(message)}</p>}
+        className={`${type}Bg`}
+        message={<p id='message-id'>{message}</p>}
       />
     )
   }
 }
+
+export default withStyles()(MsgSnackbar)

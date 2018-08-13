@@ -9,7 +9,7 @@ const create = require('./votes/create')
 const idreg = require('./utils/idreg')
 
 const app = express()
-const auth = createFirebaseAuth({ firebase })
+const auth = createFirebaseAuth({ firebase, checkEmailVerified: true })
 
 app.use(cors({ origin: true }))
 app.use(bodyParser.json())
