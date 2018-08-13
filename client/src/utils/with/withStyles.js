@@ -17,6 +17,9 @@ const defaultOpts = theme => ({
   errorBg: {
     backgroundColor: '#E64A19'
   },
+  warningBg: {
+    backgroundColor: '#FBC02D'
+  },
   successBg: {
     backgroundColor: '#388E3C'
   }

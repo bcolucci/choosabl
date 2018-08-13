@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Snackbar from '@material-ui/core/Snackbar'
-import withStyles from '../utils/with/withStyles'
 
 class MsgSnackbar extends Component {
   static propTypes = {
@@ -11,7 +10,7 @@ class MsgSnackbar extends Component {
   }
 
   render () {
-    const { classes, type, message, onClose } = this.props
+    const { type, message, onClose } = this.props
     return (
       <Snackbar
         open
@@ -25,4 +24,4 @@ class MsgSnackbar extends Component {
   }
 }
 
-export default withStyles()(MsgSnackbar)
+export default MsgSnackbar

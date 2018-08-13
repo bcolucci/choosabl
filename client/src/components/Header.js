@@ -117,7 +117,11 @@ class Header extends Component {
         <AppBar position='static'>
           <Toolbar>
             <p className={classes.title}>
-              <img src='/logo-bar.png' onClick={() => history.push('/')} />
+              <img
+                src='/logo-bar.png'
+                alt='Choosabl header logo'
+                onClick={() => history.push('/')}
+              />
             </p>
             {!authenticated && (
               <Button

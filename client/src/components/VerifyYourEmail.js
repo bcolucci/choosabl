@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import classnames from 'classnames'
 import Typography from '@material-ui/core/Typography'
+import WarningIcon from '@material-ui/icons/Warning'
 import withAll from '../utils/with'
 
 class VerifyYourEmail extends PureComponent {
@@ -10,12 +11,13 @@ class VerifyYourEmail extends PureComponent {
       <Typography
         className={classnames([
           classes.spaced,
-          classes.errorBg,
+          classes.warningBg,
           classes.veryEmail
         ])}
       >
-        Your email has not been verified yet. In order to be able to fully enjoy
-        this application, you need to veriy it. Please check your emails.
+        <WarningIcon /> Your email has not been verified yet. In order to be
+        able to fully enjoy this application, you need to veriy it. Please check
+        your emails.
       </Typography>
     )
   }
@@ -26,7 +28,7 @@ export default withAll(VerifyYourEmail, {
     styles: theme => ({
       veryEmail: {
         padding: '0.5em',
-        color: '#fff'
+        fontWeight: 'bold'
       }
     })
   }

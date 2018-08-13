@@ -51,11 +51,12 @@ class SignInDialog extends Component {
   }
 
   handleSignInWithProvider = async provider => {
+    this.setState({ saving: true })
     try {
-      await auth().signInWithPopup(provider)
-      window.location.replace('/')
+      await auth().signInWithRedirect(provider)
     } catch (err) {
-      window.alert(err.message)
+      this.props.showErr(err.message)
+      this.setState({ saving: false })
     }
   }
 
@@ -68,15 +69,12 @@ class SignInDialog extends Component {
         case 'signIn':
           return await auth().signInWithEmailAndPassword(email, password)
         case 'signUp':
-          await auth().createUserWithEmailAndPassword(email, password)
+          const { user } = await auth().createUserWithEmailAndPassword(
+            email,
+            password
+          )
+          await user.sendEmailVerification()
           showSuccess('Account created! Please check your emails.')
-          setTimeout(async () => {
-            const { user } = await auth().signInWithEmailAndPassword(
-              email,
-              password
-            )
-            await user.sendEmailVerification()
-          }, 3000)
           break
         case 'forgot':
           await auth().sendPasswordResetEmail(email)
@@ -247,61 +245,68 @@ class SignInDialog extends Component {
 
   renderSignIn () {
     const { t, classes } = this.props
+    const { saving } = this.state
     return (
       <div>
         <DialogTitle>Sign In</DialogTitle>
         <DialogContent>
-          <div>
-            <p style={{ textAlign: 'center' }}>
-              <Button
-                color='primary'
-                onClick={() =>
-                  this.setState({
-                    panel: 'SignInWithEmail',
-                    fullScreen: true
-                  })
-                }
-              >
-                {t('sign-in-with-provider', {
-                  provider: 'email'
-                })}
-              </Button>
-            </p>
-            <List>
-              <ListItem
-                button
-                dense
-                onClick={() =>
-                  this.handleSignInWithProvider(new auth.GoogleAuthProvider())
-                }
-              >
-                <ListItemAvatar className={classes.socialIcon}>
-                  <SocialIcon url='https://google.com' />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={t('sign-in-with-provider', {
-                    provider: 'Google'
+          {saving ? (
+            <CircularProgress />
+          ) : (
+            <div>
+              <p style={{ textAlign: 'center' }}>
+                <Button
+                  color='primary'
+                  onClick={() =>
+                    this.setState({
+                      panel: 'SignInWithEmail',
+                      fullScreen: true
+                    })
+                  }
+                >
+                  {t('sign-in-with-provider', {
+                    provider: 'email'
                   })}
-                />
-              </ListItem>
-              <ListItem
-                button
-                dense
-                onClick={() =>
-                  this.handleSignInWithProvider(new auth.FacebookAuthProvider())
-                }
-              >
-                <ListItemAvatar className={classes.socialIcon}>
-                  <SocialIcon url='https://facebook.com' />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={t('sign-in-with-provider', {
-                    provider: 'Facebook'
-                  })}
-                />
-              </ListItem>
-            </List>
-          </div>
+                </Button>
+              </p>
+              <List>
+                <ListItem
+                  button
+                  dense
+                  onClick={() =>
+                    this.handleSignInWithProvider(new auth.GoogleAuthProvider())
+                  }
+                >
+                  <ListItemAvatar className={classes.socialIcon}>
+                    <SocialIcon url='https://google.com' />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={t('sign-in-with-provider', {
+                      provider: 'Google'
+                    })}
+                  />
+                </ListItem>
+                <ListItem
+                  button
+                  dense
+                  onClick={() =>
+                    this.handleSignInWithProvider(
+                      new auth.FacebookAuthProvider()
+                    )
+                  }
+                >
+                  <ListItemAvatar className={classes.socialIcon}>
+                    <SocialIcon url='https://facebook.com' />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={t('sign-in-with-provider', {
+                      provider: 'Facebook'
+                    })}
+                  />
+                </ListItem>
+              </List>
+            </div>
+          )}
         </DialogContent>
       </div>
     )
