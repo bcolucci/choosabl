@@ -122,6 +122,9 @@ class SignInDialog extends Component {
     const { tab, saving } = this.state
     const handleClose = () =>
       this.setState({ panel: 'SignIn', tab: 'signIn', fullScreen: false })
+    setImmediate(() =>
+      window.document.querySelector('input[type=email]').focus()
+    )
     return (
       <div>
         <AppBar style={{ position: 'relative' }}>
