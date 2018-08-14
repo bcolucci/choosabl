@@ -1,3 +1,6 @@
 {
-  "profileSaved": "Votre profil a été enregistré !"
+  "profileSaved": "Votre profil a été enregistré !",
+  "currentPassword": "Mot de passe actuel",
+  "newPassword": "Nouveau mot de passe",
+  "newPassword2": "Vérification nouveau MDP"
 }

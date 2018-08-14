@@ -1,3 +1,6 @@
 {
-  "profileSaved": "Your profile has been saved!"
+  "profileSaved": "Your profile has been saved!",
+  "currentPassword": "Current password",
+  "newPassword": "New password",
+  "newPassword2": "New password check"
 }

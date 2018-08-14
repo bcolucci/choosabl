@@ -62,12 +62,13 @@ class SignInDialog extends Component {
 
   handleSignIn = async () => {
     this.setState({ saving: true })
-    const { showSuccess, showError } = this.props
+    const { history, showSuccess, showError } = this.props
     const { tab, email, password } = this.state
     try {
       switch (tab) {
         case 'signIn':
-          return await auth().signInWithEmailAndPassword(email, password)
+          await auth().signInWithEmailAndPassword(email, password)
+          return history.replace('/')
         case 'signUp':
           const { user } = await auth().createUserWithEmailAndPassword(
             email,
@@ -115,7 +116,7 @@ class SignInDialog extends Component {
   }
 
   renderSignInWithEmail () {
-    const { classes } = this.props
+    const { t, classes } = this.props
     const { email, password } = this.state
     const { tab, focusEmail, saving } = this.state
     const handleClose = () =>
@@ -218,7 +219,7 @@ class SignInDialog extends Component {
               </Button>
             )}
             <Button onClick={handleClose} color='primary'>
-              Cancel
+              {t('cancel')}
             </Button>
           </DialogActions>
           {tab === 'signIn' && (
@@ -331,6 +332,7 @@ class SignInDialog extends Component {
 
 export default withAll(SignInDialog, {
   withIntl: true,
+  withRouter: true,
   withMsgSnack: true,
   withStyles: {
     styles: theme => ({

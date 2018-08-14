@@ -79,7 +79,7 @@ class Battles extends Component {
               }
             />
             <Tab
-              label={t('Create')}
+              label={t('create')}
               href='/battles/create'
               className={classes.tab}
               icon={<AddIcon />}

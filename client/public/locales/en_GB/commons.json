@@ -15,5 +15,6 @@
   "other": "Other",
   "username": "Username",
   "save": "Save",
-  "Create": "Create"
+  "create": "Create",
+  "cancel": "Cancel"
 }

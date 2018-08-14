@@ -146,7 +146,7 @@ class Profile extends Component {
             autoFocus
             fullWidth
             required
-            label={t('currentPassword')}
+            label={t('profile:currentPassword')}
             value={password}
             type='password'
             onChange={this.handleChange('password')}
@@ -156,7 +156,7 @@ class Profile extends Component {
           <TextField
             fullWidth
             required
-            label={t('newPassword')}
+            label={t('profile:newPassword')}
             value={newPassword}
             type='password'
             onChange={this.handleChange('newPassword')}
@@ -166,7 +166,7 @@ class Profile extends Component {
           <TextField
             fullWidth
             required
-            label={t('newPassword2')}
+            label={t('profile:newPassword2')}
             value={newPassword2}
             type='password'
             onChange={this.handleChange('newPassword2')}
@@ -181,11 +181,11 @@ class Profile extends Component {
               color='primary'
               onClick={this.handleSave}
             >
-              Update
+              {t('save')}
             </Button>
           )}
           <Button color='primary' onClick={() => history.push('/profile')}>
-            Cancel
+            {t('cancel')}
           </Button>
         </Grid>
       </Grid>

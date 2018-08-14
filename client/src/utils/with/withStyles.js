@@ -12,7 +12,7 @@ const defaultOpts = theme => ({
     flexWrap: 'wrap'
   },
   spaced: {
-    margin: theme.spacing.unit * 2
+    margin: Math.floor(theme.spacing.unit * 1.5)
   },
   errorBg: {
     backgroundColor: '#E64A19'
