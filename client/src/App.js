@@ -25,10 +25,13 @@ class App extends Component {
   componentWillMount () {
     this.removeAuthListener = auth().onAuthStateChanged(async user => {
       if (user) {
+        this.lastUserId = user.uid
         if (!localStorage.getItem(user.uid)) {
           await createCurrentProfile()
           localStorage.setItem(user.uid, '1')
         }
+      } else {
+        localStorage.clear()
       }
       this.setState({ user, loading: false })
     })

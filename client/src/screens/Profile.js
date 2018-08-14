@@ -49,7 +49,7 @@ class Profile extends Component {
     this.setState({ saving: true })
     const { t, tab, history, showSuccess, showError } = this.props
     try {
-      if (tab == 'profile') {
+      if (tab === 'profile') {
         const { username, birthday, gender } = this.state
         profilesAPI.updateCurrent({ username, birthday, gender })
         this.props.showSuccess(t('profile:profileSaved'))
@@ -64,6 +64,7 @@ class Profile extends Component {
         } else {
           await currentUser.updatePassword(newPassword)
           showSuccess('Password updated!')
+          setTimeout(() => history.replace('/profile'), 3000)
         }
       } else {
         throw new Error('Unexpected tab.')

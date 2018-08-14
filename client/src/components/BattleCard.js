@@ -2,12 +2,15 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
+import Chip from '@material-ui/core/Chip'
+import Avatar from '@material-ui/core/Avatar'
+import PersoIcon from '@material-ui/icons/InsertEmoticon'
+import WorkIcon from '@material-ui/icons/Work'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
 import Typography from '@material-ui/core/Typography'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import Divider from '@material-ui/core/Divider'
 import DeleteIcon from '@material-ui/icons/DeleteOutline'
 import ToggleOnIcon from '@material-ui/icons/ToggleOn'
 import ToggleOffIcon from '@material-ui/icons/ToggleOff'
@@ -73,7 +76,7 @@ class BattleCard extends Component {
           <Button
             variant='outlined'
             color='secondary'
-            onClick={() => onDelete(battle)}
+            onClick={() => window.confirm('Are you sure?') && onDelete(battle)}
             style={{ marginLeft: 5 }}
           >
             <DeleteIcon />
@@ -90,10 +93,26 @@ class BattleCard extends Component {
     return (
       <Card className={classes.spaced}>
         <CardContent>
-          <Typography variant='headline' gutterBottom>
-            {battle.name}
-          </Typography>
-          <Divider />
+          <Grid container>
+            <Grid item xs={4}>
+              <Chip
+                avatar={
+                  <Avatar>{battle.isPro ? <WorkIcon /> : <PersoIcon />}</Avatar>
+                }
+                label={battle.isPro ? 'pro' : 'perso'}
+                color={battle.isPro ? 'secondary' : 'primary'}
+              />
+            </Grid>
+            <Grid item xs={8}>
+              <Typography
+                variant='headline'
+                style={{ fontSize: '0.9rem' }}
+                gutterBottom
+              >
+                {battle.name}
+              </Typography>
+            </Grid>
+          </Grid>
           {loading ? (
             <div style={{ textAlign: 'center' }}>
               <CircularProgress color='primary' style={{ margin: '50px 0' }} />

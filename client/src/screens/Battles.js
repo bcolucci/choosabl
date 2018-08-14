@@ -87,14 +87,14 @@ class Battles extends Component {
           </Tabs>
         </AppBar>
         <div className={classes.spaced}>
-          {tab === 'drafts' && (
+          {tab === 'actives' && (
             <ListBattles
               active
               battles={actives}
               moveBattle={moveBattle('drafts')}
             />
           )}
-          {tab === 'actives' && (
+          {tab === 'drafts' && (
             <ListBattles
               active={false}
               battles={drafts}

@@ -10,6 +10,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Button from '@material-ui/core/Button'
 import AccountIcon from '@material-ui/icons/AccountCircle'
 import ThumbsUpIcon from '@material-ui/icons/ThumbsUpDown'
+import SignInIcon from '@material-ui/icons/PermIdentity'
 import PhotoLibrary from '@material-ui/icons/PhotoLibrary'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import Divider from '@material-ui/core/Divider'
@@ -128,7 +129,7 @@ class Header extends Component {
                 color='inherit'
                 onClick={() => this.setState({ isSignInDiagOpened: true })}
               >
-                <AccountIcon />
+                <SignInIcon />
               </Button>
             )}
             {authenticated && (

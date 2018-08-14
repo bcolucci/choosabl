@@ -3,6 +3,7 @@ import { auth, storage } from 'firebase'
 import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+import Switch from '@material-ui/core/Switch'
 import Typography from '@material-ui/core/Typography'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -31,30 +32,53 @@ class CreateBattle extends Component {
   state = {
     name: '',
     battlesID: [],
+    isPro: false,
     photo1: photoResetAttrs(),
     photo2: photoResetAttrs(),
     loading: false,
     saving: false
   }
 
+  checkPhoto (file, num) {
+    const { t } = this.props
+    const err = (() => {
+      if (!file) {
+        return t('Photo #{{num}} is required.', { num: num + 1 })
+      }
+      if (!isTypeImage(file.type)) {
+        return t('Photo #{{num}} is not a valid image.', { num: num + 1 })
+      }
+      if (file.size > maxPhotoSize) {
+        return t('Photo #{{num}} size should be <= {{maxSize}}', {
+          num: num + 1,
+          maxSize: maxPhotoSize
+        })
+      }
+    })()
+    if (err) {
+      window.document.querySelectorAll('input[type=file]')[num].focus()
+      return err
+    }
+  }
+
   handleSave = async () => {
     const user = auth().currentUser
     const { showSuccess, showError } = this.props
-    const { name, photo1, photo2 } = this.state
+    const { name, isPro, photo1, photo2 } = this.state
     const trimName = name.trim()
     const file1 = photo1.file
     const file2 = photo2.file
     if (!trimName.length) {
+      window.document.querySelector('#name').focus()
       return showError('Name is required.')
     }
-    if (!file1 || !file2) {
-      return showError('Two photos are required.')
+    const file1Err = this.checkPhoto(file1, 0)
+    if (file1Err) {
+      return showError(file1Err)
     }
-    if (!isTypeImage(file1.type) || !isTypeImage(file2.type)) {
-      return showError('Invalid image.')
-    }
-    if (file1.size > maxPhotoSize || file2.size > maxPhotoSize) {
-      return showError('Photos size should be <= 300kB')
+    const file2Err = this.checkPhoto(file2, 1)
+    if (file2Err) {
+      return showError(file2Err)
     }
     this.setState({ saving: true })
     const photo1Path = photoPath(user.uid, file1.name)
@@ -72,6 +96,7 @@ class CreateBattle extends Component {
       ])
       await battlesAPI.createForCurrentUser({
         name: trimName,
+        isPro,
         photo1Path,
         photo2Path,
         file1: fileInfo(file1),
@@ -142,7 +167,8 @@ class CreateBattle extends Component {
 
   render () {
     const { t, classes } = this.props
-    const { name, saving, loading } = this.state
+    const { name, isPro } = this.state
+    const { saving, loading } = this.state
     if (loading) {
       return <LinearProgress color='secondary' />
     }
@@ -152,16 +178,33 @@ class CreateBattle extends Component {
         <Grid container>
           <Grid item xs={12} className={classes.spaced}>
             <TextField
+              id='name'
               autoFocus
               fullWidth
               required
               label={t('battles:name')}
               value={name}
-              onChange={({ target }) => this.setState({ name: target.value })}
+              onChange={({ target }) => {
+                const name = target.value
+                if (name.length < 40) {
+                  this.setState({ name })
+                }
+              }}
             />
           </Grid>
           {this.renderPhotoUploader(1)}
           {this.renderPhotoUploader(2)}
+          <Grid item xs={12} className={classes.spaced}>
+            <Switch
+              onChange={({ target }) =>
+                this.setState({ isPro: target.checked })
+              }
+              checked={isPro}
+            />
+            <Typography style={{ display: 'inline' }}>
+              Is Profesionnal?
+            </Typography>
+          </Grid>
           {!emailVerified ? (
             <VerifyYourEmail />
           ) : (

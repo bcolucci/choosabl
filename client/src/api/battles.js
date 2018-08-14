@@ -31,8 +31,9 @@ export const createForCurrentUser = async battle => {
 export const toggleBattleStatus = async battle => {
   await authFetch(`battles/${battle.id}/toggleStatus`, { method: 'PUT' })
   const cache = cacheNS('battles:getAllForCurrentUser')
+  const battles = cache.get([])
   cache.set(
-    cache.get().map(b => (b.id !== battle.id ? b : { ...b, active: !b.active }))
+    battles.map(b => (b.id !== battle.id ? b : { ...b, active: !b.active }))
   )
 }
 
