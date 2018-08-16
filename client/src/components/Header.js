@@ -69,7 +69,10 @@ class Header extends Component {
           <MenuItem onClick={this.handleCloseMenus}>
             <Link to='/profile'>{t('profile')}</Link>
           </MenuItem>
-          <MenuItem disabled>
+          <MenuItem onClick={this.handleCloseMenus}>
+            <Link to='/invite'>{t('invite')}</Link>
+          </MenuItem>
+          <MenuItem onClick={this.handleCloseMenus} disabled>
             <Link to='/plan'>{t('plan')}</Link>
           </MenuItem>
           <Divider />

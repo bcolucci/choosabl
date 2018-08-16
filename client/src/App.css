@@ -1,5 +1,6 @@
 body {
   margin: 0;
+  background-color: #4574ba;
 }
 
 ul[role="menu"] a {
@@ -8,9 +9,9 @@ ul[role="menu"] a {
 }
 
 .errorBg, .errorBg>div {
-  background-color: #E64A19 !important
+  background-color: #E64A19 !important;
 }
 
 .successBg, .successBg>div {
-  background-color: #388E3C !important
+  background-color: #388E3C !important;
 }

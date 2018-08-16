@@ -1,12 +1,11 @@
 module.exports = async (req, res) => {
-  const { battlesRef, profilesRef } = res.locals
+  const { battlesRef, votesRef, profilesRef } = res.locals
   const userUID = req.header('UserUID')
   const users = {}
   const battles = []
   const battlesIt = await battlesRef
     .where('active', '==', true)
     .orderBy('updatedAt', 'desc')
-    .limit(50)
     .get()
   // const bucket = storage().bucket()
   const resolved = Promise.resolve()
@@ -14,6 +13,14 @@ module.exports = async (req, res) => {
     battlesIt.docs.map(async battleSnap => {
       const battle = battleSnap.data()
       if (battle.user === userUID) {
+        return resolved
+      }
+      const voteForThisBattle = await votesRef
+        .where('user', '==', userUID)
+        .where('battle', '==', battle.id)
+        .limit(1)
+        .get()
+      if (voteForThisBattle.size) {
         return resolved
       }
       if (!users[battle.user]) {

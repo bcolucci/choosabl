@@ -5,12 +5,12 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
 import { subYears } from 'date-fns'
 import { DatePicker } from 'material-ui-pickers'
 import withAll from '../utils/with'
 import GenderPicker from '../components/GenderPicker'
 import * as profilesAPI from '../api/profiles'
-import { Typography } from '@material-ui/core'
 import { auth } from 'firebase'
 
 const maxBirthdayDate = subYears(new Date(), 14)

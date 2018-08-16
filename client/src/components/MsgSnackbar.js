@@ -6,7 +6,7 @@ class MsgSnackbar extends Component {
   static propTypes = {
     open: PropTypes.bool,
     type: PropTypes.string,
-    message: PropTypes.string,
+    message: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
     onClose: PropTypes.func.isRequired,
     timeout: PropTypes.number
   }

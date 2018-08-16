@@ -3,13 +3,18 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import withAll from '../utils/with'
 import VerifyYourEmail from '../components/VerifyYourEmail'
 import * as battlesAPI from '../api/battles'
+import * as votesAPI from '../api/votes'
+
+const defaultOpacity = 0.9
 
 class Vote extends Component {
   state = {
     battles: [],
     current: null,
     loading: true,
-    height: null
+    height: null,
+    photo1Opacity: defaultOpacity,
+    photo2Opacity: defaultOpacity
   }
 
   constructor (props) {
@@ -18,13 +23,19 @@ class Vote extends Component {
   }
 
   async componentWillMount () {
+    this.setState({ loading: true })
+    await this.shiftNextBattle()
+    this.setState({ loading: false })
+  }
+
+  async shiftNextBattle () {
     const battles = await battlesAPI.getAvailablesForCurrentUser()
-    const current = battles[0]
+    const [current] = battles
     if (current) {
       const photos = await battlesAPI.downloadPhotos(current)
       Object.assign(current, { photos })
     }
-    this.setState({ battles, current, loading: false })
+    this.setState({ battles, current })
   }
 
   componentDidMount () {
@@ -42,9 +53,41 @@ class Vote extends Component {
     this.setState({ height })
   }
 
+  handleOnPhotoOver = num => () =>
+    this.setState({
+      photo1Opacity: num === 0 ? 1 : defaultOpacity,
+      photo2Opacity: num === 1 ? 1 : defaultOpacity
+    })
+
+  handleChoosePhoto = (current, num) => async () => {
+    this.setState({ loading: true })
+    await votesAPI.voteForBattle(current.id, num)
+    await this.shiftNextBattle()
+    this.setState({ loading: false })
+  }
+
+  renderPhoto (num) {
+    const { current, height } = this.state
+    return (
+      <img
+        src={`data:${current[`file${num + 1}`].type};base64,${
+          current.photos[num]
+        }`}
+        alt={`${current.name} choice #${num + 1}`}
+        style={{
+          height,
+          opacity: this.state[`photo${num + 1}Opacity`],
+          marginTop: num === 0 ? 4 : 0
+        }}
+        onMouseOver={this.handleOnPhotoOver(num)}
+        onClick={this.handleChoosePhoto(current, num)}
+      />
+    )
+  }
+
   render () {
     const { classes, user } = this.props
-    const { loading, current, height } = this.state
+    const { loading, current } = this.state
     if (!user.emailVerified) {
       return <VerifyYourEmail />
     }
@@ -54,12 +97,7 @@ class Vote extends Component {
     if (!current) {
       return <p className={classes.spaced}>No battle found.</p>
     }
-    setImmediate(() => {
-      if (this.state.height !== null) {
-        return
-      }
-      this.handleScreenResize()
-    })
+    setImmediate(() => this.state.height === null && this.handleScreenResize())
     return (
       <div
         style={{
@@ -67,16 +105,8 @@ class Vote extends Component {
           backgroundColor: '#2a398c'
         }}
       >
-        <img
-          src={`data:${current.file1.type};base64,${current.photos[0]}`}
-          alt={`${current.name} choice #1`}
-          style={{ height, marginTop: 4 }}
-        />
-        <img
-          src={`data:${current.file2.type};base64,${current.photos[1]}`}
-          alt={`${current.name} choice #2`}
-          style={{ height }}
-        />
+        {this.renderPhoto(0)}
+        {this.renderPhoto(1)}
       </div>
     )
   }

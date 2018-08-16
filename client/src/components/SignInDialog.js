@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { auth } from 'firebase'
+import { validate as isValidEmail } from 'email-validator'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
@@ -65,6 +66,9 @@ class SignInDialog extends Component {
     const { history, showSuccess, showError } = this.props
     const { tab, email, password } = this.state
     try {
+      if (!isValidEmail(email)) {
+        throw new Error('Invalid email.')
+      }
       switch (tab) {
         case 'signIn':
           await auth().signInWithEmailAndPassword(email, password)
@@ -89,8 +93,6 @@ class SignInDialog extends Component {
     }
     this.setState({ saving: false })
   }
-
-  handleForgetMyPassword = async () => {}
 
   contextMessage () {
     const { tab } = this.state
