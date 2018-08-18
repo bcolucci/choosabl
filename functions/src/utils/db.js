@@ -8,7 +8,7 @@ const battlesRef = db.collection('battles')
 const votesRef = db.collection('votes')
 const invitationsRef = db.collection('invitations')
 
-module.exports = (_, res, next) => {
+const populateCollections = (_, res, next) => {
   Object.assign(res.locals, {
     db,
     profilesRef,
@@ -17,4 +17,15 @@ module.exports = (_, res, next) => {
     invitationsRef
   })
   next()
+}
+
+module.exports = {
+  db,
+  populateCollections,
+  collections: {
+    profilesRef,
+    battlesRef,
+    votesRef,
+    invitationsRef
+  }
 }

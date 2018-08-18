@@ -13,9 +13,8 @@ export default class extends Component {
   render () {
     const { user } = this.state
     if (!user && !auth().currentUser) {
-      const { location } = window
-      if (location.pathname !== '/') {
-        location.replace('/')
+      if (window.location.pathname !== '/') {
+        window.location.replace('/')
       }
       return null
     }

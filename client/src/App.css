@@ -15,3 +15,7 @@ ul[role="menu"] a {
 .successBg, .successBg>div {
   background-color: #388E3C !important;
 }
+
+svg.social-svg {
+  border-radius: 0 !important;
+}

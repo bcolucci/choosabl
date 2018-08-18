@@ -56,7 +56,7 @@ class CreateBattle extends Component {
       }
     })()
     if (err) {
-      window.document.querySelectorAll('input[type=file]')[num].focus()
+      document.querySelectorAll('input[type=file]')[num].focus()
       return err
     }
   }
@@ -69,7 +69,7 @@ class CreateBattle extends Component {
     const file1 = photo1.file
     const file2 = photo2.file
     if (!trimName.length) {
-      window.document.querySelector('#name').focus()
+      document.querySelector('#name').focus()
       return showError('Name is required.')
     }
     const file1Err = this.checkPhoto(file1, 0)

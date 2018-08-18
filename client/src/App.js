@@ -13,6 +13,7 @@ import Battles from './screens/Battles'
 import Profile from './screens/Profile'
 import Invite from './screens/Invite'
 import Splash from './components/Splash'
+import { apiURL } from './api'
 import { createCurrentProfile } from './api/profiles'
 
 import './App.css'
@@ -25,6 +26,7 @@ class App extends Component {
 
   componentWillMount () {
     this.catchReferrer()
+    this.catchLinkedInAuthCallback()
     this.listenAuthUserChange()
   }
 
@@ -44,9 +46,46 @@ class App extends Component {
   }
 
   catchReferrer () {
-    const [referrer] = window.location.search.match(/referrer=([^&]+)/g) || []
+    const urlParams = new URLSearchParams(window.location.search)
+    const referrer = urlParams.get('referrer')
     if (referrer) {
-      localStorage.setItem('referrer', referrer.split('=').pop())
+      localStorage.setItem('referrer', referrer)
+      window.location.replace('/')
+    }
+  }
+
+  async catchLinkedInAuthCallback () {
+    const urlParams = new URLSearchParams(window.location.search)
+    if (!urlParams.get('linkedin_callback')) {
+      return
+    }
+    const lkcrsf = localStorage.getItem('linkedin_crsf')
+    const state = urlParams.get('state')
+    if (lkcrsf && (!state || lkcrsf !== state)) {
+      return console.error('Authentication validation failed (1)')
+    }
+    const error = urlParams.get('error')
+    if (error) {
+      localStorage.removeItem('linkedin_crsf')
+      console.error(`Authentication error: ${error}`)
+      return window.location.replace('/')
+    }
+    const code = urlParams.get('code')
+    if (code) {
+      const referrer = localStorage.getItem('referrer')
+      localStorage.removeItem('referrer')
+      return window.location.replace(
+        `${apiURL}/profiles/auth/linkedin?code=${code}&crsf=${state}&referrer=${referrer}`
+      )
+    }
+    if (lkcrsf !== state) {
+      localStorage.removeItem('linkedin_crsf')
+      return console.error('Authentication validation failed (2)')
+    }
+    const token = urlParams.get('token')
+    if (token) {
+      localStorage.removeItem('linkedin_crsf')
+      await auth().signInWithCustomToken(token)
       window.location.replace('/')
     }
   }

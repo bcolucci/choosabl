@@ -1,4 +1,4 @@
-const sillyname = require('sillyname')
+const createProfile = require('./_createProfile')
 
 module.exports = async (req, res) => {
   const { profilesRef } = res.locals
@@ -6,17 +6,7 @@ module.exports = async (req, res) => {
   const { referrer } = req.query
   const profileSnap = await profilesRef.doc(userUID).get()
   if (!profileSnap.exists) {
-    const now = new Date().getTime()
-    const username = `${sillyname()} ${Math.ceil(Math.random() * 99)}`
-    await profilesRef.doc(userUID).set({
-      username,
-      birthday: null,
-      gender: '',
-      votes: 3,
-      referrer,
-      createdAt: now,
-      updatedAt: now
-    })
+    await profilesRef.doc(userUID).set(createProfile({ referrer }))
   }
   res.end()
 }

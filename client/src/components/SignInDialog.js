@@ -2,10 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { auth } from 'firebase'
 import { validate as isValidEmail } from 'email-validator'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import ListItemText from '@material-ui/core/ListItemText'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Dialog from '@material-ui/core/Dialog'
@@ -19,9 +15,11 @@ import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
+import Divider from '@material-ui/core/Divider'
 import Grid from '@material-ui/core/Grid'
 import { SocialIcon } from 'react-social-icons'
 import withAll from '../utils/with'
+import { apiURL } from '../api'
 
 const unexpectedTabErr = new Error('Unexpected tab.')
 
@@ -51,7 +49,8 @@ class SignInDialog extends Component {
     this.state.panel = props.panel
   }
 
-  handleSignInWithProvider = async provider => {
+  handleSignInWithProvider = provider => async e => {
+    e.preventDefault()
     this.setState({ saving: true })
     try {
       await auth().signInWithRedirect(provider)
@@ -94,6 +93,15 @@ class SignInDialog extends Component {
     this.setState({ saving: false })
   }
 
+  handleSignInWithLinkedIn = e => {
+    e.preventDefault()
+    const crsf =
+      Math.floor(Math.random() * 99).toString(16) +
+      new Date().getTime().toString(16)
+    localStorage.setItem('linkedin_crsf', crsf)
+    window.location.replace(`${apiURL}/profiles/auth/linkedin?crsf=${crsf}`)
+  }
+
   contextMessage () {
     const { tab } = this.state
     switch (tab) {
@@ -129,8 +137,7 @@ class SignInDialog extends Component {
         fullScreen: false
       })
     setImmediate(
-      () =>
-        focusEmail && window.document.querySelector('input[type=email]').focus()
+      () => focusEmail && document.querySelector('input[type=email]').focus()
     )
     return (
       <div>
@@ -255,58 +262,48 @@ class SignInDialog extends Component {
           {saving ? (
             <CircularProgress />
           ) : (
-            <div>
-              <p style={{ textAlign: 'center' }}>
-                <Button
-                  color='primary'
-                  onClick={() =>
-                    this.setState({
-                      panel: 'SignInWithEmail',
-                      fullScreen: true
-                    })
-                  }
+            <div style={{ textAlign: 'center' }}>
+              <Button
+                color='primary'
+                onClick={() =>
+                  this.setState({
+                    panel: 'SignInWithEmail',
+                    fullScreen: true
+                  })
+                }
+              >
+                {t('sign-in-with-provider', {
+                  provider: 'email'
+                })}
+              </Button>
+              <Divider />
+              <div style={{ marginTop: 20 }}>
+                <Typography variant='subheading' gutterBottom>
+                  Social authentication
+                </Typography>
+                <IconButton
+                  className={classes.tinyspaced}
+                  onClick={this.handleSignInWithLinkedIn}
                 >
-                  {t('sign-in-with-provider', {
-                    provider: 'email'
-                  })}
-                </Button>
-              </p>
-              <List>
-                <ListItem
-                  button
-                  dense
-                  onClick={() =>
-                    this.handleSignInWithProvider(new auth.GoogleAuthProvider())
-                  }
+                  <SocialIcon url='https://linkedin.com' />
+                </IconButton>
+                <IconButton
+                  className={classes.tinyspaced}
+                  onClick={this.handleSignInWithProvider(
+                    new auth.GoogleAuthProvider()
+                  )}
                 >
-                  <ListItemAvatar className={classes.socialIcon}>
-                    <SocialIcon url='https://google.com' />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={t('sign-in-with-provider', {
-                      provider: 'Google'
-                    })}
-                  />
-                </ListItem>
-                <ListItem
-                  button
-                  dense
-                  onClick={() =>
-                    this.handleSignInWithProvider(
-                      new auth.FacebookAuthProvider()
-                    )
-                  }
+                  <SocialIcon url='https://google.com' />
+                </IconButton>
+                <IconButton
+                  className={classes.tinyspaced}
+                  onClick={this.handleSignInWithProvider(
+                    new auth.FacebookAuthProvider()
+                  )}
                 >
-                  <ListItemAvatar className={classes.socialIcon}>
-                    <SocialIcon url='https://facebook.com' />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={t('sign-in-with-provider', {
-                      provider: 'Facebook'
-                    })}
-                  />
-                </ListItem>
-              </List>
+                  <SocialIcon url='https://facebook.com' />
+                </IconButton>
+              </div>
             </div>
           )}
         </DialogContent>

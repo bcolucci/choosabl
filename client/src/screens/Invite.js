@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
 import { validate as isValidEmail } from 'email-validator'
 import Grid from '@material-ui/core/Grid'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
+import EmailIcon from '@material-ui/icons/Email'
 import Typography from '@material-ui/core/Typography'
 import withAll from '../utils/with'
 import VerifyYourEmail from '../components/VerifyYourEmail'
@@ -12,42 +19,83 @@ import * as invitationsAPI from '../api/invitations'
 class Invite extends Component {
   state = {
     email: '',
-    alreadyInvited: false,
-    loading: false
+    message: '',
+    invitedList: [],
+    saving: false,
+    loading: true
+  }
+
+  async componentWillMount () {
+    await this.refreshInvitedList()
+    this.setState({ loading: false })
+  }
+
+  async refreshInvitedList () {
+    const invitedList = await invitationsAPI.invitedList()
+    this.setState({ invitedList })
   }
 
   handleSave = async () => {
-    this.setState({ loading: true })
-    const { email } = this.state
+    this.setState({ saving: true })
+    const { email, message, invitedList } = this.state
     const { showError, showSuccess } = this.props
     try {
       if (!isValidEmail(email)) {
         throw new Error('Invalid email.')
       }
-      const alreadyInvited = await invitationsAPI.alreadyInvited(email)
-      if (alreadyInvited) {
+      if (
+        invitedList.includes(email) ||
+        (await invitationsAPI.isInvited(email))
+      ) {
         showError('You already invite this user.')
-        return this.setState({ alreadyInvited: true, loading: false })
+        return this.setState({ saving: false })
       }
-      await invitationsAPI.invite(email)
-      this.setState({ email: '' })
+      await invitationsAPI.invite({ email, message })
+      this.setState({ email: '', message: '' })
       showSuccess(`${email} has been invited. Thank you!`)
-      setImmediate(() =>
-        window.document.querySelector('input[type=email]').focus()
-      )
+      setImmediate(() => document.querySelector('input[type=email]').focus())
     } catch (err) {
       showError(err.message)
     }
-    this.setState({ loading: false })
+    this.setState({ saving: false })
   }
 
   handleReInvite = () => window.alert('Not implemented yet.')
 
+  renderInvitedList () {
+    const { invitedList } = this.state
+    if (!invitedList.length) {
+      return (
+        <Typography style={{ marginTop: 5 }}>
+          No invitation sent yet.
+        </Typography>
+      )
+    }
+    return (
+      <List>
+        {invitedList.map((email, idx) => (
+          <ListItem key={idx}>
+            <ListItemText primary={email} />
+            <ListItemSecondaryAction>
+              <IconButton>
+                <EmailIcon onClick={this.handleReInvite} />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+        ))}
+      </List>
+    )
+  }
+
   render () {
     const { t, classes, user } = this.props
-    const { loading, email, alreadyInvited } = this.state
+    const { loading, saving } = this.state
+    const { email, message } = this.state
     if (!user.emailVerified) {
       return <VerifyYourEmail />
+    }
+    if (loading) {
+      return <LinearProgress color='secondary' />
     }
     return (
       <Grid container>
@@ -62,35 +110,38 @@ class Invite extends Component {
             label='Email Address'
             type='email'
             value={email}
+            onChange={({ target }) => this.setState({ email: target.value })}
+          />
+        </Grid>
+        <Grid item xs={12} className={classes.spaced}>
+          <TextField
+            fullWidth
+            multiline
+            rows={4}
+            label='Custom message'
+            value={message}
             onChange={({ target }) =>
-              this.setState({ email: target.value, alreadyInvited: false })
+              this.setState({ message: target.value.substr(0, 300) })
             }
           />
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
-          {loading ? (
+          {saving ? (
             <CircularProgress />
           ) : (
-            <div>
-              <Button
-                onClick={this.handleSave}
-                color='primary'
-                variant='contained'
-              >
-                {t('invite')}
-              </Button>
-              {alreadyInvited && (
-                <Button
-                  onClick={this.handleReInvite}
-                  color='secondary'
-                  variant='contained'
-                  style={{ marginLeft: 5 }}
-                >
-                  Invite again
-                </Button>
-              )}
-            </div>
+            <Button
+              onClick={this.handleSave}
+              color='primary'
+              variant='contained'
+            >
+              {t('invite')}
+            </Button>
           )}
+        </Grid>
+        <br />
+        <Grid item xs={12} className={classes.spaced}>
+          <Typography variant='headline'>Invations sent:</Typography>
+          {this.renderInvitedList()}
         </Grid>
       </Grid>
     )

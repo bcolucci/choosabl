@@ -11,6 +11,9 @@ const defaultOpts = theme => ({
     display: 'flex',
     flexWrap: 'wrap'
   },
+  tinyspaced: {
+    margin: theme.spacing.unit
+  },
   spaced: {
     margin: Math.floor(theme.spacing.unit * 1.5)
   },

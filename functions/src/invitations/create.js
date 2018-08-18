@@ -5,8 +5,14 @@ const invitationMail = require('../mails/invitation')
 
 module.exports = async (req, res) => {
   const { invitationsRef } = res.locals
-  const { invited } = req.params
+  const { invited, message } = req.body
   const userUID = req.header('UserUID')
+  const nbInvitations = (await invitationsRef
+    .where('user', '==', userUID)
+    .get()).size
+  if (nbInvitations >= 500) {
+    return res.status(500).end('Invitation limit exceeded.')
+  }
   const iterator = await invitationsRef
     .where('user', '==', userUID)
     .where('invited', '==', invited)
@@ -19,6 +25,7 @@ module.exports = async (req, res) => {
     id: uuid(),
     user: userUID,
     invited,
+    message: message.length > 300 ? message.substr(0, 300) + ' [...]' : message,
     createdAt: now
   }
   await invitationsRef.doc(invitation.id).set(invitation)
@@ -26,7 +33,8 @@ module.exports = async (req, res) => {
   mailer.sendMail(
     invitationMail({
       referrer: currentUser,
-      email: invited
+      email: invited,
+      message
     }),
     err => {
       if (err) {

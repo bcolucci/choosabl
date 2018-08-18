@@ -1,21 +1,32 @@
 import { authFetch } from '.'
 import cacheNS from '../utils/cacheNS'
 
-export const alreadyInvited = async email => {
-  const cache = cacheNS('invitations:alreadyInvited')
-  const invited = cache.get()
-  if (!invited || !Object.keys(invited).includes(email)) {
-    const res = await authFetch(`invitations/${email}`)
-    const json = await res.json()
-    cache.set({ ...invited, [email]: json.invited })
-    return json.invited
+export const invitedList = async () => {
+  const cache = cacheNS('invitations:invitedList')
+  const invited = cache.get([])
+  if (!invited.length) {
+    const res = await authFetch('invitations')
+    const emails = await res.json()
+    cache.set(emails)
+    return emails
   }
-  return !!invited[email]
+  return invited
 }
 
-export const invite = async email => {
-  await authFetch(`invitations/${email}`, { method: 'POST' })
-  const cache = cacheNS('invitations:alreadyInvited')
-  const invited = cache.get()
-  cache.set({ ...invited, [email]: true })
+export const isInvited = async email => {
+  const alreadyInvited = await (await authFetch(`invitations/${email}`)).json()
+  if (alreadyInvited) {
+    const cache = cacheNS('invitations:invitedList')
+    cache.set([...cache.get([]), email])
+  }
+  return alreadyInvited
+}
+
+export const invite = async ({ email, message }) => {
+  await authFetch('invitations', {
+    method: 'POST',
+    body: { invited: email, message }
+  })
+  const cache = cacheNS('invitations:invitedList')
+  cache.set([...cache.get([]), email])
 }

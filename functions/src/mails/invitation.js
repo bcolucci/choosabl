@@ -1,6 +1,6 @@
 const { CLIENT_URL } = process.env
 
-module.exports = ({ referrer, email }) => {
+module.exports = ({ referrer, email, message }) => {
   const invitationLink = `${CLIENT_URL}/?referrer=${referrer.uid}`
   return {
     to: email,
@@ -16,6 +16,14 @@ module.exports = ({ referrer, email }) => {
       <p>Hi!</p>
       <p>You have been invited to join Choosabl community by: <em>${referrer.displayName ||
         referrer.email}</em></p>
+      ${
+  message
+    ? `
+        <p><strong>Invitation message:</strong></p>
+        <pre>${message}</pre>
+      `
+    : ''
+}
       <p>
         Please click on the link to register:
         <br/>

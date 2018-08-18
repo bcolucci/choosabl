@@ -1,6 +1,6 @@
 import { auth } from 'firebase'
 
-const apiURL = (() => {
+export const apiURL = (() => {
   switch (window.location.host) {
     case 'choosabl.com':
     case 'choosabl-1e2ea.firebaseapp.com':
