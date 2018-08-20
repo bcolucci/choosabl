@@ -76,7 +76,7 @@ export const downloadPhotos = async battle => {
 }
 
 export const deleteOne = battle => {
-  authFetch(`battles/${battle.id}`, { method: 'DELETE' })
   const cache = cacheNS('battles:getAllForCurrentUser')
   cache.set(cache.get([]).filter(b => b.id !== battle.id))
+  return authFetch(`battles/${battle.id}`, { method: 'DELETE' })
 }

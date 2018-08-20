@@ -5,8 +5,8 @@ const removeBattleFiles = ({ photo1Path, photo2Path }) => {
   return Promise.all([
     bucket.file(photo1Path).delete(),
     bucket.file(photo2Path).delete(),
-    bucket.file(photo1Path.replace('/photos', '/vision')).delete(),
-    bucket.file(photo2Path.replace('/photos', '/vision')).delete()
+    bucket.file(photo1Path.replace('photos/', 'vision/')).delete(),
+    bucket.file(photo2Path.replace('photos/', 'vision/')).delete()
   ])
 }
 

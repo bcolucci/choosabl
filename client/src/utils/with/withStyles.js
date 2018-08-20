@@ -25,6 +25,10 @@ const defaultOpts = theme => ({
   },
   successBg: {
     backgroundColor: '#388E3C'
+  },
+  leftCaption: {
+    display: 'inline',
+    marginLeft: 8
   }
 })
 

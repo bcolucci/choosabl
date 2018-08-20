@@ -2,15 +2,15 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
-import Chip from '@material-ui/core/Chip'
 import Avatar from '@material-ui/core/Avatar'
 import PersoIcon from '@material-ui/icons/InsertEmoticon'
 import WorkIcon from '@material-ui/icons/Work'
 import Card from '@material-ui/core/Card'
+import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
 import Typography from '@material-ui/core/Typography'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import DeleteIcon from '@material-ui/icons/DeleteOutline'
 import ToggleOnIcon from '@material-ui/icons/ToggleOn'
 import ToggleOffIcon from '@material-ui/icons/ToggleOff'
@@ -21,6 +21,7 @@ class BattleCard extends Component {
   static propTypes = {
     battle: PropTypes.object.isRequired,
     active: PropTypes.bool.isRequired,
+    deleting: PropTypes.bool,
     moveBattle: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
     onPreview: PropTypes.func.isRequired
@@ -43,11 +44,14 @@ class BattleCard extends Component {
     moveBattle(battle)
   }
 
-  renderPhoto = (file, base64) => {
-    const { onPreview } = this.props
+  renderPhoto = num => {
+    const { battle, onPreview } = this.props
+    const { photos } = this.state
+    const file = battle[`file${num + 1}`]
+    const base64 = photos[num]
     return (
       <Grid item xs={6} style={{ textAlign: 'center' }}>
-        <a onClick={() => onPreview(file, base64)}>
+        <a onClick={() => onPreview({ num, battle, file, base64 })}>
           <img
             src={`data:${file.type};base64,${base64}`}
             style={{ height: 120, maxWidth: 140 }}
@@ -58,9 +62,23 @@ class BattleCard extends Component {
     )
   }
 
+  renderDeletingText () {
+    const { classes } = this.props
+    return (
+      <Typography
+        gutterBottom
+        variant='caption'
+        align='center'
+        className={classes.leftCaption}
+      >
+        deleting...
+      </Typography>
+    )
+  }
+
   renderActions () {
     const { t } = this.props
-    const { active, battle } = this.props
+    const { active, deleting, battle } = this.props
     const { onDelete } = this.props
     return (
       <div>
@@ -72,55 +90,46 @@ class BattleCard extends Component {
           {active ? <ToggleOffIcon color='secondary' /> : <ToggleOnIcon />}{' '}
           {active ? t('battles:Desactivate') : t('battles:Activate')}
         </Button>
-        {!active && (
-          <Button
-            variant='outlined'
-            color='secondary'
-            onClick={() => window.confirm('Are you sure?') && onDelete(battle)}
-            style={{ marginLeft: 5 }}
-          >
-            <DeleteIcon />
-          </Button>
-        )}
+        {!active &&
+          (deleting ? (
+            this.renderDeletingText()
+          ) : (
+            <Button
+              variant='outlined'
+              color='secondary'
+              style={{ marginLeft: 5 }}
+              onClick={() =>
+                window.confirm('Are you sure?') && onDelete(battle)
+              }
+            >
+              <DeleteIcon />
+            </Button>
+          ))}
       </div>
     )
   }
 
   render () {
-    const { loading, photos } = this.state
+    const { loading } = this.state
     const { classes } = this.props
     const { battle } = this.props
     return (
       <Card className={classes.spaced}>
-        <CardContent>
-          <Grid container>
-            <Grid item xs={4}>
-              <Chip
-                avatar={
-                  <Avatar>{battle.isPro ? <WorkIcon /> : <PersoIcon />}</Avatar>
-                }
-                label={battle.isPro ? 'pro' : 'perso'}
-                color={battle.isPro ? 'secondary' : 'primary'}
-              />
-            </Grid>
-            <Grid item xs={8}>
-              <Typography
-                variant='headline'
-                style={{ fontSize: '0.9rem' }}
-                gutterBottom
-              >
-                {battle.name}
-              </Typography>
-            </Grid>
-          </Grid>
+        <CardHeader
+          title={<Typography variant='title'>{battle.name}</Typography>}
+          avatar={
+            <Avatar>{battle.isPro ? <WorkIcon /> : <PersoIcon />}</Avatar>
+          }
+        />
+        <CardContent style={{ paddingTop: 0 }}>
           {loading ? (
             <div style={{ textAlign: 'center' }}>
-              <CircularProgress color='primary' style={{ margin: '50px 0' }} />
+              <LinearProgress color='secondary' style={{ margin: '45px 0' }} />
             </div>
           ) : (
-            <Grid container style={{ marginTop: '0.5em' }}>
-              {this.renderPhoto(battle.file1, photos[0])}
-              {this.renderPhoto(battle.file2, photos[1])}
+            <Grid container>
+              {this.renderPhoto(0)}
+              {this.renderPhoto(1)}
             </Grid>
           )}
           <CardActions>{this.renderActions()}</CardActions>

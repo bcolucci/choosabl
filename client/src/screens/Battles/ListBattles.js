@@ -14,19 +14,22 @@ class ListBattles extends Component {
 
   state = {
     preview: null,
+    deleting: [],
     deleted: []
   }
 
-  handleDeleteBattle = battle => {
-    battlesAPI.deleteOne(battle)
+  handleDeleteBattle = async battle => {
+    const { deleting, deleted } = this.state
+    this.setState({ deleting: [...deleting, battle.id] })
+    await battlesAPI.deleteOne(battle)
     this.props.moveBattle(battle, true)
-    this.setState({ deleted: [...this.state.deleted, battle.id] })
+    this.setState({ deleted: [...deleted, battle.id] })
   }
 
-  handlePreview = (file, base64) => this.setState({ preview: { file, base64 } })
+  handlePreview = preview => this.setState({ preview })
 
   render () {
-    const { preview, deleted } = this.state
+    const { preview, deleting, deleted } = this.state
     const { active, battles, moveBattle } = this.props
     return (
       <section>
@@ -36,6 +39,7 @@ class ListBattles extends Component {
             <BattleCard
               key={idx}
               active={active}
+              deleting={deleting.includes(battle.id)}
               battle={battle}
               moveBattle={moveBattle}
               onDelete={this.handleDeleteBattle}
@@ -45,8 +49,7 @@ class ListBattles extends Component {
         {preview && (
           <PhotoPreviewDialog
             open={!!preview}
-            file={preview.file}
-            base64={preview.base64}
+            {...preview}
             onClose={() => this.setState({ preview: null })}
           />
         )}
