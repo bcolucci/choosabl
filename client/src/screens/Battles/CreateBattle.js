@@ -26,7 +26,7 @@ const photoPath = (userUID, fileName) =>
 
 const isTypeImage = type => type.substr(0, 6) === 'image/'
 
-const maxPhotoSize = 300 * 1000 // 300kB
+const maxPhotoSize = 600 * 1000 // 600kB
 
 class CreateBattle extends Component {
   state = {

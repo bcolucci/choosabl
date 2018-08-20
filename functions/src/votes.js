@@ -15,7 +15,8 @@ app.use(cors({ origin: true }))
 app.use(bodyParser.json())
 app.use(populateCollections)
 
-app.get('/ping', (_, res) => res.end())
+app.head('/ping', (_, res) => res.end())
+
 app.get(`/${idreg('battleUID')}`, auth, get)
 
 app.post(`/${idreg('battleUID')}/:voteFor(0|1)`, auth, create)

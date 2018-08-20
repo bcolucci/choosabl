@@ -15,7 +15,8 @@ app.use(cors({ origin: true }))
 app.use(bodyParser.json())
 app.use(populateCollections)
 
-app.get('/ping', (_, res) => res.end())
+app.head('/ping', (_, res) => res.end())
+
 app.get('/', auth, invited)
 app.get('/:invited', auth, isInvited)
 

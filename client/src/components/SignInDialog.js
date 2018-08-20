@@ -252,8 +252,47 @@ class SignInDialog extends Component {
     )
   }
 
+  renderSocialSignIn () {
+    const { classes } = this.props
+    return (
+      <div style={{ marginTop: 20 }}>
+        <Typography variant='subheading' gutterBottom>
+          Social authentication
+        </Typography>
+        <IconButton
+          className={classes.tinyspaced}
+          onClick={this.handleSignInWithProvider(new auth.GoogleAuthProvider())}
+        >
+          <SocialIcon url='https://google.com' />
+        </IconButton>
+        <IconButton
+          className={classes.tinyspaced}
+          onClick={this.handleSignInWithProvider(
+            new auth.FacebookAuthProvider()
+          )}
+        >
+          <SocialIcon url='https://facebook.com' />
+        </IconButton>
+        <IconButton
+          className={classes.tinyspaced}
+          onClick={this.handleSignInWithLinkedIn}
+        >
+          <SocialIcon url='https://linkedin.com' />
+        </IconButton>
+        <IconButton
+          className={classes.tinyspaced}
+          onClick={this.handleSignInWithProvider(
+            new auth.TwitterAuthProvider()
+          )}
+        >
+          <SocialIcon url='https://twitter.com' />
+        </IconButton>
+      </div>
+    )
+  }
+
   renderSignIn () {
-    const { t, classes } = this.props
+    const { t } = this.props
     const { saving } = this.state
     return (
       <div>
@@ -277,33 +316,7 @@ class SignInDialog extends Component {
                 })}
               </Button>
               <Divider />
-              <div style={{ marginTop: 20 }}>
-                <Typography variant='subheading' gutterBottom>
-                  Social authentication
-                </Typography>
-                <IconButton
-                  className={classes.tinyspaced}
-                  onClick={this.handleSignInWithLinkedIn}
-                >
-                  <SocialIcon url='https://linkedin.com' />
-                </IconButton>
-                <IconButton
-                  className={classes.tinyspaced}
-                  onClick={this.handleSignInWithProvider(
-                    new auth.GoogleAuthProvider()
-                  )}
-                >
-                  <SocialIcon url='https://google.com' />
-                </IconButton>
-                <IconButton
-                  className={classes.tinyspaced}
-                  onClick={this.handleSignInWithProvider(
-                    new auth.FacebookAuthProvider()
-                  )}
-                >
-                  <SocialIcon url='https://facebook.com' />
-                </IconButton>
-              </div>
+              {this.renderSocialSignIn()}
             </div>
           )}
         </DialogContent>

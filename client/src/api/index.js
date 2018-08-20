@@ -17,7 +17,7 @@ export const apiURL = (() => {
 export const wakeUpAllAPI = () => {
   return Promise.all(
     ['profiles', 'battles', 'votes', 'invitations'].map(endpoint =>
-      fetch(`${apiURL}/${endpoint}/ping`, { cache: 'no-cache' })
+      fetch(`${apiURL}/${endpoint}/ping`, { method: 'HEAD', cache: 'no-cache' })
     )
   )
 }
