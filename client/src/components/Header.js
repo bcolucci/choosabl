@@ -49,7 +49,7 @@ class Header extends Component {
   handleSignOut = () => {
     auth().signOut()
     this.handleCloseMenus()
-    window.location.replace('/')
+    this.props.history.push('/')
   }
 
   handleCloseMenus = () =>

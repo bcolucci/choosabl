@@ -99,9 +99,8 @@ class CreateBattle extends Component {
         file1: fileInfo(file1),
         file2: fileInfo(file2)
       })
-      this.setState({ saving: 100 })
       showSuccess('Battle has been created in drafts.')
-      setTimeout(() => window.location.replace('/battles/drafts'), 1500)
+      setTimeout(() => this.props.history.push('/battles/drafts'), 2000)
     } catch (err) {
       showError(err.message)
     }
@@ -233,5 +232,6 @@ class CreateBattle extends Component {
 export default withAll(CreateBattle, {
   withStyles: true,
   withIntl: true,
+  withRouter: true,
   withMsgSnack: true
 })

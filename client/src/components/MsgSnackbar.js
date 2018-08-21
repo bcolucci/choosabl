@@ -26,9 +26,7 @@ class MsgSnackbar extends Component {
   render () {
     const { open } = this.state
     const { type, message, onClose, timeout } = this.props
-    if (timeout && timeout > 0) {
-      setTimeout(() => this.setState({ open: false }), timeout)
-    }
+    setTimeout(() => this.setState({ open: false }), Math.max(0, +timeout))
     return (
       <Snackbar
         open={open}

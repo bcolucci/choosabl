@@ -19,6 +19,7 @@ import Divider from '@material-ui/core/Divider'
 import Grid from '@material-ui/core/Grid'
 import { SocialIcon } from 'react-social-icons'
 import withAll from '../utils/with'
+import { createCurrentProfile } from '../api/profiles'
 import { apiURL } from '../api'
 
 const unexpectedTabErr = new Error('Unexpected tab.')
@@ -78,6 +79,8 @@ class SignInDialog extends Component {
             password
           )
           await user.sendEmailVerification()
+          await createCurrentProfile(email)
+          localStorage.setItem(user.uid, '1')
           break
         case 'forgot':
           await auth().sendPasswordResetEmail(email)

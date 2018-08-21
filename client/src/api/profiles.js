@@ -13,10 +13,13 @@ export const getCurrent = async () => {
   return profile
 }
 
-export const createCurrentProfile = async () => {
+export const createCurrentProfile = async email => {
   const referrer = localStorage.getItem('referrer')
   localStorage.removeItem('referrer')
-  await authFetch(`profiles/?referrer=${referrer}`, { method: 'POST' })
+  await authFetch(`profiles/?referrer=${referrer}`, {
+    method: 'POST',
+    body: { email }
+  })
 }
 
 export const updateCurrent = async profile => {

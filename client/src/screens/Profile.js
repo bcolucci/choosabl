@@ -69,7 +69,7 @@ class Profile extends Component {
         } else {
           await currentUser.updatePassword(newPassword)
           showSuccess('Password updated!')
-          setTimeout(() => history.replace('/profile'), 3000)
+          setTimeout(() => history.push('/profile'), 2500)
         }
       } else {
         throw new Error('Unexpected tab.')
@@ -84,6 +84,7 @@ class Profile extends Component {
     const { t, classes, history, user } = this.props
     const { saving } = this.state
     const { username, birthday, gender } = this.state
+    const [provider] = user.providerData
     return (
       <Grid container>
         <Grid item xs={12} className={classes.spaced}>
@@ -126,12 +127,15 @@ class Profile extends Component {
               {t('save')}
             </Button>
           )}
-          <Button
-            color='primary'
-            onClick={() => history.push('/profile/password')}
-          >
-            Update password
-          </Button>
+          {provider &&
+            provider.providerId === 'password' && (
+              <Button
+                color='primary'
+                onClick={() => history.push('/profile/password')}
+              >
+                Update password
+              </Button>
+            )}
         </Grid>
       </Grid>
     )

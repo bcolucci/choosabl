@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { BrowserRouter, Route } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import { auth } from 'firebase'
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
 import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils'
@@ -50,11 +50,12 @@ class App extends Component {
     const referrer = urlParams.get('referrer')
     if (referrer) {
       localStorage.setItem('referrer', referrer)
-      window.location.replace('/')
+      this.props.history.push('/')
     }
   }
 
   async catchLinkedInAuthCallback () {
+    const { history } = this.props
     const urlParams = new URLSearchParams(window.location.search)
     if (!urlParams.get('linkedin_callback')) {
       return
@@ -68,7 +69,7 @@ class App extends Component {
     if (error) {
       localStorage.removeItem('linkedin_crsf')
       console.error(`Authentication error: ${error}`)
-      return window.location.replace('/')
+      return history.push('/')
     }
     const code = urlParams.get('code')
     if (code) {
@@ -85,8 +86,8 @@ class App extends Component {
     const token = urlParams.get('token')
     if (token) {
       localStorage.removeItem('linkedin_crsf')
-      await auth().signInWithCustomToken(token)
-      window.location.replace('/')
+      auth().signInWithCustomToken(token)
+      // history.push('/')
     }
   }
 
@@ -138,21 +139,16 @@ class App extends Component {
     return (
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <CssBaseline />
-        <BrowserRouter>
-          <div>
-            <Header user={user} />
-            <main>
-              {this.renderProtectedRoutes()}
-              <Route path='/' component={Home} />
-            </main>
-          </div>
-        </BrowserRouter>
+        <Header user={user} />
+        {this.renderProtectedRoutes()}
+        <Route path='/' component={Home} />
       </MuiPickersUtilsProvider>
     )
   }
 }
 
 export default withAll(App, {
+  withRouter: true,
   withStyles: true,
   withIntl: true
 })

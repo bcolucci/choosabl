@@ -29,15 +29,8 @@ class PhotoPreviewDialog extends Component {
     showFaces: false
   }
 
-  constructor (props) {
-    super(props)
-    this.dev = window.location.host === 'localhost:3000'
-  }
-
   async componentWillMount () {
-    if (this.dev) {
-      this.downloadFaces()
-    }
+    this.downloadFaces()
   }
 
   async downloadFaces () {
@@ -122,7 +115,7 @@ class PhotoPreviewDialog extends Component {
         .slice(1)
         .reverse()
         .join('.')
-      const toRemove = withoutExt.length - 25
+      const toRemove = withoutExt.length - 23
       return !toRemove
         ? withoutExt
         : withoutExt.substr(0, 12) + '[...]' + withoutExt.substr(15 + toRemove)
@@ -152,19 +145,18 @@ class PhotoPreviewDialog extends Component {
           <Button color='primary' variant='contained' onClick={onClose}>
             Close
           </Button>
-          {this.dev &&
-            (!faces ? (
-              this.renderLoadingFaces()
-            ) : (
-              <Button
-                color={showFaces ? 'default' : 'primary'}
-                variant='contained'
-                onClick={() => this.setState({ showFaces: !showFaces })}
-                style={{ marginLeft: 5 }}
-              >
-                Show faces
-              </Button>
-            ))}
+          {!faces ? (
+            this.renderLoadingFaces()
+          ) : (
+            <Button
+              color={showFaces ? 'default' : 'primary'}
+              variant='contained'
+              onClick={() => this.setState({ showFaces: !showFaces })}
+              style={{ marginLeft: 5 }}
+            >
+              Show faces
+            </Button>
+          )}
         </div>
       </Dialog>
     )
