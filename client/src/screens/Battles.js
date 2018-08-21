@@ -52,15 +52,19 @@ class Battles extends Component {
     if (loading) {
       return <LinearProgress color='secondary' />
     }
-    const { tab } = this.props
+    const { tab, history } = this.props
     const moveBattle = this.moveBattle.bind(this)
+    const goto = href => e => {
+      e.preventDefault()
+      history.push(href)
+    }
     return (
       <div>
         <AppBar position='static' color='default'>
           <Tabs fullWidth value={['actives', 'drafts', 'create'].indexOf(tab)}>
             <Tab
               label={t('battles:Actives')}
-              href='/battles/actives'
+              onClick={goto('/battles/actives')}
               className={classes.tab}
               icon={
                 <Badge badgeContent={actives.length} color='default'>
@@ -70,7 +74,7 @@ class Battles extends Component {
             />
             <Tab
               label={t('battles:Drafts')}
-              href='/battles/drafts'
+              onClick={goto('/battles/drafts')}
               className={classes.tab}
               icon={
                 <Badge badgeContent={drafts.length} color='default'>
@@ -80,7 +84,7 @@ class Battles extends Component {
             />
             <Tab
               label={t('create')}
-              href='/battles/create'
+              onClick={goto('/battles/create')}
               className={classes.tab}
               icon={<AddIcon />}
             />
@@ -110,6 +114,7 @@ class Battles extends Component {
 
 export default withAll(Battles, {
   withIntl: true,
+  withRouter: true,
   withStyles: {
     styles: theme => ({
       tab: {

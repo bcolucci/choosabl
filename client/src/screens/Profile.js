@@ -42,8 +42,13 @@ class Profile extends Component {
     })
   }
 
-  handleChange = (field, synthetic = true) => e =>
-    this.setState({ [field]: synthetic ? e.target.value : e })
+  handleChange = (field, synthetic = true) => e => {
+    let value = synthetic ? e.target.value : e
+    if (field === 'username') {
+      value = value.substr(0, 30)
+    }
+    this.setState({ [field]: value })
+  }
 
   handleSave = async () => {
     this.setState({ saving: true })

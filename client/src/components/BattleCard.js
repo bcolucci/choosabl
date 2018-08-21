@@ -29,7 +29,8 @@ class BattleCard extends Component {
 
   state = {
     photos: null,
-    loading: true
+    loading: true,
+    moving: false
   }
 
   async componentWillMount () {
@@ -38,9 +39,11 @@ class BattleCard extends Component {
     this.setState({ photos, loading: false })
   }
 
-  handleToggleBattleStatus = () => {
+  handleToggleBattleStatus = async () => {
     const { battle, moveBattle } = this.props
-    battlesAPI.toggleBattleStatus(battle)
+    this.setState({ moving: true })
+    await battlesAPI.toggleBattleStatus(battle)
+    this.setState({ moving: false })
     moveBattle(battle)
   }
 
@@ -62,7 +65,7 @@ class BattleCard extends Component {
     )
   }
 
-  renderDeletingText () {
+  renderFloatingText (text) {
     const { classes } = this.props
     return (
       <Typography
@@ -71,7 +74,7 @@ class BattleCard extends Component {
         align='center'
         className={classes.leftCaption}
       >
-        deleting...
+        {text}
       </Typography>
     )
   }
@@ -80,19 +83,24 @@ class BattleCard extends Component {
     const { t } = this.props
     const { active, deleting, battle } = this.props
     const { onDelete } = this.props
+    const { moving } = this.state
     return (
       <div>
-        <Button
-          variant='outlined'
-          color='primary'
-          onClick={this.handleToggleBattleStatus}
-        >
-          {active ? <ToggleOffIcon color='secondary' /> : <ToggleOnIcon />}{' '}
-          {active ? t('battles:Desactivate') : t('battles:Activate')}
-        </Button>
+        {moving ? (
+          this.renderFloatingText('saving...')
+        ) : (
+          <Button
+            variant='outlined'
+            color='primary'
+            onClick={this.handleToggleBattleStatus}
+          >
+            {active ? <ToggleOffIcon color='secondary' /> : <ToggleOnIcon />}{' '}
+            {active ? t('battles:Desactivate') : t('battles:Activate')}
+          </Button>
+        )}
         {!active &&
           (deleting ? (
-            this.renderDeletingText()
+            this.renderFloatingText('deleting...')
           ) : (
             <Button
               variant='outlined'

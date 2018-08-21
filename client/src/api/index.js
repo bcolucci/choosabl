@@ -1,26 +1,22 @@
 import { auth } from 'firebase'
 
-export const apiURL = (() => {
-  switch (window.location.host) {
-    case 'choosabl.com':
-    case 'choosabl-1e2ea.firebaseapp.com':
-      return 'https://us-central1-choosabl-1e2ea.cloudfunctions.net'
-    case 'choosabl-test.firebaseapp.com':
-      return 'https://us-central1-choosabl-test.cloudfunctions.net'
-    case 'localhost:3000':
-      return 'http://localhost:5000/choosabl-test/us-central1'
-    default:
-      throw new Error('Unknown host (API).')
-  }
-})()
+export const apiURL =
+  (() => {
+    switch (window.location.host) {
+      case 'choosabl.com':
+      case 'choosabl-1e2ea.firebaseapp.com':
+        return 'https://us-central1-choosabl-1e2ea.cloudfunctions.net'
+      case 'choosabl-test.firebaseapp.com':
+        return 'https://us-central1-choosabl-test.cloudfunctions.net'
+      case 'localhost:3000':
+        return 'http://localhost:5000/choosabl-test/us-central1'
+      default:
+        throw new Error('Unknown host (API).')
+    }
+  })() + '/v1'
 
-export const wakeUpAllAPI = () => {
-  return Promise.all(
-    ['profiles', 'battles', 'votes', 'invitations'].map(endpoint =>
-      fetch(`${apiURL}/${endpoint}/ping`, { method: 'HEAD', cache: 'no-cache' })
-    )
-  )
-}
+export const wakeUpAPI = () =>
+  fetch(`${apiURL}/ping`, { method: 'HEAD', cache: 'no-cache' })
 
 export const authFetch = async (uri, customs = {}) => {
   const { currentUser } = auth()

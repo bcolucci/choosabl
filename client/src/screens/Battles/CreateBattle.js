@@ -6,7 +6,6 @@ import Button from '@material-ui/core/Button'
 import Switch from '@material-ui/core/Switch'
 import Typography from '@material-ui/core/Typography'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import FileInput from 'react-simple-file-input'
 import withAll from '../../utils/with'
 import VerifyYourEmail from '../../components/VerifyYourEmail'
@@ -36,7 +35,7 @@ class CreateBattle extends Component {
     photo1: photoResetAttrs(),
     photo2: photoResetAttrs(),
     loading: false,
-    saving: false
+    saving: null
   }
 
   checkPhoto (file, num) {
@@ -80,20 +79,18 @@ class CreateBattle extends Component {
     if (file2Err) {
       return showError(file2Err)
     }
-    this.setState({ saving: true })
+    this.setState({ saving: 0 })
     const photo1Path = photoPath(user.uid, file1.name)
     const photo2Path = photoPath(user.uid, file2.name)
     try {
-      await Promise.all([
-        storage()
-          .ref(photo1Path)
-          .putString(photo1.base64, 'base64')
-          .then(),
-        storage()
-          .ref(photo2Path)
-          .putString(photo2.base64, 'base64')
-          .then()
-      ])
+      await storage()
+        .ref(photo1Path)
+        .putString(photo1.base64, 'base64')
+      this.setState({ saving: 33 })
+      await storage()
+        .ref(photo2Path)
+        .putString(photo2.base64, 'base64')
+      this.setState({ saving: 66 })
       await battlesAPI.createForCurrentUser({
         name: trimName,
         isPro,
@@ -102,12 +99,13 @@ class CreateBattle extends Component {
         file1: fileInfo(file1),
         file2: fileInfo(file2)
       })
+      this.setState({ saving: 100 })
       showSuccess('Battle has been created in drafts.')
       setTimeout(() => window.location.replace('/battles/drafts'), 1500)
     } catch (err) {
       showError(err.message)
     }
-    this.setState({ saving: false })
+    this.setState({ saving: null })
   }
 
   renderProgressBar = ({ loaded, total }) => {
@@ -209,8 +207,12 @@ class CreateBattle extends Component {
             <VerifyYourEmail />
           ) : (
             <Grid item xs={12} className={classes.spaced}>
-              {saving ? (
-                <CircularProgress />
+              {Number.isInteger(saving) ? (
+                <LinearProgress
+                  color='secondary'
+                  variant='determinate'
+                  value={saving}
+                />
               ) : (
                 <Button
                   variant='contained'

@@ -98,37 +98,33 @@ class App extends Component {
     const { user } = this.state
     return (
       <ProtectedRoutes user={user}>
-        <Route exact path='/vote' render={props => <Vote user={user} />} />
-        <Route exact path='/invite' render={props => <Invite user={user} />} />
+        <Route path='/vote' render={props => <Vote user={user} />} />
+        <Route path='/invite' render={props => <Invite user={user} />} />
+        <Route
+          path='/battles/actives'
+          render={props => <Battles user={user} tab='actives' />}
+        />
+        <Route
+          path='/battles/drafts'
+          render={props => <Battles user={user} tab='drafts' />}
+        />
+        <Route
+          path='/battles/create'
+          render={props => <Battles user={user} tab='create' />}
+        />
         <Route
           exact
           path='/battles'
           render={props => <Battles user={user} />}
         />
         <Route
-          exact
-          path='/battles/actives'
-          render={props => <Battles user={user} tab='actives' />}
-        />
-        <Route
-          exact
-          path='/battles/drafts'
-          render={props => <Battles user={user} tab='drafts' />}
-        />
-        <Route
-          exact
-          path='/battles/create'
-          render={props => <Battles user={user} tab='create' />}
+          path='/profile/password'
+          render={props => <Profile user={user} tab='updatePassword' />}
         />
         <Route
           exact
           path='/profile'
           render={props => <Profile user={user} tab='profile' />}
-        />
-        <Route
-          exact
-          path='/profile/password'
-          render={props => <Profile user={user} tab='updatePassword' />}
         />
       </ProtectedRoutes>
     )
@@ -147,7 +143,7 @@ class App extends Component {
             <Header user={user} />
             <main>
               {this.renderProtectedRoutes()}
-              <Route exact path='/' component={Home} />
+              <Route path='/' component={Home} />
             </main>
           </div>
         </BrowserRouter>

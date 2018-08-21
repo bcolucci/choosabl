@@ -1,0 +1,30 @@
+{
+  "indexes": [
+    {
+      "collectionId": "battles",
+      "fields": [
+        {
+          "fieldPath": "active",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "updatedAt",
+          "mode": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "battles",
+      "fields": [
+        {
+          "fieldPath": "user",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "updatedAt",
+          "mode": "DESCENDING"
+        }
+      ]
+    }
+  ]
+}

@@ -19,6 +19,8 @@ import i18n from '../utils/initializeI18n'
 import FlagIcon from './FlagIcon'
 import SignInDialog from './SignInDialog'
 
+const langs = ['en_GB', 'fr_FR']
+
 class Header extends Component {
   static propTypes = {
     user: PropTypes.object
@@ -83,7 +85,6 @@ class Header extends Component {
   }
 
   renderLangMenu () {
-    // const { t } = this.props
     const { lang, langMenuEl } = this.state
     return (
       <ClickAwayListener onClickAway={this.handleCloseMenus}>
@@ -92,7 +93,7 @@ class Header extends Component {
           open={!!langMenuEl}
           onClose={this.handleCloseMenus}
         >
-          {['en_GB', 'fr_FR'].map(l => (
+          {langs.map(l => (
             <MenuItem
               key={l}
               selected={l === lang}
@@ -103,7 +104,6 @@ class Header extends Component {
               }}
             >
               <FlagIcon value={l} />
-              {/* {t(`langs:${l}`)} */}
             </MenuItem>
           ))}
         </Menu>
@@ -116,6 +116,10 @@ class Header extends Component {
     const { lang, userMenuEl, langMenuEl } = this.state
     const { isSignInDiagOpened } = this.state
     const authenticated = !!user
+    const goto = href => e => {
+      e.preventDefault()
+      history.push(href)
+    }
     return (
       <header className={classes.root}>
         <AppBar position='static'>
@@ -124,7 +128,7 @@ class Header extends Component {
               <img
                 src='/logo-bar.png'
                 alt='Choosabl header logo'
-                onClick={() => history.push('/')}
+                onClick={goto('/')}
               />
             </p>
             {!authenticated && (
@@ -137,13 +141,10 @@ class Header extends Component {
             )}
             {authenticated && (
               <div>
-                <Button color='inherit' onClick={() => history.push('/vote')}>
+                <Button color='inherit' onClick={goto('/vote')}>
                   <ThumbsUpIcon />
                 </Button>
-                <Button
-                  color='inherit'
-                  onClick={() => history.push('/battles')}
-                >
+                <Button color='inherit' onClick={goto('/battles')}>
                   <PhotoLibrary />
                 </Button>
                 <Button

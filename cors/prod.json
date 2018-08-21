@@ -9,6 +9,9 @@
       "Content-Type"
     ],
     "method": [
+      "OPTIONS",
+      "CONNECT",
+      "PATCH",
       "HEAD",
       "GET",
       "PUT",

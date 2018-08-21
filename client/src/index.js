@@ -6,7 +6,7 @@ import App from './App'
 import registerServiceWorker from './utils/registerServiceWorker'
 
 import './utils/initializeI18n'
-import './utils/wakeUpAllAPI'
+import './utils/wakeUpAPI'
 
 render(<App />, document.querySelector('#root'))
 

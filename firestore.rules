@@ -1,0 +1,10 @@
+service cloud.firestore {
+  function isOwner(uid) {
+    return request.auth.uid == uid;
+  }
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if isOwner(uid);
+    }
+  }
+}

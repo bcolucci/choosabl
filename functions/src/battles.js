@@ -1,9 +1,4 @@
-const express = require('express')
-const cors = require('cors')
-const bodyParser = require('body-parser')
-const firebase = require('firebase-admin')
-const { createFirebaseAuth } = require('express-firebase-auth')
-const { populateCollections } = require('./utils/db')
+const { auth, createRouter } = require('./_app')
 const idreg = require('./utils/idreg')
 const get = require('./battles/get')
 const create = require('./battles/create')
@@ -12,22 +7,19 @@ const toggleStatus = require('./battles/toggleStatus')
 const remove = require('./battles/remove')
 const isUserBattle = require('./battles/isUserBattleHandler')
 
-const app = express()
-const auth = createFirebaseAuth({ firebase, checkEmailVerified: true })
+const router = createRouter('/battles')
+router.get(`/${idreg('battleUID')}?`, auth, get)
+router.get('/availableForVote', auth, availableForVote)
 
-app.use(cors({ origin: true }))
-app.use(bodyParser.json())
-app.use(populateCollections)
+router.post('/', auth, create)
 
-app.head('/ping', (_, res) => res.end())
+router.put(
+  `/${idreg('battleUID')}/toggleStatus`,
+  auth,
+  isUserBattle,
+  toggleStatus
+)
 
-app.get(`/${idreg('battleUID')}?`, auth, get)
-app.get('/availableForVote', auth, availableForVote)
+router.delete(`/${idreg('battleUID')}`, auth, isUserBattle, remove)
 
-app.post('/', auth, create)
-
-app.put(`/${idreg('battleUID')}/toggleStatus`, auth, isUserBattle, toggleStatus)
-
-app.delete(`/${idreg('battleUID')}`, auth, isUserBattle, remove)
-
-module.exports = app
+module.exports = router
