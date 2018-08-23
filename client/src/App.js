@@ -141,7 +141,7 @@ class App extends Component {
         <CssBaseline />
         <Header user={user} />
         {this.renderProtectedRoutes()}
-        <Route path='/' component={Home} />
+        <Route path='/' render={props => <Home user={user} />} />
       </MuiPickersUtilsProvider>
     )
   }

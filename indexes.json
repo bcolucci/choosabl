@@ -25,6 +25,19 @@
           "mode": "DESCENDING"
         }
       ]
+    },
+    {
+      "collectionId": "photos",
+      "fields": [
+        {
+          "fieldPath": "user",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "mode": "DESCENDING"
+        }
+      ]
     }
   ]
 }

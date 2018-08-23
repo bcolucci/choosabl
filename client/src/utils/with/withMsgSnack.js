@@ -7,16 +7,21 @@ export default () => WrappedComponent => {
       msg: null
     }
 
-    showError (message) {
+    showError (message, cbk) {
       this.setState({ msg: { type: 'error', message } })
+      this.cbk = cbk
     }
 
-    showSuccess (message) {
+    showSuccess (message, cbk) {
       this.setState({ msg: { type: 'success', message } })
+      this.cbk = cbk
     }
 
     closeMsg () {
       this.setState({ msg: null })
+      if (this.cbk) {
+        this.cbk()
+      }
     }
 
     render () {

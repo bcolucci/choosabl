@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import FileInput from 'react-simple-file-input'
 import withAll from '../../utils/with'
+import photoPath from '../../utils/photoPath'
 import VerifyYourEmail from '../../components/VerifyYourEmail'
 import * as battlesAPI from '../../api/battles'
 
@@ -19,9 +20,6 @@ const fileInfo = file => ({
 })
 
 const photoResetAttrs = () => ({ file: null, base64: null, loading: null })
-
-const photoPath = (userUID, fileName) =>
-  `photos/${userUID}/${btoa(fileName + String(new Date().getTime()))}`
 
 const isTypeImage = type => type.substr(0, 6) === 'image/'
 
@@ -141,6 +139,7 @@ class CreateBattle extends Component {
         <Typography>Photo {num}</Typography>
         <FileInput
           required
+          fullWidth
           readAs='buffer'
           onChange={file =>
             this.setState({ [field]: { ...photoResetAttrs(), file } })

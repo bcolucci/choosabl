@@ -11,7 +11,7 @@ export default k => ({
     }
     return [null, undefined].includes(obj) ? def : obj
   },
-  set: (obj, ttl = 15 * 60 * 60) => {
+  set: (obj, ttl = 5 * 60 * 60) => {
     const item = { obj, ttl, ts: new Date().getTime() }
     try {
       localStorage.setItem(k, JSON.stringify(item))

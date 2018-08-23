@@ -115,11 +115,5 @@ class Battles extends Component {
 export default withAll(Battles, {
   withIntl: true,
   withRouter: true,
-  withStyles: {
-    styles: theme => ({
-      tab: {
-        paddingTop: '5px'
-      }
-    })
-  }
+  withStyles: true
 })

@@ -4,12 +4,11 @@ const Vision = require('@google-cloud/vision')
 const client = new Vision.ImageAnnotatorClient()
 const bucket = storage().app.options.storageBucket
 
-const detectFaces = async gcsImageUri => {
-  console.log('gcsImageUri', gcsImageUri)
+const detectFaces = async ({ uri, persist }) => {
   const request = {
     image: {
       source: {
-        gcsImageUri
+        gcsImageUri: uri
       }
     },
     imageContext: {
@@ -20,28 +19,31 @@ const detectFaces = async gcsImageUri => {
   }
   const results = await client.faceDetection(request)
   if (!results || !results.length) {
-    console.log(gcsImageUri, 'NO RESULT')
     return Promise.resolve()
   }
-  return storage()
-    .bucket(bucket)
-    .file(
-      '/vision/' +
-        gcsImageUri
-          .split('/')
-          .slice(-2)
-          .join('/')
-    )
-    .save(JSON.stringify(results), { contentType: 'application/json' })
+  if (persist) {
+    await storage()
+      .bucket(bucket)
+      .file(
+        '/vision/' +
+          uri
+            .split('/')
+            .slice(-2)
+            .join('/')
+      )
+      .save(JSON.stringify(results), { contentType: 'application/json' })
+  }
+  return results
 }
 
-const detectBattleFaces = battle =>
+const detectBattleFaces = ({ battle, persist }) =>
   Promise.all([
-    detectFaces(`${bucket}/${battle.photo1Path}`),
-    detectFaces(`${bucket}/${battle.photo2Path}`)
+    detectFaces({ uri: `${bucket}/${battle.photo1Path}`, persist }),
+    detectFaces({ uri: `${bucket}/${battle.photo2Path}`, persist })
   ])
 
 module.exports = {
+  bucket,
   detectFaces,
   detectBattleFaces
 }

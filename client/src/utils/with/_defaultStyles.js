@@ -24,6 +24,9 @@ export default theme => ({
   successBg: {
     backgroundColor: '#388E3C'
   },
+  tab: {
+    paddingTop: '5px'
+  },
   leftCaption: {
     display: 'inline',
     margin: '0px 8px'
