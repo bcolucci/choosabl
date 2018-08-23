@@ -1,7 +1,11 @@
 import { wakeUpAPI } from '../api'
 // if (window.location.host === 'localhost:3000') {
   ;(async function tick () {
-  await wakeUpAPI()
+  try {
+    await wakeUpAPI()
+  } catch (err) {
+    console.error(err)
+  }
   setTimeout(tick, 5000)
 })()
 // }
