@@ -4,6 +4,14 @@ const canvasBase64 = canvas =>
     .split('base64,')
     .pop()
 
+export const download = async url => {
+  const res = await fetch(url, {
+    cache: 'force-cache'
+  })
+  const buffer = await res.arrayBuffer()
+  return new Buffer(buffer, 'binary').toString('base64')
+}
+
 export const getDimensions = ({ type, base64 }) => {
   const img = new Image()
   img.src = `data:${type};base64,${base64}`

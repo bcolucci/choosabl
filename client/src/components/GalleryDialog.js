@@ -20,6 +20,11 @@ import CloseIcon from '@material-ui/icons/Close'
 import Typography from '@material-ui/core/Typography'
 import SelectIcon from '@material-ui/icons/RecentActors'
 import AddIcon from '@material-ui/icons/AddCircle'
+import GridList from '@material-ui/core/GridList'
+import GridListTile from '@material-ui/core/GridListTile'
+import GridListTileBar from '@material-ui/core/GridListTileBar'
+import ListSubheader from '@material-ui/core/ListSubheader'
+import InfoIcon from '@material-ui/icons/Info'
 import withAll from '../utils/with'
 import photoPath from '../utils/photoPath'
 import * as base64Img from '../utils/base64Img'
@@ -72,14 +77,28 @@ class GaleryDialog extends Component {
     this.loadPhotos()
   }
 
+  componentDidMount () {
+    window.addEventListener('resize', this.handleScreenResize, false)
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('resize', this.handleScreenResize)
+  }
+
+  handleScreenResize = () => this.forceUpdate()
+
   async loadPhotos () {
     this.setState({ loading: true })
     const photos = await photosAPI.getForCurrentUser()
     this.setState({ photos, loading: false })
-  }
-
-  steps () {
-    return ['Select a photo', 'Crop it!', 'Face detection']
+    photos.forEach(async (photo, idx) => {
+      const url = await storage()
+        .ref(photo.path)
+        .getDownloadURL()
+      const base64 = await base64Img.download(url)
+      Object.assign(this.state.photos[idx], { base64 })
+      this.forceUpdate()
+    })
   }
 
   moveToStep = (inc, updateAttrs = () => ({})) => () => {
@@ -101,15 +120,39 @@ class GaleryDialog extends Component {
         </Typography>
       )
     }
+    const headerHeight = window.document.querySelector('header').clientHeight
     return (
-      <ul className={classes.spaced}>
+      <GridList
+        id='gallery-grid'
+        cellHeight={180}
+        style={{
+          marginTop: 3,
+          width: window.screen.width
+          // height: window.screen.height - headerHeight - 10
+        }}
+      >
         {photos.map((photo, idx) => (
-          <li key={idx}>
-            <Typography>{photo.name}</Typography>
-            <Typography variant='caption'>{photo.customName}</Typography>
-          </li>
+          <GridListTile key={idx}>
+            <img
+              src={
+                photo.base64
+                  ? `data:${photo.type};base64,${photo.base64}`
+                  : '/noimg.png'
+              }
+              alt={`${photo.customName} (${photo.name}) preview`}
+            />
+            <GridListTileBar
+              title={photo.customName}
+              subtitle={<span>{photo.name}</span>}
+              actionIcon={
+                <IconButton>
+                  <InfoIcon />
+                </IconButton>
+              }
+            />
+          </GridListTile>
         ))}
-      </ul>
+      </GridList>
     )
   }
 
@@ -140,12 +183,14 @@ class GaleryDialog extends Component {
     const { uid } = auth().currentUser
     const path = photoPath(uid, file.name)
     const rawBase64 = cropBase64.split('base64,').pop()
-    try {
-      if (tmpPath) {
+    if (tmpPath) {
+      try {
         storage()
           .ref(tmpPath)
           .delete()
-      }
+      } catch (err) {}
+    }
+    try {
       await storage()
         .ref(path)
         .putString(rawBase64, 'base64')
@@ -378,14 +423,9 @@ class GaleryDialog extends Component {
     this.setState({ saving: true })
     const { uid } = auth().currentUser
     const { showError, showSuccess } = this.props
-    const { file, customName, tmpPath, cropBase64 } = this.state
+    const { file, customName, cropBase64 } = this.state
     const path = photoPath(uid, file.name)
     try {
-      if (tmpPath) {
-        storage()
-          .ref(tmpPath)
-          .delete()
-      }
       await storage()
         .ref(path)
         .putString(cropBase64, 'base64')
@@ -397,15 +437,16 @@ class GaleryDialog extends Component {
         type: file.type,
         size: file.size
       })
+      const photos = [{ ...photo, base64: cropBase64 }, ...this.state.photos]
       setTimeout(
         () =>
           this.setState({
             tab: 'select',
             step: 0,
-            ...this.resetImage(),
             face: null,
             detectingFace: false,
-            photos: [photo, ...this.state.photos]
+            ...this.resetImage(),
+            photos
           }),
         2000
       )
@@ -482,11 +523,13 @@ class GaleryDialog extends Component {
     return (
       <div>
         <Stepper activeStep={step} alternativeLabel>
-          {this.steps().map((label, idx) => (
-            <Step key={idx} disabled={idx === 0 && !photos.length}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
+          {['Select a photo', 'Crop it!', 'Face detection'].map(
+            (label, idx) => (
+              <Step key={idx} disabled={idx === 0 && !photos.length}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            )
+          )}
         </Stepper>
         {fns[step]()}
       </div>

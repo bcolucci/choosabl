@@ -11,7 +11,6 @@ class Home extends Component {
   render () {
     const { classes, user } = this.props
     const { showGallery } = this.state
-    console.log(user)
     if (!user) {
       return null
     }

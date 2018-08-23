@@ -30,6 +30,10 @@ class App extends Component {
     this.listenAuthUserChange()
   }
 
+  componentWillUnmount () {
+    this.removeAuthListener()
+  }
+
   listenAuthUserChange () {
     this.removeAuthListener = auth().onAuthStateChanged(async user => {
       if (user) {
@@ -91,10 +95,6 @@ class App extends Component {
     }
   }
 
-  componentWillUnmount () {
-    this.removeAuthListener()
-  }
-
   renderProtectedRoutes () {
     const { user } = this.state
     return (
@@ -140,8 +140,10 @@ class App extends Component {
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <CssBaseline />
         <Header user={user} />
-        {this.renderProtectedRoutes()}
-        <Route path='/' render={props => <Home user={user} />} />
+        <main>
+          {this.renderProtectedRoutes()}
+          <Route path='/' render={props => <Home user={user} />} />
+        </main>
       </MuiPickersUtilsProvider>
     )
   }

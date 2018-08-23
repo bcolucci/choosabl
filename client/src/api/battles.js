@@ -1,8 +1,7 @@
 import { storage } from 'firebase'
 import { authFetch } from '.'
 import cacheNS from '../utils/cacheNS'
-
-const bufToB64 = b => new Buffer(b, 'binary').toString('base64')
+import * as base64Img from '../utils/base64Img'
 
 export const getAllForCurrentUser = async () => {
   const cache = cacheNS('battles:getAllForCurrentUser')
@@ -63,14 +62,10 @@ export const downloadPhotos = async battle => {
       .ref(battle.photo2Path)
       .getDownloadURL()
   ])
-  const opts = {
-    cache: 'force-cache'
-  }
-  const [res1, res2] = await Promise.all([fetch(url1, opts), fetch(url2, opts)])
-  const images = (await Promise.all([
-    res1.arrayBuffer(),
-    res2.arrayBuffer()
-  ])).map(bufToB64)
+  const images = await Promise.all([
+    base64Img.download(url1),
+    base64Img.download(url2)
+  ])
   // cache.set(images)
   return images
 }
