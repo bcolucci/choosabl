@@ -19,3 +19,8 @@ ul[role="menu"] a {
 svg.social-svg {
   border-radius: 0 !important;
 }
+
+.ReactCrop__drag-handle {
+  width: 40px;
+  height: 40px;
+}

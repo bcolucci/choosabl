@@ -18,7 +18,6 @@ import withAll from '../utils/with'
 import i18n from '../utils/initializeI18n'
 import FlagIcon from './FlagIcon'
 import SignInDialog from './SignInDialog'
-import { Typography } from '@material-ui/core'
 
 const langs = ['en_GB', 'fr_FR']
 
@@ -60,7 +59,7 @@ class Header extends Component {
     })
 
   renderUserMenu () {
-    const { userMenuEl, langMenuEl } = this.state
+    const { userMenuEl } = this.state
     const { lang } = this.state
     const { t } = this.props
     return (

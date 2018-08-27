@@ -20,7 +20,6 @@ import { SocialIcon } from 'react-social-icons'
 import withAll from '../utils/with'
 import { createCurrentProfile } from '../api/profiles'
 import { apiURL } from '../api'
-import { LinearProgress } from '@material-ui/core'
 
 const unexpectedTabErr = new Error('Unexpected tab.')
 
