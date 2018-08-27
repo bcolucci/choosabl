@@ -23,7 +23,6 @@ import AddIcon from '@material-ui/icons/AddCircle'
 import GridList from '@material-ui/core/GridList'
 import GridListTile from '@material-ui/core/GridListTile'
 import GridListTileBar from '@material-ui/core/GridListTileBar'
-import ListSubheader from '@material-ui/core/ListSubheader'
 import InfoIcon from '@material-ui/icons/Info'
 import withAll from '../utils/with'
 import photoPath from '../utils/photoPath'
@@ -120,7 +119,6 @@ class GaleryDialog extends Component {
         </Typography>
       )
     }
-    const headerHeight = window.document.querySelector('header').clientHeight
     return (
       <GridList
         id='gallery-grid'
@@ -128,7 +126,6 @@ class GaleryDialog extends Component {
         style={{
           marginTop: 3,
           width: window.screen.width
-          // height: window.screen.height - headerHeight - 10
         }}
       >
         {photos.map((photo, idx) => (
@@ -307,19 +304,23 @@ class GaleryDialog extends Component {
             }}
           />
         </Grid>
-        {base64 && (
-          <Grid item xs={12} className={classes.spaced}>
-            <Typography variant='subheading'>Preview:</Typography>
-            <Typography variant='caption' gutterBottom>
-              {file.name}
-            </Typography>
-            <img
-              src={`data:${file.type};base64,${base64}`}
-              alt={`preview ${file.name}`}
-              style={{ width: '40%' }}
-            />
-          </Grid>
-        )}
+        <Grid item xs={12} className={classes.spaced}>
+          <Typography variant='subheading'>Preview:</Typography>
+          {base64 ? (
+            <div>
+              <Typography variant='caption' gutterBottom>
+                {file.name}
+              </Typography>
+              <img
+                src={`data:${file.type};base64,${base64}`}
+                alt={`preview ${file.name}`}
+                style={{ width: '40%' }}
+              />
+            </div>
+          ) : (
+            <img src='/noimg.png' style={{ width: '40%' }} />
+          )}
+        </Grid>
         <Grid item xs={12} className={classes.spaced}>
           <Button
             color='primary'
@@ -549,9 +550,6 @@ class GaleryDialog extends Component {
   render () {
     const { classes, open } = this.props
     const { loading, tab } = this.state
-    if (loading) {
-      return <LinearProgress color='secondary' />
-    }
     return (
       <Dialog fullScreen open={open} onClose={this.handleClose}>
         <AppBar style={{ position: 'relative' }} color='primary'>
@@ -582,7 +580,13 @@ class GaleryDialog extends Component {
             />
           </Tabs>
         </AppBar>
-        {tab === 'select' ? this.renderSelectTab() : this.renderImportTab()}
+        {loading ? (
+          <LinearProgress color='secondary' />
+        ) : tab === 'select' ? (
+          this.renderSelectTab()
+        ) : (
+          this.renderImportTab()
+        )}
       </Dialog>
     )
   }

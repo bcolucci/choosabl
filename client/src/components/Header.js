@@ -18,6 +18,7 @@ import withAll from '../utils/with'
 import i18n from '../utils/initializeI18n'
 import FlagIcon from './FlagIcon'
 import SignInDialog from './SignInDialog'
+import { Typography } from '@material-ui/core'
 
 const langs = ['en_GB', 'fr_FR']
 
@@ -59,7 +60,8 @@ class Header extends Component {
     })
 
   renderUserMenu () {
-    const { userMenuEl } = this.state
+    const { userMenuEl, langMenuEl } = this.state
+    const { lang } = this.state
     const { t } = this.props
     return (
       <ClickAwayListener onClickAway={this.handleCloseMenus}>
@@ -78,6 +80,14 @@ class Header extends Component {
             <Link to='/plan'>{t('plan')}</Link>
           </MenuItem>
           <Divider />
+          <MenuItem
+            onClick={({ currentTarget }) =>
+              this.setState({ langMenuEl: currentTarget })
+            }
+          >
+            <FlagIcon value={lang} />
+            <span style={{ marginLeft: 5 }}>{t('langs:Language')}</span>
+          </MenuItem>
           <MenuItem onClick={this.handleSignOut}>{t('sign-out')}</MenuItem>
         </Menu>
       </ClickAwayListener>
@@ -85,6 +95,7 @@ class Header extends Component {
   }
 
   renderLangMenu () {
+    const { t } = this.props
     const { lang, langMenuEl } = this.state
     return (
       <ClickAwayListener onClickAway={this.handleCloseMenus}>
@@ -104,6 +115,7 @@ class Header extends Component {
               }}
             >
               <FlagIcon value={l} />
+              <span style={{ marginLeft: 5 }}>{t(`langs:${l}`)}</span>
             </MenuItem>
           ))}
         </Menu>
@@ -113,7 +125,7 @@ class Header extends Component {
 
   render () {
     const { user, classes, history } = this.props
-    const { lang, userMenuEl, langMenuEl } = this.state
+    const { userMenuEl } = this.state
     const { isSignInDiagOpened } = this.state
     const authenticated = !!user
     const goto = href => e => {
@@ -162,21 +174,9 @@ class Header extends Component {
                   )}
                 </Button>
                 {this.renderUserMenu()}
+                {this.renderLangMenu()}
               </div>
             )}
-            <div>
-              <Button
-                color='inherit'
-                aria-owns={langMenuEl ? 'fade-menu' : null}
-                aria-haspopup='true'
-                onClick={({ currentTarget }) =>
-                  this.setState({ langMenuEl: currentTarget })
-                }
-              >
-                <FlagIcon value={lang} style={{ marginRight: '-5px' }} />
-              </Button>
-              {this.renderLangMenu()}
-            </div>
           </Toolbar>
         </AppBar>
         {!authenticated && (
@@ -191,12 +191,14 @@ class Header extends Component {
 }
 
 export default withAll(Header, {
-  withIntl: true,
+  withIntl: ['langs'],
   withRouter: true,
   withStyles: {
     styles: theme => ({
       title: {
         flexGrow: 1,
+        margin: 0,
+        marginTop: '5px',
         cursor: 'pointer'
       }
     })

@@ -4,6 +4,7 @@ import { auth } from 'firebase'
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider'
 import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils'
 import CssBaseline from '@material-ui/core/CssBaseline'
+import { MuiThemeProvider } from '@material-ui/core/styles'
 import withAll from './utils/with'
 import Header from './components/Header'
 import ProtectedRoutes from './components/ProtectedRoutes'
@@ -15,6 +16,7 @@ import Invite from './screens/Invite'
 import Splash from './components/Splash'
 import { apiURL } from './api'
 import { createCurrentProfile } from './api/profiles'
+import theme from './theme'
 
 import './App.css'
 
@@ -137,14 +139,16 @@ class App extends Component {
       return <Splash />
     }
     return (
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <CssBaseline />
-        <Header user={user} />
-        <main>
-          {this.renderProtectedRoutes()}
-          <Route path='/' render={props => <Home user={user} />} />
-        </main>
-      </MuiPickersUtilsProvider>
+      <MuiThemeProvider theme={theme}>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <CssBaseline />
+          <Header user={user} />
+          <main>
+            {this.renderProtectedRoutes()}
+            <Route exact path='/' render={props => <Home user={user} />} />
+          </main>
+        </MuiPickersUtilsProvider>
+      </MuiThemeProvider>
     )
   }
 }

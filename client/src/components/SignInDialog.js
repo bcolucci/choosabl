@@ -15,12 +15,12 @@ import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
-import Divider from '@material-ui/core/Divider'
 import Grid from '@material-ui/core/Grid'
 import { SocialIcon } from 'react-social-icons'
 import withAll from '../utils/with'
 import { createCurrentProfile } from '../api/profiles'
 import { apiURL } from '../api'
+import { LinearProgress } from '@material-ui/core'
 
 const unexpectedTabErr = new Error('Unexpected tab.')
 
@@ -258,9 +258,9 @@ class SignInDialog extends Component {
   renderSocialSignIn () {
     const { classes } = this.props
     return (
-      <div style={{ marginTop: 20 }}>
-        <Typography variant='subheading' gutterBottom>
-          Social authentication
+      <div style={{ marginTop: 30 }}>
+        <Typography variant='caption' gutterBottom>
+          or via social networks:
         </Typography>
         <IconButton
           className={classes.tinyspaced}
@@ -302,11 +302,12 @@ class SignInDialog extends Component {
         <DialogTitle>Sign In</DialogTitle>
         <DialogContent>
           {saving ? (
-            <CircularProgress />
+            <CircularProgress style={{ margin: '40px 100px' }} />
           ) : (
             <div style={{ textAlign: 'center' }}>
               <Button
                 color='primary'
+                variant='outlined'
                 onClick={() =>
                   this.setState({
                     panel: 'SignInWithEmail',
@@ -318,7 +319,6 @@ class SignInDialog extends Component {
                   provider: 'email'
                 })}
               </Button>
-              <Divider />
               {this.renderSocialSignIn()}
             </div>
           )}

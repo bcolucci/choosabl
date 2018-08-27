@@ -54,6 +54,7 @@ class Invite extends Component {
       this.setState({ email: '', message: '' })
       showSuccess(`${email} has been invited. Thank you!`)
       setImmediate(() => document.querySelector('input[type=email]').focus())
+      this.refreshInvitedList()
     } catch (err) {
       showError(err.message)
     }
