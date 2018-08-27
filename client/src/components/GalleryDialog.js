@@ -26,6 +26,7 @@ import GridListTileBar from '@material-ui/core/GridListTileBar'
 import InfoIcon from '@material-ui/icons/Info'
 import withAll from '../utils/with'
 import photoPath from '../utils/photoPath'
+import prettyBytes from '../utils/prettyBytes'
 import * as base64Img from '../utils/base64Img'
 import * as photosAPI from '../api/photos'
 
@@ -65,6 +66,7 @@ class GaleryDialog extends Component {
     crop: defaultCrop(),
     pixelCrop: null,
     cropBase64: null,
+    isValidCrop: false,
     // ---
     face: null,
     detectingFace: false,
@@ -221,7 +223,7 @@ class GaleryDialog extends Component {
       return false
     }
     if (size > maxPhotoSize) {
-      showError(`Image size should be <= ${maxPhotoSize}kB`)
+      showError(`Image size should be <= ${prettyBytes(maxPhotoSize)}`)
       return false
     }
     return true
@@ -347,6 +349,7 @@ class GaleryDialog extends Component {
       base64: cropBase64
     })
     if (width < photoWidth) {
+      this.setState({ isValidCrop: false })
       return this.showWidthValidationError()
     }
     const resized = await base64Img.resize({
@@ -357,6 +360,7 @@ class GaleryDialog extends Component {
     this.setState({
       crop,
       pixelCrop,
+      isValidCrop: true,
       cropBase64: resized
     })
   }
@@ -376,7 +380,7 @@ class GaleryDialog extends Component {
 
   renderCropStep () {
     const { classes } = this.props
-    const { file, base64, crop, cropBase64 } = this.state
+    const { file, base64, crop, cropBase64, isValidCrop } = this.state
     return (
       <Grid container>
         <Grid
@@ -393,7 +397,8 @@ class GaleryDialog extends Component {
             crop={crop}
             src={`data:${file.type};base64,${base64}`}
             imageStyle={{ width: '100%' }}
-            onChange={this.handleCropUpdate}
+            onChange={crop => this.setState({ crop })}
+            onComplete={this.handleCropUpdate}
             onImageLoaded={this.handleCropImageLoaded}
           />
         </Grid>
@@ -410,7 +415,7 @@ class GaleryDialog extends Component {
           <Button
             color='primary'
             variant='contained'
-            disabled={!cropBase64}
+            disabled={!cropBase64 || !isValidCrop}
             onClick={this.moveToStep(+1)}
           >
             Next
