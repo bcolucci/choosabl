@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 import { auth, storage } from 'firebase'
 import ReactCrop, { makeAspectCrop } from 'react-image-crop'
 import FileInput from 'react-simple-file-input'
@@ -12,18 +13,22 @@ import StepLabel from '@material-ui/core/StepLabel'
 import Grid from '@material-ui/core/Grid'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 import Toolbar from '@material-ui/core/Toolbar'
 import Dialog from '@material-ui/core/Dialog'
 import IconButton from '@material-ui/core/IconButton'
-import LinearProgress from '@material-ui/core/LinearProgress'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
+import AddIcon from '@material-ui/icons/AddCircle'
 import CloseIcon from '@material-ui/icons/Close'
+import DoneIcon from '@material-ui/icons/Done'
+import DeleteIcon from '@material-ui/icons/Delete'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import Typography from '@material-ui/core/Typography'
 import SelectIcon from '@material-ui/icons/RecentActors'
-import AddIcon from '@material-ui/icons/AddCircle'
 import GridList from '@material-ui/core/GridList'
 import GridListTile from '@material-ui/core/GridListTile'
 import GridListTileBar from '@material-ui/core/GridListTileBar'
-import InfoIcon from '@material-ui/icons/Info'
 import withAll from '../utils/with'
 import photoPath from '../utils/photoPath'
 import prettyBytes from '../utils/prettyBytes'
@@ -57,6 +62,8 @@ class GaleryDialog extends Component {
     step: 0,
     photos: [],
     loading: true,
+    selected: null,
+    selectionEl: null,
     // ---
     file: null,
     customName: '',
@@ -107,9 +114,33 @@ class GaleryDialog extends Component {
     this.setState({ step: step + inc, ...updateAttrs() })
   }
 
+  handleCloseSelectionMenu = () => {
+    this.setState({ selectionEl: null, selected: null })
+  }
+
+  handleSelectPhoto = e => {
+    e.preventDefault()
+    const { selected } = this.state
+    if (selected === null) {
+      return
+    }
+    window.alert(`Select photo #${selected + 1}`)
+    this.handleCloseSelectionMenu()
+  }
+
+  handleDeletePhoto = e => {
+    e.preventDefault()
+    const { selected } = this.state
+    if (selected === null) {
+      return
+    }
+    window.alert(`Delete photo #${selected + 1}`)
+    this.handleCloseSelectionMenu()
+  }
+
   renderSelectTab () {
     const { classes } = this.props
-    const { photos } = this.state
+    const { photos, selected, selectionEl } = this.state
     if (!photos.length) {
       return (
         <Typography
@@ -122,36 +153,63 @@ class GaleryDialog extends Component {
       )
     }
     return (
-      <GridList
-        id='gallery-grid'
-        cellHeight={180}
-        style={{
-          marginTop: 3,
-          width: window.screen.width
-        }}
-      >
-        {photos.map((photo, idx) => (
-          <GridListTile key={idx}>
-            <img
-              src={
-                photo.base64
-                  ? `data:${photo.type};base64,${photo.base64}`
-                  : '/noimg.png'
-              }
-              alt={`${photo.customName} (${photo.name}) preview`}
-            />
-            <GridListTileBar
-              title={photo.customName}
-              subtitle={<span>{photo.name}</span>}
-              actionIcon={
-                <IconButton>
-                  <InfoIcon />
-                </IconButton>
-              }
-            />
-          </GridListTile>
-        ))}
-      </GridList>
+      <div>
+        <GridList
+          id='gallery-grid'
+          cellHeight={180}
+          style={{
+            marginTop: 3,
+            width: window.screen.width
+          }}
+        >
+          {photos.map((photo, idx) => (
+            <GridListTile
+              key={idx}
+              onClick={() => this.setState({ selected: idx })}
+            >
+              <img
+                src={
+                  photo.base64
+                    ? `data:${photo.type};base64,${photo.base64}`
+                    : '/noimg.png'
+                }
+                alt={`${photo.customName} (${photo.name}) preview`}
+              />
+              <GridListTileBar
+                title={photo.customName}
+                subtitle={<span>{photo.name}</span>}
+                actionIcon={
+                  <IconButton
+                    style={{ color: '#fff' }}
+                    onClick={({ currentTarget }) => {
+                      this.setState({
+                        selectionEl: currentTarget,
+                        selected: idx
+                      })
+                    }}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                }
+              />
+            </GridListTile>
+          ))}
+        </GridList>
+        <Menu
+          anchorEl={selectionEl}
+          open={!!selectionEl}
+          onClose={this.handleCloseSelectionMenu}
+        >
+          <MenuItem onClick={this.handleSelectPhoto}>
+            <DoneIcon className='menu-icon' />
+            Select
+          </MenuItem>
+          <MenuItem onClick={this.handleDeletePhoto}>
+            <DeleteIcon className='menu-icon' />
+            Delete
+          </MenuItem>
+        </Menu>
+      </div>
     )
   }
 
@@ -285,8 +343,8 @@ class GaleryDialog extends Component {
             required
             fullWidth
             value={customName}
-            onChange={({ target }) =>
-              this.setState({ customName: target.value.substr(0, 50) })
+            onChange={({ currentTarget }) =>
+              this.setState({ customName: currentTarget.value.substr(0, 50) })
             }
           />
         </Grid>

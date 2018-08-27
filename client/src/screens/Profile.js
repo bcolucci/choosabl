@@ -43,7 +43,7 @@ class Profile extends Component {
   }
 
   handleChange = (field, synthetic = true) => e => {
-    let value = synthetic ? e.target.value : e
+    let value = synthetic ? e.currentTarget.value : e
     if (field === 'username') {
       value = value.substr(0, 30)
     }

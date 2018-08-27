@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  background-color: #2196f3;
+  background-color: #1769aa;
 }
 
 ul[role="menu"] a {
@@ -18,6 +18,10 @@ ul[role="menu"] a {
 
 svg.social-svg {
   border-radius: 0 !important;
+}
+
+.menu-icon {
+  margin-right: 5px;
 }
 
 .ReactCrop__drag-handle {

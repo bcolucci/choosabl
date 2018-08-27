@@ -10,13 +10,13 @@ class Home extends Component {
   }
 
   renderGalleryBtn () {
-    const { user } = this.props
+    const { classes, user } = this.props
     const { showGallery } = this.state
     if (!user) {
       return null
     }
     return (
-      <div>
+      <div className={classes.spaced}>
         <GalleryDialog
           open={showGallery}
           onPick={() => window.alert('photo selectionnée')}

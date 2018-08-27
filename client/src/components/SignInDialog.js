@@ -181,8 +181,11 @@ class SignInDialog extends Component {
                   label='Email Address'
                   type='email'
                   value={email}
-                  onChange={({ target }) =>
-                    this.setState({ email: target.value, focusEmail: false })
+                  onChange={({ currentTarget }) =>
+                    this.setState({
+                      email: currentTarget.value,
+                      focusEmail: false
+                    })
                   }
                 />
               </Grid>
@@ -195,9 +198,9 @@ class SignInDialog extends Component {
                     label='Password'
                     type='password'
                     value={password}
-                    onChange={({ target }) =>
+                    onChange={({ currentTarget }) =>
                       this.setState({
-                        password: target.value,
+                        password: currentTarget.value,
                         focusEmail: false
                       })
                     }

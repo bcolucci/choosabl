@@ -111,7 +111,9 @@ class Invite extends Component {
             label='Email Address'
             type='email'
             value={email}
-            onChange={({ target }) => this.setState({ email: target.value })}
+            onChange={({ currentTarget }) =>
+              this.setState({ email: currentTarget.value })
+            }
           />
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
@@ -121,8 +123,8 @@ class Invite extends Component {
             rows={4}
             label='Custom message'
             value={message}
-            onChange={({ target }) =>
-              this.setState({ message: target.value.substr(0, 300) })
+            onChange={({ currentTarget }) =>
+              this.setState({ message: currentTarget.value.substr(0, 300) })
             }
           />
         </Grid>

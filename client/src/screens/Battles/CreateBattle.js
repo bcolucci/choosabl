@@ -180,8 +180,8 @@ class CreateBattle extends Component {
               required
               label={t('battles:name')}
               value={name}
-              onChange={({ target }) => {
-                const name = target.value
+              onChange={({ currentTarget }) => {
+                const name = currentTarget.value
                 if (name.length < 40) {
                   this.setState({ name })
                 }
@@ -192,8 +192,8 @@ class CreateBattle extends Component {
           {this.renderPhotoUploader(2)}
           <Grid item xs={12} className={classes.spaced}>
             <Switch
-              onChange={({ target }) =>
-                this.setState({ isPro: target.checked })
+              onChange={({ currentTarget }) =>
+                this.setState({ isPro: currentTarget.checked })
               }
               checked={isPro}
             />
