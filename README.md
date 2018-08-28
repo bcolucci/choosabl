@@ -21,6 +21,16 @@
 
 ---
 
+# Accounts
+
+| Network   | Login                   | Password       |
+|------------------------------------------------------|
+| Facebook  | contact@choosabl.com    | 2018@choosabl
+| LinkedIn  | contact@choosabl.com    | 2018@choosabl
+| Google    | mac.choosabl@gmail.com  | 2018@choosabl
+
+---
+
 Open usefull links for development:
 
     google-chrome \
