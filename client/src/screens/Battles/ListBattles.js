@@ -19,11 +19,10 @@ class ListBattles extends Component {
   }
 
   handleDeleteBattle = async battle => {
-    const { deleting, deleted } = this.state
-    this.setState({ deleting: [...deleting, battle.id] })
+    this.setState(prev => ({ deleting: [...prev.deleting, battle.id] }))
     await battlesAPI.deleteOne(battle)
     this.props.moveBattle(battle, true)
-    this.setState({ deleted: [...deleted, battle.id] })
+    this.setState(prev => ({ deleted: [...prev.deleted, battle.id] }))
   }
 
   handlePreview = preview => this.setState({ preview })

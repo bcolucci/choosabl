@@ -38,11 +38,11 @@ class Battles extends Component {
 
   moveBattle = dest => (battle, remove = false) => {
     const from = dest === 'actives' ? 'drafts' : 'actives'
-    this.setState({
-      [from]: this.state[from].filter(b => b.id !== battle.id)
-    })
+    this.setState(prev => ({
+      [from]: prev[from].filter(b => b.id !== battle.id)
+    }))
     if (!remove) {
-      this.setState({ [dest]: [battle, ...this.state[dest]] })
+      this.setState(prev => ({ [dest]: [battle, ...prev[dest]] }))
     }
   }
 

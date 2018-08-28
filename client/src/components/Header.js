@@ -52,11 +52,7 @@ class Header extends Component {
     this.props.history.push('/')
   }
 
-  handleCloseMenus = () =>
-    this.setState({
-      userMenuEl: null,
-      langMenuEl: null
-    })
+  handleCloseMenus = () => this.setState({ userMenuEl: null, langMenuEl: null })
 
   renderUserMenu () {
     const { userMenuEl } = this.state

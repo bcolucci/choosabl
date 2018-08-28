@@ -1,44 +1,14 @@
-import React, { Component } from 'react'
-import Button from '@material-ui/core/Button'
-import GalleryDialog from '../components/GalleryDialog'
+import React, { PureComponent } from 'react'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
 import withAll from '../utils/with'
-import { Grid, Typography } from '@material-ui/core'
 
-class Home extends Component {
-  state = {
-    showGallery: false
-  }
-
-  renderGalleryBtn () {
-    const { classes, user } = this.props
-    const { showGallery } = this.state
-    if (!user) {
-      return null
-    }
-    return (
-      <div className={classes.spaced}>
-        <GalleryDialog
-          open={showGallery}
-          onPick={() => window.alert('photo selectionnée')}
-          onClose={() => this.setState({ showGallery: false })}
-        />
-        <Button
-          variant='contained'
-          color='primary'
-          onClick={() => this.setState({ showGallery: true })}
-        >
-          Open gallery
-        </Button>
-      </div>
-    )
-  }
-
+class Home extends PureComponent {
   render () {
     const { classes } = this.props
     const pClass = { fontWeight: 'bold', color: '#666' }
     return (
       <Grid container>
-        {this.renderGalleryBtn()}
         <Grid item xs={12} className={classes.spaced}>
           <Typography variant='headline' color='secondary' gutterBottom>
             Etes-vous sûre de votre photo de profil ?

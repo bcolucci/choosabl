@@ -32,14 +32,13 @@ class Profile extends Component {
   }
 
   async componentWillMount () {
-    const { username, birthday, gender } = this.state
     const profile = await profilesAPI.getCurrent()
-    this.setState({
+    this.setState(prev => ({
       loading: false,
-      username: profile.username || username,
-      birthday: profile.birthday || birthday,
-      gender: profile.gender || gender
-    })
+      username: profile.username || prev.username,
+      birthday: profile.birthday || prev.birthday,
+      gender: profile.gender || prev.gender
+    }))
   }
 
   handleChange = (field, synthetic = true) => e => {

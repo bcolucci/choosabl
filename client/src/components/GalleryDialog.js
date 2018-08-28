@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import classnames from 'classnames'
 import { auth, storage } from 'firebase'
 import ReactCrop, { makeAspectCrop } from 'react-image-crop'
 import FileInput from 'react-simple-file-input'
@@ -19,9 +18,9 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Dialog from '@material-ui/core/Dialog'
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
+import PreviewIcon from '@material-ui/icons/Visibility'
 import AddIcon from '@material-ui/icons/AddCircle'
 import CloseIcon from '@material-ui/icons/Close'
-import DoneIcon from '@material-ui/icons/Done'
 import DeleteIcon from '@material-ui/icons/Delete'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Typography from '@material-ui/core/Typography'
@@ -53,7 +52,7 @@ const defaultCrop = () => ({
 class GaleryDialog extends Component {
   static propTypes = {
     open: PropTypes.bool.isRequired,
-    onPick: PropTypes.func.isRequired,
+    onSelect: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired
   }
 
@@ -109,38 +108,42 @@ class GaleryDialog extends Component {
     })
   }
 
-  moveToStep = (inc, updateAttrs = () => ({})) => () => {
-    const { step } = this.state
-    this.setState({ step: step + inc, ...updateAttrs() })
-  }
+  moveToStep = (inc, updateAttrs = () => ({})) => () =>
+    this.setState(prev => ({
+      step: prev.step + inc,
+      ...updateAttrs()
+    }))
 
-  handleCloseSelectionMenu = () => {
+  handleCloseSelectionMenu = () =>
     this.setState({ selectionEl: null, selected: null })
-  }
-
-  handleSelectPhoto = e => {
-    e.preventDefault()
-    const { selected } = this.state
-    if (selected === null) {
-      return
-    }
-    window.alert(`Select photo #${selected + 1}`)
-    this.handleCloseSelectionMenu()
-  }
 
   handleDeletePhoto = e => {
     e.preventDefault()
     const { selected } = this.state
-    if (selected === null) {
-      return
-    }
-    window.alert(`Delete photo #${selected + 1}`)
+    const photo = this.state.photos[selected]
+    console.log('Delete', photo)
     this.handleCloseSelectionMenu()
+  }
+
+  handlePreviewPhoto = e => {
+    e.preventDefault()
+    const { selected } = this.state
+    const photo = this.state.photos[selected]
+    console.log('Preview', photo)
+    this.handleCloseSelectionMenu()
+  }
+
+  handleSelectPhoto = idx => e => {
+    e.preventDefault()
+    const { onSelect, onClose } = this.props
+    const photo = this.state.photos[idx]
+    onSelect(photo)
+    onClose()
   }
 
   renderSelectTab () {
     const { classes } = this.props
-    const { photos, selected, selectionEl } = this.state
+    const { photos, selectionEl } = this.state
     if (!photos.length) {
       return (
         <Typography
@@ -163,11 +166,9 @@ class GaleryDialog extends Component {
           }}
         >
           {photos.map((photo, idx) => (
-            <GridListTile
-              key={idx}
-              onClick={() => this.setState({ selected: idx })}
-            >
+            <GridListTile key={idx}>
               <img
+                onClick={this.handleSelectPhoto(idx)}
                 src={
                   photo.base64
                     ? `data:${photo.type};base64,${photo.base64}`
@@ -182,10 +183,10 @@ class GaleryDialog extends Component {
                   <IconButton
                     style={{ color: '#fff' }}
                     onClick={({ currentTarget }) => {
-                      this.setState({
-                        selectionEl: currentTarget,
-                        selected: idx
-                      })
+                      // this.setState({
+                      //   selected: idx,
+                      //   selectionEl: currentTarget
+                      // })
                     }}
                   >
                     <MoreVertIcon />
@@ -200,11 +201,11 @@ class GaleryDialog extends Component {
           open={!!selectionEl}
           onClose={this.handleCloseSelectionMenu}
         >
-          <MenuItem onClick={this.handleSelectPhoto}>
-            <DoneIcon className='menu-icon' />
-            Select
+          <MenuItem disabled onClick={this.handleSelectPhoto}>
+            <PreviewIcon className='menu-icon' />
+            Preview
           </MenuItem>
-          <MenuItem onClick={this.handleDeletePhoto}>
+          <MenuItem disabled onClick={this.handleDeletePhoto}>
             <DeleteIcon className='menu-icon' />
             Delete
           </MenuItem>
@@ -300,8 +301,11 @@ class GaleryDialog extends Component {
   }
 
   drawPhoto = () => {
-    const { file, cropBase64, face } = this.state
     const canvas = window.document.querySelector('canvas#face')
+    if (!canvas) {
+      return setTimeout(this.drawPhoto, 100)
+    }
+    const { file, cropBase64, face } = this.state
     const img = new Image()
     img.src = `data:${file.type};base64,${cropBase64}`
     img.onload = () => {
@@ -378,7 +382,11 @@ class GaleryDialog extends Component {
               />
             </div>
           ) : (
-            <img src='/noimg.png' style={{ width: '40%' }} />
+            <img
+              src='/noimg.png'
+              alt='preview - please select a file'
+              style={{ width: '40%' }}
+            />
           )}
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
@@ -561,7 +569,7 @@ class GaleryDialog extends Component {
             variant='contained'
             onClick={this.handleDetectFace}
           >
-            {detectingFace ? 'Decting...' : 'Detect face'}
+            {detectingFace ? 'Detecting...' : 'Detect face'}
           </Button>
           <Button
             disabled={!face || saving}

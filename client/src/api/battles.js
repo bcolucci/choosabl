@@ -49,24 +49,18 @@ export const getAvailablesForCurrentUser = async () => {
 }
 
 export const downloadPhotos = async battle => {
-  // const cache = cacheNS(`battles:downloadPhotos:${battle.id}`)
-  // const obj = cache.get()
-  // if (obj) {
-  //   return obj
-  // }
   const [url1, url2] = await Promise.all([
     storage()
-      .ref(battle.photo1Path)
+      .ref(battle.photo1.path)
       .getDownloadURL(),
     storage()
-      .ref(battle.photo2Path)
+      .ref(battle.photo2.path)
       .getDownloadURL()
   ])
   const images = await Promise.all([
     base64Img.download(url1),
     base64Img.download(url2)
   ])
-  // cache.set(images)
   return images
 }
 
