@@ -38,7 +38,7 @@ import 'react-image-crop/dist/ReactCrop.css'
 
 const aspect = 3.7 / 4
 const photoWidth = 250
-const maxPhotoSize = 600 * 1000 // 600kB
+const maxPhotoSize = 6 * 1000 * 1000 // 6mB
 
 const isTypeImage = type => /^image\//.test(type)
 
@@ -300,17 +300,28 @@ class GaleryDialog extends Component {
     }
   }
 
-  drawPhoto = () => {
+  drawPhoto = async () => {
     const canvas = window.document.querySelector('canvas#face')
     if (!canvas) {
       return setTimeout(this.drawPhoto, 100)
     }
     const { file, cropBase64, face } = this.state
+    const src = `data:${file.type};base64,${cropBase64}`
+    const { width, height } = await base64Img.getDimensions({
+      type: file.type,
+      base64: cropBase64
+    })
+    let resizedWidth = width
+    if (height > 200) {
+      resizedWidth = Math.floor(width * 200 / height)
+    }
     const img = new Image()
-    img.src = `data:${file.type};base64,${cropBase64}`
+    img.src = src
+    img.height = 200
+    img.width = resizedWidth
     img.onload = () => {
-      canvas.width = img.width
-      canvas.height = img.height
+      canvas.height = 200
+      canvas.width = resizedWidth
       const ctx = canvas.getContext('2d')
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.drawImage(img, 0, 0)
@@ -353,7 +364,12 @@ class GaleryDialog extends Component {
           />
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
-          <Typography>Select a photo:</Typography>
+          <Typography>
+            Select a photo:{' '}
+            <span className='file-size-caption'>
+              ({'<='} {prettyBytes(maxPhotoSize)})
+            </span>
+          </Typography>
           <FileInput
             required
             readAs='buffer'
@@ -378,14 +394,14 @@ class GaleryDialog extends Component {
               <img
                 src={`data:${file.type};base64,${base64}`}
                 alt={`preview ${file.name}`}
-                style={{ width: '40%' }}
+                style={{ height: '120px' }}
               />
             </div>
           ) : (
             <img
               src='/noimg.png'
               alt='preview - please select a file'
-              style={{ width: '40%' }}
+              style={{ height: '120px' }}
             />
           )}
         </Grid>
@@ -462,7 +478,8 @@ class GaleryDialog extends Component {
             keepSelection
             crop={crop}
             src={`data:${file.type};base64,${base64}`}
-            imageStyle={{ width: '100%' }}
+            style={{ height: '200px' }}
+            imageStyle={{ height: '100%' }}
             onChange={crop => this.setState({ crop })}
             onComplete={this.handleCropUpdate}
             onImageLoaded={this.handleCropImageLoaded}
