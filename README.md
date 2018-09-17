@@ -44,8 +44,8 @@ Open usefull links for development:
 
 ## Select a "good" node version to work with
 
-    sudo npm i -g n \
-      && sudo n 8.11.1
+    sudo npm i -g nvm \
+      && nvm install 8.11.1
 
 ## Retrieve the code and install deps
 
@@ -60,6 +60,41 @@ Open usefull links for development:
     [...]
     cd [choosabl-path]
     gcloud init
+
+## Setup Firebase CLI
+
+    sudo npm i -g firebase-tools
+
+    # and login
+    firebase login
+
+## Switch to dev env
+
+    npm run switch:test
+
+## (optional) Active NVM version autoload
+
+Add this to your profile file (e.g. bashrc, bash_profile):
+
+    #
+    # Run 'nvm use' automatically every time there's
+    # a .nvmrc file in the directory. Also, revert to default
+    # version when entering a directory without .nvmrc
+    #
+    enter_directory() {
+    if [[ $PWD == $PREV_PWD ]]; then
+        return
+    fi
+
+    PREV_PWD=$PWD
+    if [[ -f ".nvmrc" ]]; then
+        nvm use
+        NVM_DIRTY=true
+    elif [[ $NVM_DIRTY = true ]]; then
+        nvm use default
+        NVM_DIRTY=false
+    fi
+    }
 
 ## Set CORS
 
