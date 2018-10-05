@@ -99,7 +99,9 @@ class GaleryDialog extends Component {
     const photos = await photosAPI.getForCurrentUser()
     this.setState({ photos, loading: false })
     photos.forEach(async (photo, idx) => {
-      const url = await storage().ref(photo.path).getDownloadURL()
+      const url = await storage()
+        .ref(photo.path)
+        .getDownloadURL()
       const base64 = await base64Img.download(url)
       Object.assign(this.state.photos[idx], { base64 })
       this.forceUpdate()
@@ -245,11 +247,15 @@ class GaleryDialog extends Component {
     const rawBase64 = cropBase64.split('base64,').pop()
     if (tmpPath) {
       try {
-        storage().ref(tmpPath).delete()
+        storage()
+          .ref(tmpPath)
+          .delete()
       } catch (err) {}
     }
     try {
-      await storage().ref(path).putString(rawBase64, 'base64')
+      await storage()
+        .ref(path)
+        .putString(rawBase64, 'base64')
       const face = await photosAPI.detectingFace(path)
       if (!Object.keys(face).length) {
         throw new Error('No face detected.')
@@ -357,7 +363,8 @@ class GaleryDialog extends Component {
             fullWidth
             value={customName}
             onChange={({ currentTarget }) =>
-              this.setState({ customName: currentTarget.value.substr(0, 50) })}
+              this.setState({ customName: currentTarget.value.substr(0, 50) })
+            }
           />
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
@@ -383,8 +390,8 @@ class GaleryDialog extends Component {
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
           <Typography variant='subheading'>Preview:</Typography>
-          {base64
-            ? <div>
+          {base64 ? (
+            <div>
               <Typography variant='caption' gutterBottom>
                 {file.name}
               </Typography>
@@ -392,13 +399,15 @@ class GaleryDialog extends Component {
                 src={`data:${file.type};base64,${base64}`}
                 alt={`preview ${file.name}`}
                 style={{ height: '120px' }}
-                />
+              />
             </div>
-            : <img
+          ) : (
+            <img
               src='/noimg.png'
               alt='preview - please select a file'
               style={{ height: '120px' }}
-              />}
+            />
+          )}
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
           <Button
@@ -510,7 +519,9 @@ class GaleryDialog extends Component {
     const { file, customName, cropBase64 } = this.state
     const path = photoPath(uid, file.name)
     try {
-      await storage().ref(path).putString(cropBase64, 'base64')
+      await storage()
+        .ref(path)
+        .putString(cropBase64, 'base64')
       showSuccess('Photo successfully uploaded!')
       const photo = await photosAPI.createPhoto({
         path,
@@ -605,15 +616,13 @@ class GaleryDialog extends Component {
     return (
       <div>
         <Stepper activeStep={step} alternativeLabel>
-          {[
-            'Select a photo',
-            'Crop it!',
-            'Face detection'
-          ].map((label, idx) => (
-            <Step key={idx} disabled={idx === 0 && !photos.length}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
+          {['Select a photo', 'Crop it!', 'Face detection'].map(
+            (label, idx) => (
+              <Step key={idx} disabled={idx === 0 && !photos.length}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            )
+          )}
         </Stepper>
         {fns[step]()}
       </div>
@@ -663,9 +672,13 @@ class GaleryDialog extends Component {
             />
           </Tabs>
         </AppBar>
-        {loading
-          ? <LinearProgress color='secondary' />
-          : tab === 'select' ? this.renderSelectTab() : this.renderImportTab()}
+        {loading ? (
+          <LinearProgress color='secondary' />
+        ) : tab === 'select' ? (
+          this.renderSelectTab()
+        ) : (
+          this.renderImportTab()
+        )}
       </Dialog>
     )
   }
