@@ -121,7 +121,7 @@ Add this to your profile file (e.g. bashrc, bash_profile):
 
 ## Build
 
-    cd api && npm run build
+    cd functions && npm run build
 
 ## Deploy
 
@@ -137,5 +137,5 @@ Add this to your profile file (e.g. bashrc, bash_profile):
 
 # Documentation
 
-* API: https://github.com/bcolucci/choosabl/blob/master/api
+* Functions: https://github.com/bcolucci/choosabl/blob/master/functions
 * Client: https://github.com/bcolucci/choosabl/blob/master/client
