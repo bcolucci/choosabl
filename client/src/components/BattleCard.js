@@ -33,7 +33,7 @@ class BattleCard extends Component {
     moving: false
   }
 
-  async componentWillMount () {
+  async componentDidMount () {
     const { battle } = this.props
     const photos = await battlesAPI.downloadPhotos(battle)
     this.setState({ photos, loading: false })

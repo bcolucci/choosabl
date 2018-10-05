@@ -25,7 +25,7 @@ class Invite extends Component {
     loading: true
   }
 
-  async componentWillMount () {
+  async componentDidMount () {
     await this.refreshInvitedList()
     this.setState({ loading: false })
   }

@@ -80,12 +80,9 @@ class GaleryDialog extends Component {
     saving: false
   }
 
-  componentWillMount () {
-    this.loadPhotos()
-  }
-
   componentDidMount () {
     window.addEventListener('resize', this.handleScreenResize, false)
+    this.loadPhotos()
   }
 
   componentWillUnmount () {

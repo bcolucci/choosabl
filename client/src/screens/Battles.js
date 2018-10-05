@@ -11,6 +11,7 @@ import AddIcon from '@material-ui/icons/AddCircle'
 import ListBattles from './Battles/ListBattles'
 import CreateBattle from './Battles/CreateBattle'
 import withAll from '../utils/with'
+import goto from '../utils/goto'
 import * as battlesAPI from '../api/battles'
 
 class Battles extends Component {
@@ -23,13 +24,12 @@ class Battles extends Component {
   }
 
   state = {
-    menu: null,
     actives: [],
     drafts: [],
     loading: true
   }
 
-  async componentWillMount () {
+  async componentDidMount () {
     const battles = await battlesAPI.getAllForCurrentUser()
     const actives = battles.filter(({ active }) => active)
     const drafts = battles.filter(({ active }) => !active)
@@ -52,19 +52,16 @@ class Battles extends Component {
     if (loading) {
       return <LinearProgress color='secondary' />
     }
-    const { tab, history } = this.props
+    const { tab } = this.props
     const moveBattle = this.moveBattle.bind(this)
-    const goto = href => e => {
-      e.preventDefault()
-      history.push(href)
-    }
+    const go = goto(this.props)
     return (
       <div>
         <AppBar position='static' color='default'>
           <Tabs fullWidth value={['actives', 'drafts', 'create'].indexOf(tab)}>
             <Tab
               label={t('battles:Actives')}
-              onClick={goto('/battles/actives')}
+              onClick={go('/battles/actives')}
               className={classes.tab}
               icon={
                 <Badge badgeContent={actives.length} color='default'>
@@ -74,7 +71,7 @@ class Battles extends Component {
             />
             <Tab
               label={t('battles:Drafts')}
-              onClick={goto('/battles/drafts')}
+              onClick={go('/battles/drafts')}
               className={classes.tab}
               icon={
                 <Badge badgeContent={drafts.length} color='default'>
@@ -84,7 +81,7 @@ class Battles extends Component {
             />
             <Tab
               label={t('create')}
-              onClick={goto('/battles/create')}
+              onClick={go('/battles/create')}
               className={classes.tab}
               icon={<AddIcon />}
             />

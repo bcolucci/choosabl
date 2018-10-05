@@ -1,16 +1,23 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid'
+import AppBar from '@material-ui/core/AppBar'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
+import AccountIcon from '@material-ui/icons/AccountCircle'
+import GradeIcon from '@material-ui/icons/Grade'
 import { subYears } from 'date-fns'
 import { DatePicker } from 'material-ui-pickers'
 import withAll from '../utils/with'
+import goto from '../utils/goto'
 import GenderPicker from '../components/GenderPicker'
 import * as profilesAPI from '../api/profiles'
+import Badges from './Profile/Badges'
 import { auth } from 'firebase'
 
 const maxBirthdayDate = subYears(new Date(), 14)
@@ -18,6 +25,10 @@ const maxBirthdayDate = subYears(new Date(), 14)
 class Profile extends Component {
   static propTypes = {
     tab: PropTypes.string.isRequired
+  }
+
+  static defaultProps = {
+    tab: 'profile'
   }
 
   state = {
@@ -31,7 +42,7 @@ class Profile extends Component {
     newPassword2: ''
   }
 
-  async componentWillMount () {
+  async componentDidMount () {
     const profile = await profilesAPI.getCurrent()
     this.setState(prev => ({
       loading: false,
@@ -201,13 +212,38 @@ class Profile extends Component {
   }
 
   render () {
+    const { t, classes, tab } = this.props
     const { loading } = this.state
     if (loading) {
       return <LinearProgress color='secondary' />
     }
-    return this.props.tab === 'profile'
-      ? this.renderProfile()
-      : this.renderUpdatePassword()
+    const tabValue = ['profile', 'updatePassword'].includes(tab) ? 0 : 1
+    const go = goto(this.props)
+    return (
+      <div>
+        <AppBar position='static' color='default'>
+          <Tabs fullWidth value={tabValue}>
+            <Tab
+              label={t('profile:Profile')}
+              onClick={go('/profile')}
+              className={classes.tab}
+              icon={<AccountIcon />}
+            />
+            <Tab
+              label={t('profile:Badges')}
+              onClick={go('/profile/badges')}
+              className={classes.tab}
+              icon={<GradeIcon />}
+            />
+          </Tabs>
+        </AppBar>
+        <div className={classes.spaced}>
+          {tab === 'profile' && this.renderProfile()}
+          {tab === 'updatePassword' && this.renderUpdatePassword()}
+          {tab === 'badges' && <Badges user={this.props.user} />}
+        </div>
+      </div>
+    )
   }
 }
 

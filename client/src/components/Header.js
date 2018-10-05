@@ -33,7 +33,7 @@ class Header extends Component {
     isSignInDiagOpened: false
   }
 
-  componentWillMount () {
+  componentDidMount () {
     i18n.on('languageChanged', this.handleLangChange)
   }
 

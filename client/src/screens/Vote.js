@@ -22,12 +22,6 @@ class Vote extends Component {
     this.handleScreenResize = this.handleScreenResize.bind(this)
   }
 
-  async componentWillMount () {
-    this.setState({ loading: true })
-    await this.shiftNextBattle()
-    this.setState({ loading: false })
-  }
-
   async shiftNextBattle () {
     const battles = await battlesAPI.getAvailablesForCurrentUser()
     const [current] = battles
@@ -38,8 +32,11 @@ class Vote extends Component {
     this.setState({ battles, current })
   }
 
-  componentDidMount () {
+  async componentDidMount () {
     window.addEventListener('resize', this.handleScreenResize, false)
+    this.setState({ loading: true })
+    await this.shiftNextBattle()
+    this.setState({ loading: false })
   }
 
   componentWillUnmount () {

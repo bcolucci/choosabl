@@ -26,7 +26,7 @@ class App extends Component {
     loading: true
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.catchReferrer()
     this.catchLinkedInAuthCallback()
     this.listenAuthUserChange()
@@ -101,33 +101,33 @@ class App extends Component {
     const { user } = this.state
     return (
       <ProtectedRoutes user={user}>
-        <Route path='/vote' render={props => <Vote user={user} />} />
-        <Route path='/invite' render={props => <Invite user={user} />} />
+        <Route path='/vote' render={() => <Vote user={user} />} />
+        <Route path='/invite' render={() => <Invite user={user} />} />
         <Route
           path='/battles/actives'
-          render={props => <Battles user={user} tab='actives' />}
+          render={() => <Battles user={user} tab='actives' />}
         />
         <Route
           path='/battles/drafts'
-          render={props => <Battles user={user} tab='drafts' />}
+          render={() => <Battles user={user} tab='drafts' />}
         />
         <Route
           path='/battles/create'
-          render={props => <Battles user={user} tab='create' />}
+          render={() => <Battles user={user} tab='create' />}
         />
-        <Route
-          exact
-          path='/battles'
-          render={props => <Battles user={user} />}
-        />
+        <Route exact path='/battles' render={() => <Battles user={user} />} />
         <Route
           path='/profile/password'
-          render={props => <Profile user={user} tab='updatePassword' />}
+          render={() => <Profile user={user} tab='updatePassword' />}
+        />
+        <Route
+          path='/profile/badges'
+          render={() => <Profile user={user} tab='badges' />}
         />
         <Route
           exact
           path='/profile'
-          render={props => <Profile user={user} tab='profile' />}
+          render={() => <Profile user={user} tab='profile' />}
         />
       </ProtectedRoutes>
     )

@@ -1,3 +1,4 @@
+.firebase
 build/
 client/build/
 node_modules/
