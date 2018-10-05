@@ -18,7 +18,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Dialog from '@material-ui/core/Dialog'
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
-import PreviewIcon from '@material-ui/icons/Visibility'
+// import PreviewIcon from '@material-ui/icons/Visibility'
 import AddIcon from '@material-ui/icons/AddCircle'
 import CloseIcon from '@material-ui/icons/Close'
 import DeleteIcon from '@material-ui/icons/Delete'
@@ -99,9 +99,7 @@ class GaleryDialog extends Component {
     const photos = await photosAPI.getForCurrentUser()
     this.setState({ photos, loading: false })
     photos.forEach(async (photo, idx) => {
-      const url = await storage()
-        .ref(photo.path)
-        .getDownloadURL()
+      const url = await storage().ref(photo.path).getDownloadURL()
       const base64 = await base64Img.download(url)
       Object.assign(this.state.photos[idx], { base64 })
       this.forceUpdate()
@@ -121,8 +119,10 @@ class GaleryDialog extends Component {
     e.preventDefault()
     const { selected } = this.state
     const photo = this.state.photos[selected]
-    console.log('Delete', photo)
+    photosAPI.deleteOne(photo)
     this.handleCloseSelectionMenu()
+    const photos = this.state.photos.filter(({ id }) => id !== photo.id)
+    this.setState({ photos })
   }
 
   handlePreviewPhoto = e => {
@@ -142,8 +142,8 @@ class GaleryDialog extends Component {
   }
 
   renderSelectTab () {
-    const { classes } = this.props
-    const { photos, selectionEl } = this.state
+    const { t, classes } = this.props
+    const { photos, selected, selectionEl } = this.state
     if (!photos.length) {
       return (
         <Typography
@@ -155,6 +155,7 @@ class GaleryDialog extends Component {
         </Typography>
       )
     }
+    const used = selected !== null && this.state.photos[selected].used
     return (
       <div>
         <GridList
@@ -183,10 +184,10 @@ class GaleryDialog extends Component {
                   <IconButton
                     style={{ color: '#fff' }}
                     onClick={({ currentTarget }) => {
-                      // this.setState({
-                      //   selected: idx,
-                      //   selectionEl: currentTarget
-                      // })
+                      this.setState({
+                        selected: idx,
+                        selectionEl: currentTarget
+                      })
                     }}
                   >
                     <MoreVertIcon />
@@ -201,13 +202,14 @@ class GaleryDialog extends Component {
           open={!!selectionEl}
           onClose={this.handleCloseSelectionMenu}
         >
-          <MenuItem disabled onClick={this.handleSelectPhoto}>
+          {/* <MenuItem disabled onClick={this.handleSelectPhoto}>
             <PreviewIcon className='menu-icon' />
             Preview
-          </MenuItem>
-          <MenuItem disabled onClick={this.handleDeletePhoto}>
+          </MenuItem> */}
+          <MenuItem disabled={used} onClick={this.handleDeletePhoto}>
             <DeleteIcon className='menu-icon' />
             Delete
+            {used && ` (${t('used')})`}
           </MenuItem>
         </Menu>
       </div>
@@ -243,15 +245,11 @@ class GaleryDialog extends Component {
     const rawBase64 = cropBase64.split('base64,').pop()
     if (tmpPath) {
       try {
-        storage()
-          .ref(tmpPath)
-          .delete()
+        storage().ref(tmpPath).delete()
       } catch (err) {}
     }
     try {
-      await storage()
-        .ref(path)
-        .putString(rawBase64, 'base64')
+      await storage().ref(path).putString(rawBase64, 'base64')
       const face = await photosAPI.detectingFace(path)
       if (!Object.keys(face).length) {
         throw new Error('No face detected.')
@@ -359,8 +357,7 @@ class GaleryDialog extends Component {
             fullWidth
             value={customName}
             onChange={({ currentTarget }) =>
-              this.setState({ customName: currentTarget.value.substr(0, 50) })
-            }
+              this.setState({ customName: currentTarget.value.substr(0, 50) })}
           />
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
@@ -386,8 +383,8 @@ class GaleryDialog extends Component {
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
           <Typography variant='subheading'>Preview:</Typography>
-          {base64 ? (
-            <div>
+          {base64
+            ? <div>
               <Typography variant='caption' gutterBottom>
                 {file.name}
               </Typography>
@@ -395,15 +392,13 @@ class GaleryDialog extends Component {
                 src={`data:${file.type};base64,${base64}`}
                 alt={`preview ${file.name}`}
                 style={{ height: '120px' }}
-              />
+                />
             </div>
-          ) : (
-            <img
+            : <img
               src='/noimg.png'
               alt='preview - please select a file'
               style={{ height: '120px' }}
-            />
-          )}
+              />}
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
           <Button
@@ -515,9 +510,7 @@ class GaleryDialog extends Component {
     const { file, customName, cropBase64 } = this.state
     const path = photoPath(uid, file.name)
     try {
-      await storage()
-        .ref(path)
-        .putString(cropBase64, 'base64')
+      await storage().ref(path).putString(cropBase64, 'base64')
       showSuccess('Photo successfully uploaded!')
       const photo = await photosAPI.createPhoto({
         path,
@@ -612,13 +605,15 @@ class GaleryDialog extends Component {
     return (
       <div>
         <Stepper activeStep={step} alternativeLabel>
-          {['Select a photo', 'Crop it!', 'Face detection'].map(
-            (label, idx) => (
-              <Step key={idx} disabled={idx === 0 && !photos.length}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            )
-          )}
+          {[
+            'Select a photo',
+            'Crop it!',
+            'Face detection'
+          ].map((label, idx) => (
+            <Step key={idx} disabled={idx === 0 && !photos.length}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
         </Stepper>
         {fns[step]()}
       </div>
@@ -668,13 +663,9 @@ class GaleryDialog extends Component {
             />
           </Tabs>
         </AppBar>
-        {loading ? (
-          <LinearProgress color='secondary' />
-        ) : tab === 'select' ? (
-          this.renderSelectTab()
-        ) : (
-          this.renderImportTab()
-        )}
+        {loading
+          ? <LinearProgress color='secondary' />
+          : tab === 'select' ? this.renderSelectTab() : this.renderImportTab()}
       </Dialog>
     )
   }
