@@ -119,9 +119,9 @@ Add this to your profile file (e.g. bashrc, bash_profile):
     # starts the client
     cd client && npm start
 
-## Build
+## Build client
 
-    cd functions && npm run build
+    cd client && npm run build
 
 ## Deploy
 
