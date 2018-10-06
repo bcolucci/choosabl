@@ -1,5 +1,7 @@
+const populatePhotos = require('./populatePhotos')
+const { battlesRef, votesRef, profilesRef } = require('../utils/db')
+
 module.exports = async (req, res) => {
-  const { battlesRef, votesRef, profilesRef } = res.locals
   const userUID = req.header('UserUID')
   const users = {}
   const battles = []
@@ -46,5 +48,6 @@ module.exports = async (req, res) => {
       return resolved
     })
   )
+  await Promise.all(battles.map(populatePhotos))
   res.json(battles)
 }

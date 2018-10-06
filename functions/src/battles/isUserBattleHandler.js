@@ -1,5 +1,6 @@
+const { battlesRef } = require('../utils/db')
+
 module.exports = async (req, res, next) => {
-  const { battlesRef } = res.locals
   const userUID = req.header('UserUID')
   const { battleUID } = req.params
   const snap = await battlesRef.doc(battleUID).get()

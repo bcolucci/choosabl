@@ -1,5 +1,6 @@
+const { rofilesRef } = require('../utils/db')
+
 module.exports = async (req, res) => {
-  const { profilesRef } = res.locals
   const userUID = req.header('UserUID')
   const { profile } = req.body
   const now = new Date().getTime()

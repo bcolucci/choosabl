@@ -1,7 +1,7 @@
 const createProfile = require('./_createProfile')
+const { profilesRef } = require('../utils/db')
 
 module.exports = async (req, res) => {
-  const { profilesRef } = res.locals
   const userUID = req.header('UserUID')
   const { referrer } = req.query
   const { email } = req.body

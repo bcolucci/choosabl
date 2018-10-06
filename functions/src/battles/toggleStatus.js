@@ -1,5 +1,6 @@
+const { battlesRef } = require('../utils/db')
+
 module.exports = async (req, res) => {
-  const { battlesRef } = res.locals
   const { battleUID } = req.params
   const { battle } = res.locals
   const now = new Date().getTime()

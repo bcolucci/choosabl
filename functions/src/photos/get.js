@@ -1,5 +1,7 @@
+const { battlesRef, photosRef } = require('../utils/db')
+
 // TODO move out
-const useUsedPhotos = async (battlesRef, userUID) => {
+const useUsedPhotos = async userUID => {
   const photos = []
   const iterator = await battlesRef.where('user', '==', userUID).get()
   iterator.forEach(snap => {
@@ -13,9 +15,8 @@ const useUsedPhotos = async (battlesRef, userUID) => {
 
 module.exports = async (req, res) => {
   const userUID = req.header('UserUID')
-  const { photosRef, battlesRef } = res.locals
   const photos = []
-  const usedPhotos = await useUsedPhotos(battlesRef, userUID)
+  const usedPhotos = await useUsedPhotos(userUID)
   const iterator = await photosRef
     .where('user', '==', userUID)
     .orderBy('createdAt', 'desc')

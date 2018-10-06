@@ -1,8 +1,8 @@
 const uuid = require('uuid/v4')
 const { detectBattleFaces } = require('../utils/vision')
+const { battlesRef } = require('../utils/db')
 
 module.exports = async (req, res) => {
-  const { battlesRef } = res.locals
   const userUID = req.header('UserUID')
   const id = uuid()
   const { battle } = req.body

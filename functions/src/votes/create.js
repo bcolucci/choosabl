@@ -1,7 +1,7 @@
 const uuid = require('uuid/v4')
+const { battlesRef, profilesRef, votesRef } = require('../utils/db')
 
 module.exports = async (req, res) => {
-  const { battlesRef, profilesRef, votesRef } = res.locals
   const userUID = req.header('UserUID')
   const { battleUID } = req.params
   const voteFor = +Boolean(+req.params.voteFor)

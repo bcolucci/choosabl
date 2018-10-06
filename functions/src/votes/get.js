@@ -1,5 +1,6 @@
+const { votesRef } = require('../utils/db')
+
 module.exports = async (req, res) => {
-  const { votesRef } = res.locals
   const { battleUID } = req.params
   const votes = []
   const iterator = await votesRef.where('battle', '==', battleUID).get()

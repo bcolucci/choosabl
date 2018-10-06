@@ -8,9 +8,4 @@ const collections = require('../collections').reduce(
   {}
 )
 
-const populateCollections = (_, res, next) => {
-  Object.assign(res.locals, { db, ...collections })
-  next()
-}
-
-module.exports = { db, populateCollections, collections }
+module.exports = { db, ...collections }

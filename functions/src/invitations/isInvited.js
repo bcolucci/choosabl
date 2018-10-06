@@ -1,5 +1,6 @@
+const { invitationsRef } = require('../utils/db')
+
 module.exports = async (req, res) => {
-  const { invitationsRef } = res.locals
   const { invited } = req.params
   const userUID = req.header('UserUID')
   const iterator = await invitationsRef

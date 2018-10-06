@@ -1,5 +1,6 @@
+const { db, battlesRef, votesRef } = require('../utils/db')
+
 module.exports = async (req, res) => {
-  const { db, battlesRef, votesRef } = res.locals
   const { battleUID } = req.params
   try {
     await Promise.all([

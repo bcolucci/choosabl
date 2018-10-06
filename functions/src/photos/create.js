@@ -1,7 +1,7 @@
 const uuid = require('uuid/v4')
+const { photosRef } = require('../utils/db')
 
 module.exports = async (req, res) => {
-  const { photosRef } = res.locals
   const { photo } = req.body
   const userUID = req.header('UserUID')
   const id = uuid()

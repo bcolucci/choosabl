@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import Button from '@material-ui/core/Button'
 import withAll from '../utils/with'
 import VerifyYourEmail from '../components/VerifyYourEmail'
 import * as battlesAPI from '../api/battles'
 import * as votesAPI from '../api/votes'
+import * as profilesAPI from '../api/profiles'
 
 const defaultOpacity = 0.9
 
@@ -11,6 +13,7 @@ class Vote extends Component {
   state = {
     battles: [],
     current: null,
+    profile: null,
     loading: true,
     height: null,
     photo1Opacity: defaultOpacity,
@@ -35,8 +38,9 @@ class Vote extends Component {
   async componentDidMount () {
     window.addEventListener('resize', this.handleScreenResize, false)
     this.setState({ loading: true })
+    const profile = await profilesAPI.getCurrent()
     await this.shiftNextBattle()
-    this.setState({ loading: false })
+    this.setState({ profile, loading: false })
   }
 
   componentWillUnmount () {
@@ -64,14 +68,20 @@ class Vote extends Component {
     this.setState({ loading: true })
     await votesAPI.voteForBattle(current.id, num)
     await this.shiftNextBattle()
-    this.setState({ loading: false })
+    this.setState(({ profile }) => ({
+      profile: {
+        ...profile,
+        votes: profile.votes + 1
+      },
+      loading: false
+    }))
   }
 
   renderPhoto (num) {
     const { current, height } = this.state
     return (
       <img
-        src={`data:${current[`file${num + 1}`].type};base64,${
+        src={`data:${current[`photo${num + 1}`].type};base64,${
           current.photos[num]
         }`}
         alt={`${current.name} choice #${num + 1}`}
@@ -88,7 +98,7 @@ class Vote extends Component {
 
   render () {
     const { classes, user } = this.props
-    const { loading, current } = this.state
+    const { loading, profile, current } = this.state
     if (!user.emailVerified) {
       return <VerifyYourEmail />
     }
@@ -108,6 +118,17 @@ class Vote extends Component {
       >
         {this.renderPhoto(0)}
         {this.renderPhoto(1)}
+        <Button
+          variant='fab'
+          color='secondary'
+          style={{
+            position: 'absolute',
+            top: '50%',
+            right: 10
+          }}
+        >
+          {profile.votes}
+        </Button>
       </div>
     )
   }

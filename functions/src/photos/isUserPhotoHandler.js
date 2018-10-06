@@ -1,5 +1,6 @@
+const { photosRef } = require('../utils/db')
+
 module.exports = async (req, res, next) => {
-  const { photosRef } = res.locals
   const userUID = req.header('UserUID')
   const { photoUID } = req.params
   const snap = await photosRef.doc(photoUID).get()

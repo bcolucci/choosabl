@@ -2,9 +2,9 @@ const { auth } = require('firebase-admin')
 const uuid = require('uuid')
 const mailer = require('../utils/mailer')
 const invitationMail = require('../mails/invitation')
+const { invitationsRef } = require('../utils/db')
 
 module.exports = async (req, res) => {
-  const { invitationsRef } = res.locals
   const { invited, message } = req.body
   const userUID = req.header('UserUID')
   const nbInvitations = (await invitationsRef
