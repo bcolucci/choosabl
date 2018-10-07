@@ -114,7 +114,7 @@ Add this to your profile file (e.g. bashrc, bash_profile):
 ## Run on local
 
     # starts the server side
-    cd functions && sudo npm run serve
+    cd functions && npm start
 
     # starts the client
     cd client && npm start

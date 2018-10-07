@@ -10,7 +10,7 @@
   "scripts": {
     "serve": "sudo firebase serve --only functions",
     "shell": "firebase functions:shell",
-    "start": "npm run shell",
+    "start": "npm run serve",
     "deploy": "firebase deploy --only functions --runtime=nodejs8 --trigger-http",
     "logs": "firebase functions:log",
     "format": "prettier-standard '**/*.js'"
