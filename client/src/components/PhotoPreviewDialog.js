@@ -8,7 +8,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
-import truncateName from '../utils/truncateName'
+import innerEllipse from '../utils/innerEllipse'
 import withAll from '../utils/with'
 
 class PhotoPreviewDialog extends PureComponent {
@@ -36,7 +36,7 @@ class PhotoPreviewDialog extends PureComponent {
               <CloseIcon />
             </IconButton>
             <Typography variant='title' color='inherit'>
-              {truncateName(file.name)}
+              {innerEllipse(file.name)}
             </Typography>
           </Toolbar>
         </AppBar>

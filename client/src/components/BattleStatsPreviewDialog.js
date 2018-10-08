@@ -8,7 +8,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
-import truncateName from '../utils/truncateName'
+import innerEllipse from '../utils/innerEllipse'
 import withAll from '../utils/with'
 
 class BattleStatsPreviewDialog extends PureComponent {
@@ -34,7 +34,7 @@ class BattleStatsPreviewDialog extends PureComponent {
               <CloseIcon />
             </IconButton>
             <Typography variant='title' color='inherit'>
-              {truncateName(battle.name)}
+              {innerEllipse(battle.name)}
             </Typography>
           </Toolbar>
         </AppBar>
