@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { auth, storage } from 'firebase'
 import ReactCrop, { makeAspectCrop } from 'react-image-crop'
 import FileInput from 'react-simple-file-input'
+// import imagetracer from 'imagetracerjs'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import AppBar from '@material-ui/core/AppBar'
@@ -257,6 +258,11 @@ class GaleryDialog extends Component {
       if (!Object.keys(face).length) {
         throw new Error('No face detected.')
       }
+      // imagetracer.imageToSVG(
+      //   `data:${file.type};base64,${rawBase64}`,
+      //   svg => storage().ref(`${path}.svg`).putString(svg),
+      //   'artistic4'
+      // )
       this.setState({ face, tmpPath: path })
     } catch (err) {
       showError(err.message)
@@ -347,7 +353,7 @@ class GaleryDialog extends Component {
     }
   }
 
-  renderSelectStep () {
+  renderSelectStep = () => {
     const { classes } = this.props
     const { customName, file, base64 } = this.state
     return (
@@ -461,7 +467,7 @@ class GaleryDialog extends Component {
     this.setState({ cropBase64, crop })
   }
 
-  renderCropStep () {
+  renderCropStep = () => {
     const { classes } = this.props
     const { file, base64, crop, cropBase64, isValidCrop } = this.state
     return (
@@ -546,7 +552,7 @@ class GaleryDialog extends Component {
     this.setState({ saving: false })
   }
 
-  renderDetectFaceStep () {
+  renderDetectFaceStep = () => {
     const { classes } = this.props
     const { file, detectingFace, face, saving } = this.state
     setImmediate(this.drawPhoto)
@@ -606,9 +612,9 @@ class GaleryDialog extends Component {
   renderImportTab () {
     const { step, photos } = this.state
     const fns = [
-      this.renderSelectStep.bind(this),
-      this.renderCropStep.bind(this),
-      this.renderDetectFaceStep.bind(this)
+      this.renderSelectStep,
+      this.renderCropStep,
+      this.renderDetectFaceStep
     ]
     return (
       <div>

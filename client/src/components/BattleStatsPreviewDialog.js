@@ -11,18 +11,16 @@ import CloseIcon from '@material-ui/icons/Close'
 import truncateName from '../utils/truncateName'
 import withAll from '../utils/with'
 
-class PhotoPreviewDialog extends PureComponent {
+class BattleStatsPreviewDialog extends PureComponent {
   static propTypes = {
     open: PropTypes.bool,
     onClose: PropTypes.func,
-    battle: PropTypes.object.isRequired,
-    file: PropTypes.object.isRequired,
-    base64: PropTypes.string.isRequired
+    battle: PropTypes.object.isRequired
   }
 
   render () {
-    const { classes, open, onClose } = this.props
-    const { file, base64 } = this.props
+    const { classes, open, onClose, battle } = this.props
+    console.log(battle)
     return (
       <Dialog
         fullScreen
@@ -36,16 +34,12 @@ class PhotoPreviewDialog extends PureComponent {
               <CloseIcon />
             </IconButton>
             <Typography variant='title' color='inherit'>
-              {truncateName(file.name)}
+              {truncateName(battle.name)}
             </Typography>
           </Toolbar>
         </AppBar>
         <div className={classes.tinyspaced}>
-          <img
-            alt='preview battle file'
-            src={`data:${file.type};base64,${base64}`}
-            style={{ width: '100%' }}
-          />
+          <p>TODO</p>
           <Button color='primary' variant='contained' onClick={onClose}>
             Close
           </Button>
@@ -55,6 +49,7 @@ class PhotoPreviewDialog extends PureComponent {
   }
 }
 
-export default withAll(PhotoPreviewDialog, {
-  withStyles: true
+export default withAll(BattleStatsPreviewDialog, {
+  withStyles: true,
+  withIntl: ['battles']
 })

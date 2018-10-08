@@ -12,6 +12,7 @@ import CardActions from '@material-ui/core/CardActions'
 import Typography from '@material-ui/core/Typography'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import DeleteIcon from '@material-ui/icons/DeleteOutline'
+import PollIcon from '@material-ui/icons/Poll'
 import ToggleOnIcon from '@material-ui/icons/ToggleOn'
 import ToggleOffIcon from '@material-ui/icons/ToggleOff'
 import withAll from '../utils/with'
@@ -24,7 +25,8 @@ class BattleCard extends Component {
     deleting: PropTypes.bool,
     moveBattle: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
-    onPreview: PropTypes.func.isRequired
+    onPreview: PropTypes.func.isRequired,
+    onStats: PropTypes.func.isRequired
   }
 
   state = {
@@ -82,7 +84,7 @@ class BattleCard extends Component {
   renderActions () {
     const { t } = this.props
     const { active, deleting, battle } = this.props
-    const { onDelete } = this.props
+    const { onDelete, onStats } = this.props
     const { moving } = this.state
     return (
       <div>
@@ -113,6 +115,17 @@ class BattleCard extends Component {
               <DeleteIcon />
             </Button>
           ))}
+        {active && (
+          <Button
+            variant='outlined'
+            color='primary'
+            style={{ marginLeft: 5 }}
+            onClick={() => onStats(battle)}
+          >
+            <PollIcon />
+            {t('battles:Stats')}
+          </Button>
+        )}
       </div>
     )
   }

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import withAll from '../../utils/with'
 import BattleCard from '../../components/BattleCard'
 import PhotoPreviewDialog from '../../components/PhotoPreviewDialog'
+import BattleStatsPreviewDialog from '../../components/BattleStatsPreviewDialog'
 import * as battlesAPI from '../../api/battles'
 
 class ListBattles extends Component {
@@ -14,6 +15,7 @@ class ListBattles extends Component {
 
   state = {
     preview: null,
+    showStats: null,
     deleting: [],
     deleted: []
   }
@@ -25,10 +27,12 @@ class ListBattles extends Component {
     this.setState(prev => ({ deleted: [...prev.deleted, battle.id] }))
   }
 
+  handleStats = battle => this.setState({ showStats: battle })
+
   handlePreview = preview => this.setState({ preview })
 
   render () {
-    const { preview, deleting, deleted } = this.state
+    const { preview, showStats, deleting, deleted } = this.state
     const { active, battles, moveBattle } = this.props
     return (
       <section>
@@ -43,11 +47,19 @@ class ListBattles extends Component {
               moveBattle={moveBattle}
               onDelete={this.handleDeleteBattle}
               onPreview={this.handlePreview}
+              onStats={this.handleStats}
             />
           ))}
-        {preview && (
+        {!!showStats && (
+          <BattleStatsPreviewDialog
+            open
+            battle={showStats}
+            onClose={() => this.setState({ showStats: null })}
+          />
+        )}
+        {!!preview && (
           <PhotoPreviewDialog
-            open={!!preview}
+            open
             {...preview}
             onClose={() => this.setState({ preview: null })}
           />
