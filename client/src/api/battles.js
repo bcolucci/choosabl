@@ -50,12 +50,8 @@ export const getAvailablesForCurrentUser = async () => {
 
 export const downloadPhotos = async battle => {
   const [url1, url2] = await Promise.all([
-    storage()
-      .ref(battle.photo1.path)
-      .getDownloadURL(),
-    storage()
-      .ref(battle.photo2.path)
-      .getDownloadURL()
+    storage().ref(battle.photo1.path).getDownloadURL(),
+    storage().ref(battle.photo2.path).getDownloadURL()
   ])
   const images = await Promise.all([
     base64Img.download(url1),
@@ -68,4 +64,11 @@ export const deleteOne = battle => {
   const cache = cacheNS('battles:getAllForCurrentUser')
   cache.set(cache.get([]).filter(b => b.id !== battle.id))
   return authFetch(`battles/${battle.id}`, { method: 'DELETE' })
+}
+
+export const statsForOne = async battle => {
+  console.log(`battles/stats/${battle.id}`)
+  // const res = await authFetch(`battles/${battle.id}/stats`)
+  // const obj = await res.json()
+  // console.log(obj)
 }

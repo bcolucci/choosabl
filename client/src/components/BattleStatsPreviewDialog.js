@@ -10,12 +10,18 @@ import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
 import innerEllipse from '../utils/innerEllipse'
 import withAll from '../utils/with'
+import * as battlesAPI from '../api/battles'
 
 class BattleStatsPreviewDialog extends PureComponent {
   static propTypes = {
     open: PropTypes.bool,
     onClose: PropTypes.func,
     battle: PropTypes.object.isRequired
+  }
+
+  componentDidMount () {
+    const { battle } = this.props
+    battlesAPI.statsForOne(battle)
   }
 
   render () {

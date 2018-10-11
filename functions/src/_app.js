@@ -9,14 +9,13 @@ const auth = createFirebaseAuth({ firebase, checkEmailVerified: true })
 
 app.use(cors({ origin: true }))
 app.use(bodyParser.json())
-app.head('/ping', (_, res) => res.end())
+app.get('/ping', (_, res) => res.end('pong'))
 
-module.exports = {
-  app,
-  auth,
-  createRouter: endpoint => {
-    const router = express.Router()
-    app.use(endpoint, router)
-    return router
-  }
+const createRouter = endpoint => {
+  const router = express.Router()
+  app.use(endpoint, router)
+  // console.log('router', endpoint, 'created')
+  return router
 }
+
+module.exports = { app, auth, createRouter }

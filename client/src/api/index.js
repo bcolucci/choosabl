@@ -15,8 +15,7 @@ export const apiURL =
     }
   })() + '/v1'
 
-export const wakeUpAPI = () =>
-  fetch(`${apiURL}/ping`, { method: 'HEAD', cache: 'no-cache' })
+export const wakeUpAPI = () => fetch(`${apiURL}/ping`, { cache: 'no-cache' })
 
 export const authFetch = async (uri, customs = {}) => {
   const { currentUser } = auth()

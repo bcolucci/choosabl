@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
   if (battleUID) {
     const battle = await battlesRef.doc(battleUID).get()
     if (!battle.exists) {
-      return res.status(500).end('Not found.')
+      return res.status(404).end('Not found.')
     }
     if (battle.user !== userUID) {
       return res.status(500).end('Not allowed.')

@@ -10,7 +10,7 @@
   "scripts": {
     "serve": "sudo firebase serve --only functions",
     "shell": "firebase functions:shell",
-    "start": "npm run serve",
+    "start": "chokidar 'src/**/*.js' -c 'clear && npm run serve' --initial",
     "deploy": "firebase deploy --only functions --runtime=nodejs8 --trigger-http",
     "logs": "firebase functions:log",
     "format": "prettier-standard '**/*.js'"
@@ -19,16 +19,17 @@
     "@google-cloud/vision": "^0.21.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
-    "express": "^4.16.3",
+    "express": "^4.16.4",
     "express-firebase-auth": "^1.3.4",
     "firebase-admin": "^6.0.0",
-    "firebase-functions": "^2.0.4",
+    "firebase-functions": "^2.0.5",
     "node-fetch": "^2.2.0",
     "nodemailer": "^4.6.8",
     "sillyname": "^0.1.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "chokidar-cli": "^1.2.1",
     "husky": "^0.14.3",
     "prettier-standard": "^8.0.1",
     "rimraf": "^2.6.2"

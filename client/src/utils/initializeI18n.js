@@ -4,7 +4,7 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 import { reactI18nextModule } from 'react-i18next'
 
 const defaultNS = 'commons'
-const debug = process.env.NODE_ENV !== 'production'
+const debug = false //process.env.NODE_ENV !== 'production'
 
 let initialized = false
 if (!initialized) {
