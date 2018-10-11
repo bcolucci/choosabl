@@ -56,13 +56,12 @@ class BattleCard extends Component {
     const base64 = photos[num]
     return (
       <Grid item xs={6} style={{ textAlign: 'center' }}>
-        <a onClick={() => onPreview({ battle, file, base64 })}>
-          <img
-            src={`data:${file.type};base64,${base64}`}
-            style={{ height: 120, maxWidth: 140 }}
-            alt={file.name}
-          />
-        </a>
+        <img
+          src={`data:${file.type};base64,${base64}`}
+          style={{ height: 120, maxWidth: 140 }}
+          onClick={() => onPreview({ battle, file, base64 })}
+          alt={file.name}
+        />
       </Grid>
     )
   }

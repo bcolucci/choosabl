@@ -320,7 +320,7 @@ class GaleryDialog extends Component {
     })
     let resizedWidth = width
     if (height > 200) {
-      resizedWidth = Math.floor(width * 200 / height)
+      resizedWidth = Math.floor((width * 200) / height)
     }
     const img = new Image()
     img.src = src

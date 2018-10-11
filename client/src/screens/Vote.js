@@ -79,11 +79,10 @@ class Vote extends Component {
 
   renderPhoto (num) {
     const { current, height } = this.state
+    const { id, type } = current[`photo${num + 1}`]
     return (
       <img
-        src={`data:${current[`photo${num + 1}`].type};base64,${
-          current.photos[num]
-        }`}
+        src={`data:${type};base64,${current.photos[num]}`}
         alt={`${current.name} choice #${num + 1}`}
         style={{
           height,
@@ -91,7 +90,7 @@ class Vote extends Component {
           marginTop: num === 0 ? 4 : 0
         }}
         onMouseOver={this.handleOnPhotoOver(num)}
-        onClick={this.handleChoosePhoto(current, num)}
+        onClick={id && this.handleChoosePhoto(current, num)}
       />
     )
   }

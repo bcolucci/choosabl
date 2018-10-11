@@ -139,13 +139,13 @@ class Profile extends Component {
           )}
           {provider &&
             provider.providerId === 'password' && (
-              <Button
-                color='primary'
-                onClick={() => history.push('/profile/password')}
-              >
+            <Button
+              color='primary'
+              onClick={() => history.push('/profile/password')}
+            >
                 Update password
-              </Button>
-            )}
+            </Button>
+          )}
         </Grid>
       </Grid>
     )

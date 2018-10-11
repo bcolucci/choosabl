@@ -45,7 +45,7 @@ Open usefull links for development:
 ## Select a "good" node version to work with
 
     sudo npm i -g nvm \
-      && nvm install 8.11.1
+      && nvm install 10.10
 
 ## Retrieve the code and install deps
 
@@ -63,7 +63,7 @@ Open usefull links for development:
 
 ## Setup Firebase CLI
 
-    sudo npm i -g firebase-tools
+    sudo npm i -g firebase firebase-tools
 
     # and login
     firebase login
