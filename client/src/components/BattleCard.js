@@ -59,7 +59,7 @@ class BattleCard extends Component {
         <img
           src={`data:${file.type};base64,${base64}`}
           style={{ height: 120, maxWidth: 140 }}
-          onClick={() => onPreview({ battle, file, base64 })}
+          onClick={file.id && (() => onPreview({ battle, file, base64 }))}
           alt={file.name}
         />
       </Grid>

@@ -9,7 +9,7 @@ const remove = require('./battles/remove')
 const isUserBattle = require('./battles/isUserBattleHandler')
 
 const router = createRouter('/battles')
-router.get(`/${idreg('battleUID')}`, auth, get)
+router.get(`/${idreg('battleUID')}?`, auth, get)
 router.get(`/stats/${idreg('battleUID')}`, auth, isUserBattle, stats)
 router.get('/availableForVote', auth, availableForVote)
 

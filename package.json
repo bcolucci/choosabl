@@ -6,6 +6,7 @@
   "scripts": {
     "deploy": "firebase deploy",
     "switch:prod": "firebase use default",
-    "switch:test": "firebase use test"
+    "switch:test": "firebase use test",
+    "format": "cd client && npm run format && cd ../functions && npm run format"
   }
 }
