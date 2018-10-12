@@ -129,6 +129,7 @@ class GaleryDialog extends Component {
     e.preventDefault()
     const { selected } = this.state
     const photo = this.state.photos[selected]
+    // TODO
     console.log('Preview', photo)
     this.handleCloseSelectionMenu()
   }
@@ -151,7 +152,7 @@ class GaleryDialog extends Component {
           className={classes.spaced}
           gutterBottom
         >
-          No photo imported yet.
+          {t('gallery:No photo imported yet.')}
         </Typography>
       )
     }
@@ -208,7 +209,7 @@ class GaleryDialog extends Component {
           </MenuItem> */}
           <MenuItem disabled={used} onClick={this.handleDeletePhoto}>
             <DeleteIcon className='menu-icon' />
-            Delete
+            {t('Delete')}
             {used && ` (${t('used')})`}
           </MenuItem>
         </Menu>
@@ -239,7 +240,7 @@ class GaleryDialog extends Component {
   handleDetectFace = async () => {
     this.setState({ detectingFace: true })
     const { file, cropBase64, tmpPath } = this.state
-    const { showError } = this.props
+    const { t, showError } = this.props
     const { uid } = auth().currentUser
     const path = photoPath(uid, file.name)
     const rawBase64 = cropBase64.split('base64,').pop()
@@ -256,7 +257,7 @@ class GaleryDialog extends Component {
         .putString(rawBase64, 'base64')
       const face = await photosAPI.detectingFace(path)
       if (!Object.keys(face).length) {
-        throw new Error('No face detected.')
+        throw new Error(t('gallery:No face detected.'))
       }
       // imagetracer.imageToSVG(
       //   `data:${file.type};base64,${rawBase64}`,
@@ -274,22 +275,28 @@ class GaleryDialog extends Component {
     if (this.widthErrOpened) {
       return
     }
-    const { showError } = this.props
+    const { t, showError } = this.props
     this.widthErrOpened = true
     showError(
-      `Photo is too small. Must be >= ${photoWidth}px.`,
+      t('gallery:Photo is too small. Must be >= {{width}}px.', {
+        width: photoWidth
+      }),
       () => (this.widthErrOpened = false)
     )
   }
 
   isValideImage ({ type, size }) {
-    const { showError } = this.props
+    const { t, showError } = this.props
     if (!isTypeImage(type)) {
-      showError('Invalid image.')
+      showError(t('Invalid image.'))
       return false
     }
     if (size > maxPhotoSize) {
-      showError(`Image size should be <= ${prettyBytes(maxPhotoSize)}`)
+      showError(
+        t('gallery:Image size should be <= {{size}}', {
+          size: prettyBytes(maxPhotoSize)
+        })
+      )
       return false
     }
     return true
@@ -354,12 +361,12 @@ class GaleryDialog extends Component {
   }
 
   renderSelectStep = () => {
-    const { classes } = this.props
+    const { t, classes } = this.props
     const { customName, file, base64 } = this.state
     return (
       <Grid container>
         <Grid item xs={12} className={classes.spaced}>
-          <Typography>Give it a name:</Typography>
+          <Typography>{t('gallery:Give it a name:')}</Typography>
           <TextField
             autoFocus
             required
@@ -372,8 +379,8 @@ class GaleryDialog extends Component {
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
           <Typography>
-            Select a photo:{' '}
-            <span className='file-size-caption'>
+            {t('gallery:Select a photo:')}
+            <span className='file-size-caption' style={{ marginLeft: 5 }}>
               ({'<='} {prettyBytes(maxPhotoSize)})
             </span>
           </Typography>
@@ -392,7 +399,7 @@ class GaleryDialog extends Component {
           />
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
-          <Typography variant='subheading'>Preview:</Typography>
+          <Typography variant='subheading'>{t('gallery:Preview:')}</Typography>
           {base64 ? (
             <div>
               <Typography variant='caption' gutterBottom>
@@ -468,7 +475,7 @@ class GaleryDialog extends Component {
   }
 
   renderCropStep = () => {
-    const { classes } = this.props
+    const { t, classes } = this.props
     const { file, base64, crop, cropBase64, isValidCrop } = this.state
     return (
       <Grid container>
@@ -500,7 +507,7 @@ class GaleryDialog extends Component {
               base64: null
             }))}
           >
-            Back
+            {t('Back')}
           </Button>
           <Button
             color='primary'
@@ -508,7 +515,7 @@ class GaleryDialog extends Component {
             disabled={!cropBase64 || !isValidCrop}
             onClick={this.moveToStep(+1)}
           >
-            Next
+            {t('Next')}
           </Button>
         </Grid>
       </Grid>
@@ -518,14 +525,14 @@ class GaleryDialog extends Component {
   handleImport = async () => {
     this.setState({ saving: true })
     const { uid } = auth().currentUser
-    const { showError, showSuccess } = this.props
+    const { t, showError, showSuccess } = this.props
     const { file, customName, cropBase64 } = this.state
     const path = photoPath(uid, file.name)
     try {
       await storage()
         .ref(path)
         .putString(cropBase64, 'base64')
-      showSuccess('Photo successfully uploaded!')
+      showSuccess(t('gallery:Photo successfully uploaded!'))
       const photo = await photosAPI.createPhoto({
         path,
         customName,
@@ -553,14 +560,16 @@ class GaleryDialog extends Component {
   }
 
   renderDetectFaceStep = () => {
-    const { classes } = this.props
+    const { t, classes } = this.props
     const { file, detectingFace, face, saving } = this.state
     setImmediate(this.drawPhoto)
     return (
       <Grid container>
         <Grid item xs={12} className={classes.spaced}>
           <Typography variant='subheading'>
-            Exactly one face has to be detected in order to import the photo.
+            {t(
+              `gallery:Exactly one face has to be detected in order to import the photo.`
+            )}
           </Typography>
         </Grid>
         <Grid
@@ -585,7 +594,7 @@ class GaleryDialog extends Component {
               detectingFace: false
             }))}
           >
-            Back
+            {t('Back')}
           </Button>
           <Button
             disabled={detectingFace || !!face}
@@ -593,7 +602,9 @@ class GaleryDialog extends Component {
             variant='contained'
             onClick={this.handleDetectFace}
           >
-            {detectingFace ? 'Detecting...' : 'Detect face'}
+            {detectingFace
+              ? t('gallery:Detecting...')
+              : t('gallery:Detect face')}
           </Button>
           <Button
             disabled={!face || saving}
@@ -602,7 +613,7 @@ class GaleryDialog extends Component {
             onClick={this.handleImport}
             style={{ marginLeft: 5 }}
           >
-            {saving ? 'Importing...' : 'Import'}
+            {saving ? t('gallery:Importing...') : t('gallery:Import')}
           </Button>
         </Grid>
       </Grid>
@@ -610,6 +621,7 @@ class GaleryDialog extends Component {
   }
 
   renderImportTab () {
+    const { t } = this.props
     const { step, photos } = this.state
     const fns = [
       this.renderSelectStep,
@@ -619,13 +631,15 @@ class GaleryDialog extends Component {
     return (
       <div>
         <Stepper activeStep={step} alternativeLabel>
-          {['Select a photo', 'Crop it!', 'Face detection'].map(
-            (label, idx) => (
-              <Step key={idx} disabled={idx === 0 && !photos.length}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            )
-          )}
+          {[
+            t('gallery:Select a photo'),
+            t('gallery:Crop it!'),
+            t('gallery:Face detection')
+          ].map((label, idx) => (
+            <Step key={idx} disabled={idx === 0 && !photos.length}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
         </Stepper>
         {fns[step]()}
       </div>
@@ -643,7 +657,7 @@ class GaleryDialog extends Component {
   }
 
   render () {
-    const { classes, open } = this.props
+    const { t, classes, open } = this.props
     const { loading, tab } = this.state
     return (
       <Dialog fullScreen open={open} onClose={this.handleClose}>
@@ -657,7 +671,7 @@ class GaleryDialog extends Component {
               color='inherit'
               className={classes.flex}
             >
-              Gallery
+              {t('gallery:Gallery')}
             </Typography>
           </Toolbar>
           <Tabs fullWidth value={['select', 'import'].indexOf(tab)}>

@@ -21,7 +21,7 @@ class PhotoPreviewDialog extends PureComponent {
   }
 
   render () {
-    const { classes, open, onClose } = this.props
+    const { t, classes, open, onClose } = this.props
     const { file, base64 } = this.props
     return (
       <Dialog
@@ -47,7 +47,7 @@ class PhotoPreviewDialog extends PureComponent {
             style={{ width: '100%' }}
           />
           <Button color='primary' variant='contained' onClick={onClose}>
-            Close
+            {t('Close')}
           </Button>
         </div>
       </Dialog>

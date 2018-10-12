@@ -1,10 +1,12 @@
 {
-  "activeBattles": "Battles Actives",
-  "draftBattles": "Battles Brouillon",
-  "createBattle": "Créer une nouvelle Battle",
-  "name": "Nom",
-  "Activate": "Activer",
-  "Desactivate": "Désactiver",
+  "Desactivate": "Desactivate",
+  "Activate": "Activate",
+  "Stats": "Stats",
   "Actives": "Actives",
-  "Drafts": "Brouillons"
+  "Drafts": "Drafts",
+  "Name is required.": "Name is required.",
+  "Battle has been created in drafts.": "Battle has been created in drafts.",
+  "Select a photo": "Select a photo",
+  "Name": "Name",
+  "Is it for a profesionnal usage?": "Is it for a profesionnal usage?"
 }

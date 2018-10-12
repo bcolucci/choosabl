@@ -1,0 +1,18 @@
+{
+  "No photo imported yet.": "No photo imported yet.",
+  "No face detected.": "No face detected.",
+  "Photo is too small. Must be >= {{width}}px.": "Photo is too small. Must be >= {{width}}px.",
+  "Image size should be <= {{size}}": "Image size should be <= {{size}}",
+  "Give it a name": "Give it a name",
+  "Select a photo": "Select a photo",
+  "Preview": "Preview",
+  "Photo successfully uploaded!": "Photo successfully uploaded!",
+  "Exactly one face has to be detected in order to import the photo.": "Exactly one face has to be detected in order to import the photo.",
+  "Detecting...": "Detecting...",
+  "Detect face": "Detect face",
+  "Importing...": "Importing...",
+  "Import": "Import",
+  "Crop it!": "Crop it!",
+  "Face detection": "Face detection",
+  "Gallery": "Gallery"
+}

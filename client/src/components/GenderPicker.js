@@ -17,30 +17,27 @@ class GenderPicker extends PureComponent {
     this.items = [
       {
         label: 'woman',
-        value: 'woman'
+        value: props.t('profile:Woman')
       },
       {
         label: 'man',
-        value: 'man'
+        value: props.t('profile:Man')
       },
       {
         label: 'other',
-        value: 'other'
+        value: props.t('profile:Other')
       }
     ]
   }
 
-  renderItem = ({ label, value }) => {
-    const { t } = this.props
-    return (
-      <FormControlLabel
-        key={value}
-        label={t(label)}
-        value={value}
-        control={<Radio />}
-      />
-    )
-  }
+  renderItem = ({ label, value }) => (
+    <FormControlLabel
+      key={value}
+      label={label}
+      value={value}
+      control={<Radio />}
+    />
+  )
 
   render () {
     const { value, onChange } = this.props

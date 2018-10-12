@@ -2,9 +2,7 @@ import i18n from 'i18next'
 import Backend from 'i18next-xhr-backend'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { reactI18nextModule } from 'react-i18next'
-
-const defaultNS = 'commons'
-const debug = false // process.env.NODE_ENV !== 'production'
+import config from '../i18n.config'
 
 let initialized = false
 if (!initialized) {
@@ -12,18 +10,7 @@ if (!initialized) {
     .use(Backend)
     .use(LanguageDetector)
     .use(reactI18nextModule)
-    .init({
-      fallbackLng: 'en_GB',
-      ns: [defaultNS, 'langs', 'battles', 'profile'],
-      defaultNS,
-      debug,
-      interpolation: {
-        escapeValue: false
-      },
-      react: {
-        wait: true
-      }
-    })
+    .init(config)
   initialized = true
 }
 

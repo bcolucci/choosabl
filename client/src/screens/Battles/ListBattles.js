@@ -70,5 +70,5 @@ class ListBattles extends Component {
 }
 
 export default withAll(ListBattles, {
-  withIntl: ['battles']
+  withIntl: true
 })

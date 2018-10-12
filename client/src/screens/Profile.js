@@ -67,7 +67,7 @@ class Profile extends Component {
       if (tab === 'profile') {
         const { username, birthday, gender } = this.state
         profilesAPI.updateCurrent({ username, birthday, gender })
-        this.props.showSuccess(t('profile:profileSaved'))
+        this.props.showSuccess(t('profile:Your profile has been saved!'))
       } else if (tab === 'updatePassword') {
         const { currentUser } = auth()
         const { password, newPassword, newPassword2 } = this.state
@@ -105,7 +105,7 @@ class Profile extends Component {
             autoFocus
             fullWidth
             required
-            label={t('username')}
+            label={t('profile:Username')}
             value={username}
             onChange={this.handleChange('username')}
           />
@@ -114,7 +114,7 @@ class Profile extends Component {
           <DatePicker
             disableFuture
             fullWidth
-            label={t('birthday')}
+            label={t('profile:Birthday')}
             value={birthday}
             initialFocusedDate={maxBirthdayDate}
             maxDate={maxBirthdayDate}
@@ -134,7 +134,7 @@ class Profile extends Component {
               color='primary'
               onClick={this.handleSave}
             >
-              {t('save')}
+              {t('Save')}
             </Button>
           )}
           {provider &&
@@ -143,7 +143,7 @@ class Profile extends Component {
               color='primary'
               onClick={() => history.push('/profile/password')}
             >
-                Update password
+              {t('profile:Update password')}
             </Button>
           )}
         </Grid>
@@ -158,14 +158,14 @@ class Profile extends Component {
     return (
       <Grid container>
         <Typography style={{ fontStyle: 'italic' }} className={classes.spaced}>
-          Update your password:
+          {t('profile:Update your password:')}
         </Typography>
         <Grid item xs={12} className={classes.spaced}>
           <TextField
             autoFocus
             fullWidth
             required
-            label={t('profile:currentPassword')}
+            label={t('profile:Current password')}
             value={password}
             type='password'
             onChange={this.handleChange('password')}
@@ -175,7 +175,7 @@ class Profile extends Component {
           <TextField
             fullWidth
             required
-            label={t('profile:newPassword')}
+            label={t('profile:New Password')}
             value={newPassword}
             type='password'
             onChange={this.handleChange('newPassword')}
@@ -185,7 +185,7 @@ class Profile extends Component {
           <TextField
             fullWidth
             required
-            label={t('profile:newPassword2')}
+            label={t('profile:New password check')}
             value={newPassword2}
             type='password'
             onChange={this.handleChange('newPassword2')}
@@ -251,5 +251,5 @@ export default withAll(Profile, {
   withRouter: true,
   withStyles: true,
   withMsgSnack: true,
-  withIntl: ['profile']
+  withIntl: true
 })

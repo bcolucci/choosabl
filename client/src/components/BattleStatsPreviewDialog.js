@@ -25,8 +25,7 @@ class BattleStatsPreviewDialog extends PureComponent {
   }
 
   render () {
-    const { classes, open, onClose, battle } = this.props
-    console.log(battle)
+    const { t, classes, open, onClose, battle } = this.props
     return (
       <Dialog
         fullScreen
@@ -47,7 +46,7 @@ class BattleStatsPreviewDialog extends PureComponent {
         <div className={classes.tinyspaced}>
           <p>TODO</p>
           <Button color='primary' variant='contained' onClick={onClose}>
-            Close
+            {t('Close')}
           </Button>
         </div>
       </Dialog>
@@ -57,5 +56,5 @@ class BattleStatsPreviewDialog extends PureComponent {
 
 export default withAll(BattleStatsPreviewDialog, {
   withStyles: true,
-  withIntl: ['battles']
+  withIntl: true
 })

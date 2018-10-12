@@ -11,7 +11,7 @@ import VerifyYourEmail from '../../components/VerifyYourEmail'
 import GalleryDialog from '../../components/GalleryDialog'
 import * as battlesAPI from '../../api/battles'
 
-const photoRequiredErr = num => `Photo #${num} required.`
+const photoRequiredErr = (t, num) => t('Photo #{{num}} required.', { num })
 
 class CreateBattle extends Component {
   state = {
@@ -26,18 +26,18 @@ class CreateBattle extends Component {
   }
 
   handleSave = async () => {
-    const { showSuccess, showError } = this.props
+    const { t, showSuccess, showError } = this.props
     const { name, isPro, photo1, photo2 } = this.state
     const trimName = name.trim()
     if (!trimName.length) {
       document.querySelector('#name').focus()
-      return showError('Name is required.')
+      return showError(t('battles:Name is required.'))
     }
     if (!photo1) {
-      return showError(photoRequiredErr(1))
+      return showError(photoRequiredErr(t, 1))
     }
     if (!photo2) {
-      return showError(photoRequiredErr(2))
+      return showError(photoRequiredErr(t, 2))
     }
     this.setState({ saving: true })
     try {
@@ -47,7 +47,7 @@ class CreateBattle extends Component {
         photo2: photo2.id,
         isPro
       })
-      showSuccess('Battle has been created in drafts.')
+      showSuccess(t('battles:Battle has been created in drafts.'))
       setTimeout(() => this.props.history.push('/battles/drafts'), 1500)
     } catch (err) {
       showError(err.message)
@@ -56,13 +56,13 @@ class CreateBattle extends Component {
   }
 
   renderPhotoSelector = num => {
-    const { classes } = this.props
+    const { t, classes } = this.props
     const { photo1, photo2 } = this.state
     const photo = num === 1 ? photo1 : photo2
     return (
       <Grid container className={classes.spaced}>
         <Grid item xs={6}>
-          <Typography>Photo #{num}:</Typography>
+          <Typography>{t('Photo #{{num}}:', { num })}</Typography>
           <img
             alt={`battle choice #${num}`}
             src={
@@ -77,7 +77,7 @@ class CreateBattle extends Component {
             variant='outlined'
             onClick={() => this.setState({ openedGallery: num })}
           >
-            Select a photo
+            {t('battles:Select a photo')}
           </Button>
         </Grid>
       </Grid>
@@ -101,7 +101,7 @@ class CreateBattle extends Component {
               autoFocus
               fullWidth
               required
-              label={t('battles:name')}
+              label={t('battles:Name')}
               value={name}
               onChange={({ currentTarget }) => {
                 const name = currentTarget.value
@@ -123,7 +123,7 @@ class CreateBattle extends Component {
               checked={isPro}
             />
             <Typography style={{ display: 'inline' }}>
-              Is it for a profesionnal usage?
+              {t('battles:Is it for a profesionnal usage?')}
             </Typography>
           </Grid>
           {!emailVerified ? (
@@ -136,7 +136,7 @@ class CreateBattle extends Component {
                 disabled={saving}
                 onClick={this.handleSave}
               >
-                {saving ? 'Saving...' : t('save')}
+                {saving ? t('Saving...') : t('save')}
               </Button>
             </Grid>
           )}

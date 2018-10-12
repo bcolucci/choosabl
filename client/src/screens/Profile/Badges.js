@@ -29,5 +29,5 @@ class Badges extends Component {
 }
 
 export default withAll(Badges, {
-  withIntl: ['profile']
+  withIntl: true
 })

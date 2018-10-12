@@ -62,11 +62,11 @@ class SignInDialog extends Component {
 
   handleSignIn = async () => {
     this.setState({ saving: true })
-    const { history, showSuccess, showError } = this.props
+    const { t, history, showSuccess, showError } = this.props
     const { tab, email, password } = this.state
     try {
       if (!isValidEmail(email)) {
-        throw new Error('Invalid email.')
+        throw new Error(t('Invalid email.'))
       }
       switch (tab) {
         case 'signIn':
@@ -83,7 +83,7 @@ class SignInDialog extends Component {
           break
         case 'forgot':
           await auth().sendPasswordResetEmail(email)
-          showSuccess('Recovering email sent!')
+          showSuccess(t('Recovering email sent!'))
           this.setState({ tab: 'signIn' })
           break
         default:
@@ -105,21 +105,25 @@ class SignInDialog extends Component {
   }
 
   contextMessage () {
+    const { t } = this.props
     const { tab } = this.state
     switch (tab) {
       case 'signIn':
-        return <span>Sign In with your existing account.</span>
+        return <span>{t('Sign In with your existing account.')}</span>
       case 'signUp':
         return (
           <span>
-            Create an account with your email address. You'll receive a
-            confirmation email.
+            {t(
+              `Create an account with your email address. You'll receive a confirmation email.`
+            )}
           </span>
         )
       case 'forgot':
         return (
           <span>
-            Enter your email in order for use to send you a recovering email.
+            {t(
+              'Enter your email in order for use to send you a recovering email.'
+            )}
           </span>
         )
       default:
@@ -156,11 +160,11 @@ class SignInDialog extends Component {
               {(() => {
                 switch (tab) {
                   case 'signIn':
-                    return 'Sign In'
+                    return t('Sign In')
                   case 'signUp':
-                    return 'Sign Up'
+                    return t('Sign Up')
                   case 'forgot':
-                    return 'Recover password'
+                    return t('Recover password')
                   default:
                     throw unexpectedTabErr
                 }
@@ -178,7 +182,7 @@ class SignInDialog extends Component {
                   autoFocus
                   fullWidth
                   required
-                  label='Email Address'
+                  label={t('Email Address')}
                   type='email'
                   value={email}
                   onChange={({ currentTarget }) =>
@@ -195,7 +199,7 @@ class SignInDialog extends Component {
                     fullWidth
                     required
                     autoComplete='off'
-                    label='Password'
+                    label={t('Password')}
                     type='password'
                     value={password}
                     onChange={({ currentTarget }) =>
@@ -221,11 +225,11 @@ class SignInDialog extends Component {
                 {(() => {
                   switch (tab) {
                     case 'signIn':
-                      return 'Sign In'
+                      return t('Sign In')
                     case 'signUp':
-                      return 'Create account'
+                      return t('Create account')
                     case 'forgot':
-                      return 'Send email'
+                      return t('Send email')
                     default:
                       throw unexpectedTabErr
                   }
@@ -242,13 +246,13 @@ class SignInDialog extends Component {
                 onClick={() => this.setState({ tab: 'forgot' })}
                 color='primary'
               >
-                Forgot password?
+                {t('Forgot password?')}
               </Button>
               <Button
                 onClick={() => this.setState({ tab: 'signUp' })}
                 color='primary'
               >
-                No account ? Create one now!
+                {t('No account ? Create one now!')}
               </Button>
             </div>
           )}
@@ -258,11 +262,11 @@ class SignInDialog extends Component {
   }
 
   renderSocialSignIn () {
-    const { classes } = this.props
+    const { t, classes } = this.props
     return (
       <div style={{ marginTop: 30 }}>
         <Typography variant='caption' gutterBottom>
-          or via social networks:
+          {t('or via social networks:')}
         </Typography>
         <IconButton
           className={classes.tinyspaced}
@@ -301,7 +305,7 @@ class SignInDialog extends Component {
     const { saving } = this.state
     return (
       <div>
-        <DialogTitle>Sign In</DialogTitle>
+        <DialogTitle>{t('Sign In')}</DialogTitle>
         <DialogContent>
           {saving ? (
             <CircularProgress style={{ margin: '40px 100px' }} />

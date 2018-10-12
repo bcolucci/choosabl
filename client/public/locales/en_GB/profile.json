@@ -1,6 +1,16 @@
 {
-  "profileSaved": "Your profile has been saved!",
-  "currentPassword": "Current password",
-  "newPassword": "New password",
-  "newPassword2": "New password check"
+  "Woman": "Woman",
+  "Man": "Man",
+  "Other": "Other",
+  "Sign out": "Sign out",
+  "Your profile has been saved!": "Your profile has been saved!",
+  "Username": "Username",
+  "Birthday": "Birthday",
+  "Update password": "Update password",
+  "Update your password": "Update your password",
+  "Current password": "Current password",
+  "New Password": "New Password",
+  "New password check": "New password check",
+  "Profile": "Profile",
+  "Badges": "Badges"
 }

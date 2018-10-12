@@ -38,21 +38,21 @@ class Invite extends Component {
   handleSave = async () => {
     this.setState({ saving: true })
     const { email, message, invitedList } = this.state
-    const { showError, showSuccess } = this.props
+    const { t, showError, showSuccess } = this.props
     try {
       if (!isValidEmail(email)) {
-        throw new Error('Invalid email.')
+        throw new Error(t('Invalid email.'))
       }
       if (
         invitedList.includes(email) ||
         (await invitationsAPI.isInvited(email))
       ) {
-        showError('You already invite this user.')
+        showError(t('You already invite this user.'))
         return this.setState({ saving: false })
       }
       await invitationsAPI.invite({ email, message })
       this.setState({ email: '', message: '' })
-      showSuccess(`${email} has been invited. Thank you!`)
+      showSuccess(t('{{email}} has been invited. Thank you!', { email }))
       setImmediate(() => document.querySelector('input[type=email]').focus())
       this.refreshInvitedList()
     } catch (err) {
@@ -61,14 +61,18 @@ class Invite extends Component {
     this.setState({ saving: false })
   }
 
-  handleReInvite = () => window.alert('Not implemented yet.')
+  handleReInvite = () => {
+    const { t } = this.props
+    window.alert(t('Not implemented yet.'))
+  }
 
   renderInvitedList () {
+    const { t } = this.props
     const { invitedList } = this.state
     if (!invitedList.length) {
       return (
         <Typography style={{ marginTop: 5 }}>
-          No invitation sent yet.
+          {t('No invitation sent yet.')}
         </Typography>
       )
     }
@@ -101,14 +105,14 @@ class Invite extends Component {
     return (
       <Grid container>
         <Typography className={classes.spaced}>
-          Please enter the email of the one you want to invite:
+          {t('Please enter the email of the one you want to invite:')}
         </Typography>
         <Grid item xs={12} className={classes.spaced}>
           <TextField
             autoFocus
             fullWidth
             required
-            label='Email Address'
+            label={t('Email Address')}
             type='email'
             value={email}
             onChange={({ currentTarget }) =>
@@ -121,7 +125,7 @@ class Invite extends Component {
             fullWidth
             multiline
             rows={4}
-            label='Custom message'
+            label={t('Custom message')}
             value={message}
             onChange={({ currentTarget }) =>
               this.setState({ message: currentTarget.value.substr(0, 300) })
@@ -143,7 +147,7 @@ class Invite extends Component {
         </Grid>
         <br />
         <Grid item xs={12} className={classes.spaced}>
-          <Typography variant='headline'>Invations sent:</Typography>
+          <Typography variant='headline'>{t('Invations sent:')}</Typography>
           {this.renderInvitedList()}
         </Grid>
       </Grid>

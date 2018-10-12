@@ -18,8 +18,7 @@ import withAll from '../utils/with'
 import i18n from '../utils/initializeI18n'
 import FlagIcon from './FlagIcon'
 import SignInDialog from './SignInDialog'
-
-const langs = ['en_GB', 'fr_FR']
+import { langs } from '../i18n.config'
 
 class Header extends Component {
   static propTypes = {
@@ -66,13 +65,13 @@ class Header extends Component {
           onClose={this.handleCloseMenus}
         >
           <MenuItem onClick={this.handleCloseMenus}>
-            <Link to='/profile'>{t('profile')}</Link>
+            <Link to='/profile'>{t('Profile')}</Link>
           </MenuItem>
           <MenuItem onClick={this.handleCloseMenus}>
-            <Link to='/invite'>{t('invite')}</Link>
+            <Link to='/invite'>{t('Invite')}</Link>
           </MenuItem>
           <MenuItem onClick={this.handleCloseMenus} disabled>
-            <Link to='/plan'>{t('plan')}</Link>
+            <Link to='/plan'>{t('Plan')}</Link>
           </MenuItem>
           <Divider />
           <MenuItem
@@ -83,7 +82,9 @@ class Header extends Component {
             <FlagIcon value={lang} />
             <span style={{ marginLeft: 5 }}>{t('langs:Language')}</span>
           </MenuItem>
-          <MenuItem onClick={this.handleSignOut}>{t('sign-out')}</MenuItem>
+          <MenuItem onClick={this.handleSignOut}>
+            {t('profile:Sign out')}
+          </MenuItem>
         </Menu>
       </ClickAwayListener>
     )
@@ -186,7 +187,7 @@ class Header extends Component {
 }
 
 export default withAll(Header, {
-  withIntl: ['langs'],
+  withIntl: true,
   withRouter: true,
   withStyles: {
     styles: theme => ({

@@ -88,7 +88,7 @@ class BattleCard extends Component {
     return (
       <div>
         {moving ? (
-          this.renderFloatingText('saving...')
+          this.renderFloatingText(t('saving...'))
         ) : (
           <Button
             variant='outlined'
@@ -101,14 +101,14 @@ class BattleCard extends Component {
         )}
         {!active &&
           (deleting ? (
-            this.renderFloatingText('deleting...')
+            this.renderFloatingText(t('deleting...'))
           ) : (
             <Button
               variant='outlined'
               color='secondary'
               style={{ marginLeft: 5 }}
               onClick={() =>
-                window.confirm('Are you sure?') && onDelete(battle)
+                window.confirm(t('Are you sure?')) && onDelete(battle)
               }
             >
               <DeleteIcon />
