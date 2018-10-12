@@ -123,6 +123,10 @@ Add this to your profile file (e.g. bashrc, bash_profile):
 
     cd client && npm run build
 
+## Format code
+
+    npm run format
+
 ## Deploy
 
     npm run deploy
