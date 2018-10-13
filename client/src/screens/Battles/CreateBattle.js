@@ -39,6 +39,9 @@ class CreateBattle extends Component {
     if (!photo2) {
       return showError(photoRequiredErr(t, 2))
     }
+    if (photo1.id === photo2.id) {
+      return showError(t('battles:Please select different photos.'))
+    }
     this.setState({ saving: true })
     try {
       await battlesAPI.createForCurrentUser({
