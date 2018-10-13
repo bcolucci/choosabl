@@ -4,6 +4,7 @@
   "private": true,
   "author": "Brice Colucci <brice.colucci@gmail.com>",
   "homepage": "https://github.com/bcolucci/choosabl/tree/master/api",
+  "main": "index.js",
   "engines": {
     "node": "8"
   },

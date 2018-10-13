@@ -100,11 +100,11 @@ Add this to your profile file (e.g. bashrc, bash_profile):
 
     # local/test
     gcloud config set project choosabl-test \
-      && gsutil cors set cors/test.json gs://choosabl-test.appspot.com
+      && gsutil cors set functions/cors/test.json gs://choosabl-test.appspot.com
 
     # prod
     gcloud config set project choosabl-1e2ea \
-      && gsutil cors set cors/prod.json gs://choosabl-1e2ea.appspot.com    
+      && gsutil cors set functions/cors/prod.json gs://choosabl-1e2ea.appspot.com    
 
 ## Install Visual Code deps
 

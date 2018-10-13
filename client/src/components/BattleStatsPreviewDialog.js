@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Slide from '@material-ui/core/Slide'
 import Dialog from '@material-ui/core/Dialog'
@@ -6,26 +6,47 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
 import innerEllipse from '../utils/innerEllipse'
 import withAll from '../utils/with'
 import * as battlesAPI from '../api/battles'
 
-class BattleStatsPreviewDialog extends PureComponent {
+class BattleStatsPreviewDialog extends Component {
   static propTypes = {
     open: PropTypes.bool,
     onClose: PropTypes.func,
     battle: PropTypes.object.isRequired
   }
 
-  componentDidMount () {
+  state = {
+    stats: null,
+    loading: true
+  }
+
+  async componentDidMount () {
     const { battle } = this.props
-    battlesAPI.statsForOne(battle)
+    const stats = await battlesAPI.statsForOne(battle)
+    this.setState({ stats, loading: false })
+  }
+
+  renderStats () {
+    const { t, classes, onClose } = this.props
+    const { stats } = this.state
+    return (
+      <div className={classes.tinyspaced}>
+        <pre>{JSON.stringify(stats, null, 2)}</pre>
+        <Button color='primary' variant='contained' onClick={onClose}>
+          {t('Close')}
+        </Button>
+      </div>
+    )
   }
 
   render () {
-    const { t, classes, open, onClose, battle } = this.props
+    const { open, onClose, battle } = this.props
+    const { loading } = this.state
     return (
       <Dialog
         fullScreen
@@ -43,12 +64,7 @@ class BattleStatsPreviewDialog extends PureComponent {
             </Typography>
           </Toolbar>
         </AppBar>
-        <div className={classes.tinyspaced}>
-          <p>TODO</p>
-          <Button color='primary' variant='contained' onClick={onClose}>
-            {t('Close')}
-          </Button>
-        </div>
+        {loading ? <LinearProgress color='secondary' /> : this.renderStats()}
       </Dialog>
     )
   }
