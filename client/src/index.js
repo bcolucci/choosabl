@@ -2,18 +2,28 @@ import 'typeface-roboto'
 import './utils/initializeFirebase'
 
 import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
+import createHistory from 'history/createBrowserHistory'
+import { Router } from 'react-router-dom'
 import { render } from 'react-dom'
+import GA from './ga'
 import App from './App'
 import registerServiceWorker from './utils/registerServiceWorker'
 
 import './utils/initializeI18n'
 import './utils/wakeUpAPI'
 
+const history = createHistory()
+history.listen((location, action) => {
+  if (GA.ga()) {
+    GA.set({ page: location.pathname })
+    GA.pageview(location.pathname)
+  }
+})
+
 render(
-  <BrowserRouter>
+  <Router history={history}>
     <App />
-  </BrowserRouter>,
+  </Router>,
   document.querySelector('#root')
 )
 
