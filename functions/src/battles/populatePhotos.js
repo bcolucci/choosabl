@@ -3,15 +3,15 @@ const { photosRef } = require('../utils/db')
 const fields = ['photo1', 'photo2']
 
 module.exports = async battle => {
-  const snaps = await Promise.all(
+  ;(await Promise.all(
     fields.map(field =>
       photosRef
         .where('id', '==', battle[field])
         .limit(1)
         .get()
     )
-  )
-  snaps.forEach((snap, idx) =>
+  )).forEach((results, idx) => {
+    const [snap] = results.docs
     Object.assign(battle, {
       [`photo${idx + 1}`]: snap.exists
         ? snap.data()
@@ -20,5 +20,5 @@ module.exports = async battle => {
           type: 'image/gif'
         }
     })
-  )
+  })
 }
