@@ -11,6 +11,7 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
 import { Bar } from 'react-chartjs'
+import BattlePhotosRow from './BattlePhotosRow'
 import innerEllipse from '../utils/innerEllipse'
 import withAll from '../utils/with'
 import * as battlesAPI from '../api/battles'
@@ -34,11 +35,12 @@ class BattleStatsPreviewDialog extends Component {
   }
 
   renderStats () {
-    const { t, classes, onClose } = this.props
+    const { t, classes, onClose, battle } = this.props
     const { stats } = this.state
     return (
       <Grid container className={classes.tinyspaced}>
         <pre>{JSON.stringify(stats, null, 2)}</pre>
+        <BattlePhotosRow battle={battle} />
         <Grid item xs={12}>
           <Bar
             data={{

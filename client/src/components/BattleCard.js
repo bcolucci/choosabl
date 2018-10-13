@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import Avatar from '@material-ui/core/Avatar'
 import PersoIcon from '@material-ui/icons/InsertEmoticon'
@@ -15,6 +14,7 @@ import DeleteIcon from '@material-ui/icons/DeleteOutline'
 import PollIcon from '@material-ui/icons/Poll'
 import ToggleOnIcon from '@material-ui/icons/ToggleOn'
 import ToggleOffIcon from '@material-ui/icons/ToggleOff'
+import BattlePhotosRow from './BattlePhotosRow'
 import withAll from '../utils/with'
 import * as battlesAPI from '../api/battles'
 
@@ -30,15 +30,8 @@ class BattleCard extends Component {
   }
 
   state = {
-    photos: null,
-    loading: true,
+    loading: false,
     moving: false
-  }
-
-  async componentDidMount () {
-    const { battle } = this.props
-    const photos = await battlesAPI.downloadPhotos(battle)
-    this.setState({ photos, loading: false })
   }
 
   handleToggleBattleStatus = async () => {
@@ -51,23 +44,6 @@ class BattleCard extends Component {
       category: 'Battle',
       action: battle.active ? 'Desactivate' : 'Activate'
     })
-  }
-
-  renderPhoto = num => {
-    const { battle, onPreview } = this.props
-    const { photos } = this.state
-    const file = battle[`photo${num + 1}`]
-    const base64 = photos[num]
-    return (
-      <Grid item xs={6} style={{ textAlign: 'center' }}>
-        <img
-          src={`data:${file.type};base64,${base64}`}
-          style={{ height: 120, maxWidth: 140 }}
-          onClick={file.id && (() => onPreview({ battle, file, base64 }))}
-          alt={file.name}
-        />
-      </Grid>
-    )
   }
 
   renderFloatingText (text) {
@@ -135,8 +111,7 @@ class BattleCard extends Component {
 
   render () {
     const { loading } = this.state
-    const { classes } = this.props
-    const { battle } = this.props
+    const { classes, onPreview, battle } = this.props
     return (
       <Card className={classes.spaced}>
         <CardHeader
@@ -151,10 +126,7 @@ class BattleCard extends Component {
               <LinearProgress color='secondary' style={{ margin: '45px 0' }} />
             </div>
           ) : (
-            <Grid container>
-              {this.renderPhoto(0)}
-              {this.renderPhoto(1)}
-            </Grid>
+            <BattlePhotosRow battle={battle} onClick={onPreview} />
           )}
           <CardActions>{this.renderActions()}</CardActions>
         </CardContent>

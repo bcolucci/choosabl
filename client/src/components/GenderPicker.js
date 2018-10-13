@@ -16,16 +16,16 @@ class GenderPicker extends PureComponent {
     super(props)
     this.items = [
       {
-        label: 'woman',
-        value: props.t('profile:Woman')
+        value: 'woman',
+        label: props.t('profile:Woman')
       },
       {
-        label: 'man',
-        value: props.t('profile:Man')
+        value: 'man',
+        label: props.t('profile:Man')
       },
       {
-        label: 'other',
-        value: props.t('profile:Other')
+        value: 'other',
+        label: props.t('profile:Other')
       }
     ]
   }

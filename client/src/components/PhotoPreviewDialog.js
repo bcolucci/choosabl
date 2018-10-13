@@ -56,5 +56,6 @@ class PhotoPreviewDialog extends PureComponent {
 }
 
 export default withAll(PhotoPreviewDialog, {
+  withIntl: true,
   withStyles: true
 })
