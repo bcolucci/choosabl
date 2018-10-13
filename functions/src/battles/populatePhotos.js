@@ -10,15 +10,16 @@ module.exports = async battle => {
         .limit(1)
         .get()
     )
-  )).forEach((results, idx) => {
-    const [snap] = results.docs
-    Object.assign(battle, {
-      [`photo${idx + 1}`]: snap.exists
-        ? snap.data()
-        : {
-          path: 'image-not-found.gif',
-          type: 'image/gif'
-        }
+  ))
+    .map(rows => rows.docs.shift())
+    .forEach((snap, idx) => {
+      Object.assign(battle, {
+        [`photo${idx + 1}`]: snap.exists
+          ? snap.data()
+          : {
+            path: 'image-not-found.gif',
+            type: 'image/gif'
+          }
+      })
     })
-  })
 }

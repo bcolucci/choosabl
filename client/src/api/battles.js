@@ -71,8 +71,6 @@ export const deleteOne = battle => {
 }
 
 export const statsForOne = async battle => {
-  console.log(`battles/stats/${battle.id}`)
-  // const res = await authFetch(`battles/${battle.id}/stats`)
-  // const obj = await res.json()
-  // console.log(obj)
+  const res = await authFetch(`battles/stats/${battle.id}`)
+  return await res.json()
 }

@@ -1,4 +1,4 @@
-const { rofilesRef } = require('../utils/db')
+const { profilesRef } = require('../utils/db')
 
 module.exports = async (req, res) => {
   const userUID = req.header('UserUID')

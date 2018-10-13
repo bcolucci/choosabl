@@ -12,6 +12,7 @@ module.exports = async (req, res) => {
     id,
     user: userUID,
     active: false,
+    publishedAt: null,
     createdAt: now,
     updatedAt: now
   }

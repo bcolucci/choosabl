@@ -7,7 +7,9 @@ module.exports = async (req, res) => {
   const { email } = req.body
   const profileSnap = await profilesRef.doc(userUID).get()
   if (!profileSnap.exists) {
-    await profilesRef.doc(userUID).set(createProfile({ email, referrer }))
+    await profilesRef
+      .doc(userUID)
+      .set(createProfile({ uuid: userUID, email, referrer }))
   }
   res.end()
 }
