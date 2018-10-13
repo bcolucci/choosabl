@@ -97,6 +97,25 @@ Add this to your profile file (e.g. bashrc, bash_profile):
     fi
     }
 
+## (optional) Hide some folders
+
+Add this to your Visual Code User Settings, in **file.exclude**.
+
+For example:
+
+```json
+{
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/bower_components": true,
+    "**/node_modules": true,
+    "**/package-lock.json": true,
+    "**/.firebase": true
+  }
+}
+```
+
 ## Set CORS
 
     # local/test
