@@ -18,6 +18,7 @@
 | [Flags](https://github.com/wiredmax/react-flags)
 | [Large images](https://commons.wikimedia.org/w/index.php?title=Category:Large_images#mw-category-media)
 | [Vision Console](https://beta-dot-custom-vision.appspot.com)
+| [Charts](http://www.chartjs.org/docs/latest/) - [Components](https://github.com/reactjs/react-chartjs)
 
 ---
 

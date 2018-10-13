@@ -7,8 +7,10 @@ import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
+import { Bar } from 'react-chartjs'
 import innerEllipse from '../utils/innerEllipse'
 import withAll from '../utils/with'
 import * as battlesAPI from '../api/battles'
@@ -35,12 +37,27 @@ class BattleStatsPreviewDialog extends Component {
     const { t, classes, onClose } = this.props
     const { stats } = this.state
     return (
-      <div className={classes.tinyspaced}>
+      <Grid container className={classes.tinyspaced}>
         <pre>{JSON.stringify(stats, null, 2)}</pre>
-        <Button color='primary' variant='contained' onClick={onClose}>
-          {t('Close')}
-        </Button>
-      </div>
+        <Grid item xs={12}>
+          <Bar
+            data={{
+              labels: [t('Unknown'), t('Men'), t('Women')],
+              datasets: [
+                {
+                  fillColor: '#1769aa',
+                  data: Object.values(stats.byGenders)
+                }
+              ]
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} className={classes.spaced}>
+          <Button color='primary' variant='contained' onClick={onClose}>
+            {t('Close')}
+          </Button>
+        </Grid>
+      </Grid>
     )
   }
 
