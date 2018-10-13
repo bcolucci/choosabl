@@ -23,10 +23,21 @@ class MsgSnackbar extends Component {
     this.setState({ open })
   }
 
+  componentWillUnmount () {
+    this.unmounted = true
+  }
+
+  componentDidMount () {
+    const { timeout } = this.props
+    setTimeout(
+      () => !this.unmounted && this.setState({ open: false }),
+      Math.max(0, +timeout)
+    )
+  }
+
   render () {
     const { open } = this.state
-    const { type, message, onClose, timeout } = this.props
-    setTimeout(() => this.setState({ open: false }), Math.max(0, +timeout))
+    const { type, message, onClose } = this.props
     return (
       <Snackbar
         open={open}
