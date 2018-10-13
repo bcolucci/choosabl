@@ -27,6 +27,7 @@ class VerifyYourEmail extends PureComponent {
 }
 
 export default withAll(VerifyYourEmail, {
+  withIntl: true,
   withStyles: {
     styles: theme => ({
       veryEmail: {
