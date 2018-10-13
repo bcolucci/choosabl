@@ -23,7 +23,7 @@ module.exports = async (req, res) => {
   )
   stats.votes = votes.length
   stats.publishedAt = battle.publishedAt
-  stats.byGenders = { '': 0, Man: 0, Woman: 0 }
+  stats.byGenders = { '': 0, man: 0, woman: 0 }
   votes.forEach(vote => {
     const user = users.find(user => user.id === vote.user)
     stats.byGenders[user.gender] += 1
