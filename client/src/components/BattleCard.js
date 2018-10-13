@@ -42,11 +42,15 @@ class BattleCard extends Component {
   }
 
   handleToggleBattleStatus = async () => {
-    const { battle, moveBattle } = this.props
+    const { analytics, battle, moveBattle } = this.props
     this.setState({ moving: true })
     await battlesAPI.toggleBattleStatus(battle)
     this.setState({ moving: false })
     moveBattle(battle)
+    analytics.event({
+      category: 'Battle',
+      action: battle.active ? 'Desactivate' : 'Activate'
+    })
   }
 
   renderPhoto = num => {
@@ -160,6 +164,7 @@ class BattleCard extends Component {
 }
 
 export default withAll(BattleCard, {
+  withAnalytics: true,
   withStyles: true,
   withIntl: true
 })
