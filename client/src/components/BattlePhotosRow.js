@@ -7,10 +7,14 @@ import * as battlesAPI from '../api/battles'
 class BattlePhotosRow extends Component {
   static propTypes = {
     battle: PropTypes.object.isRequired,
+    photo1Classname: PropTypes.string,
+    photo2Classname: PropTypes.string,
     onClick: PropTypes.func
   }
 
   static defaultProps = {
+    photo1Classname: 'battle-result',
+    photo2Classname: 'battle-result',
     onClick: () => {}
   }
 
@@ -31,17 +35,24 @@ class BattlePhotosRow extends Component {
     const file = battle[`photo${num + 1}`]
     const base64 = photos[num]
     return (
-      <Grid item xs={6} style={{ textAlign: 'center' }}>
-        <img
-          src={
-            base64
-              ? `data:${file.type};base64,${base64}`
-              : '/image-not-found.gif'
-          }
-          style={{ height: 120, maxWidth: 140 }}
-          onClick={() => onClick({ battle, file, base64 })}
-          alt={file.name}
-        />
+      <Grid
+        item
+        xs={6}
+        style={{ textAlign: 'center' }}
+        className={this.props[`photo${num + 1}Classname`]}
+      >
+        <div className='overlay'>
+          <img
+            src={
+              base64
+                ? `data:${file.type};base64,${base64}`
+                : '/image-not-found.gif'
+            }
+            style={{ height: 120, maxWidth: 140 }}
+            onClick={() => onClick({ battle, file, base64 })}
+            alt={file.name}
+          />
+        </div>
       </Grid>
     )
   }

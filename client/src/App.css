@@ -34,3 +34,22 @@ svg.social-svg {
   font-style: 'italic';
   color: #666
 }
+
+.battle-result img {
+  border: 3px solid #CCC;
+}
+
+.overlay {
+  outline: 100px solid transparent !important;
+  outline-offset: -100px;
+  overflow: hidden;
+  position: relative;
+}
+
+.stats .overlay {
+  outline-color: rgba(255, 100, 0, 0.2) !important;
+}
+
+.stats .battle-result-winner .overlay {
+  outline-color: rgba(100, 255, 0, 0.2) !important;
+}

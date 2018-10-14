@@ -1,18 +1,20 @@
 const { votesRef, profilesRef } = require('../utils/db')
 
-const byGendersStatsProto = () => ({ '': 0, man: 0, woman: 0 })
+const defGender = gender => gender || 'unknown'
+
+const byGendersStatsProto = () => ({ unknown: 0, man: 0, woman: 0 })
 
 const createPhotoStatsBuilder = votes => num => {
   const photoVotes = votes.filter(({ voteFor }) => voteFor === num)
   return {
-    votes: photoVotes.length,
-    byGenders: photoVotes.reduce(
-      (acc, vote) => ({
+    total: photoVotes.length,
+    ...photoVotes.reduce((acc, vote) => {
+      const gender = defGender(vote.user.gender)
+      return {
         ...acc,
-        [vote.user.gender]: acc[vote.user.gender] + 1
-      }),
-      byGendersStatsProto()
-    )
+        [gender]: acc[gender] + 1
+      }
+    }, byGendersStatsProto())
   }
 }
 
@@ -37,14 +39,19 @@ module.exports = async (req, res) => {
         .then(snap => snap.data())
     )
   )
-  stats.votes = votes.length
-  stats.publishedAt = battle.publishedAt
-  stats.byGenders = byGendersStatsProto()
+  Object.assign(stats, {
+    publishedAt: battle.publishedAt,
+    total: votes.length,
+    ...byGendersStatsProto()
+  })
   votes.forEach(vote => {
     vote.user = users.find(user => user.id === vote.user)
-    stats.byGenders[vote.user.gender] += 1
+    stats[defGender(vote.user.gender)] += 1
   })
   const buildPhotoStats = createPhotoStatsBuilder(votes)
-  stats.byPhotos = [buildPhotoStats(0), buildPhotoStats(1)]
+  Object.assign(stats, {
+    photo1: buildPhotoStats(0),
+    photo2: buildPhotoStats(1)
+  })
   res.json(stats)
 }
