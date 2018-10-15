@@ -59,8 +59,8 @@ class BattleStatsPreviewDialog extends Component {
 
   barChartData () {
     const { t } = this.props
-    // const { stats } = this.state
-    const stats = this.fakeStats()
+    const { stats } = this.state
+    // const stats = this.fakeStats()
     return {
       labels: [t('Total'), t('Man'), t('Woman'), t('Unknown')],
       datasets: [
@@ -95,8 +95,8 @@ class BattleStatsPreviewDialog extends Component {
 
   genderPieChartData (num) {
     const { t } = this.props
-    // const { stats } = this.state
-    const stats = this.fakeStats()
+    const { stats } = this.state
+    // const stats = this.fakeStats()
     const photoStats = stats[`photo${num}`]
     return {
       labels: [t('Man'), t('Woman'), t('Unknown')],
@@ -110,8 +110,8 @@ class BattleStatsPreviewDialog extends Component {
 
   renderContents () {
     const { t, classes, onClose, battle } = this.props
-    // const { stats } = this.state
-    const stats = this.fakeStats()
+    const { stats } = this.state
+    // const stats = this.fakeStats()
     const winner =
       stats.photo1.total === stats.photo2.total
         ? 'none'

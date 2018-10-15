@@ -1,5 +1,24 @@
 const { votesRef, profilesRef } = require('../utils/db')
 
+const defaultStats = () => ({
+  total: 0,
+  unknown: 0,
+  man: 0,
+  woman: 0,
+  photo1: {
+    total: 0,
+    unknown: 0,
+    man: 0,
+    woman: 0
+  },
+  photo2: {
+    total: 0,
+    unknown: 0,
+    man: 0,
+    woman: 0
+  }
+})
+
 const defGender = gender => gender || 'unknown'
 
 const byGendersStatsProto = () => ({ unknown: 0, man: 0, woman: 0 })
@@ -20,7 +39,7 @@ const createPhotoStatsBuilder = votes => num => {
 
 module.exports = async (req, res) => {
   const { battle } = res.locals
-  const stats = {}
+  const stats = defaultStats()
   const iterator = await votesRef.where('battle', '==', battle.id).get()
   const votes = []
   const userIds = []
