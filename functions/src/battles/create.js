@@ -1,4 +1,5 @@
 const uuid = require('uuid/v4')
+const populatePhotos = require('./populatePhotos')
 const { detectBattleFaces } = require('../utils/vision')
 const { battlesRef } = require('../utils/db')
 
@@ -18,5 +19,6 @@ module.exports = async (req, res) => {
   }
   await detectBattleFaces({ battle, persist: true })
   await Promise.all([battlesRef.doc(id).set(doc)])
+  await populatePhotos(doc)
   res.json(doc)
 }
