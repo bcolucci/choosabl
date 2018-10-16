@@ -1,4 +1,4 @@
-export default k => ({
+export default (k, defTtl = 5 * 60 * 60) => ({
   get: (def = null) => {
     const json = localStorage.getItem(k)
     if (!json || !json.length) {
@@ -11,7 +11,7 @@ export default k => ({
     }
     return [null, undefined].includes(obj) ? def : obj
   },
-  set: (obj, ttl = 5 * 60 * 60) => {
+  set: (obj, ttl = defTtl) => {
     const item = { obj, ttl, ts: new Date().getTime() }
     try {
       localStorage.setItem(k, JSON.stringify(item))

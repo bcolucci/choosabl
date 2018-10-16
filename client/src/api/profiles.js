@@ -26,3 +26,15 @@ export const updateCurrent = async profile => {
   await authFetch('profiles/', { method: 'PUT', body: { profile } })
   cacheNS('profiles:getCurrent').set(profile)
 }
+
+export const currentProfileStats = async () => {
+  const cache = cacheNS('profiles:currentStats', 30 * 1000)
+  const obj = cache.get()
+  if (obj) {
+    return obj
+  }
+  const res = await authFetch('profiles/stats')
+  const stats = await res.json()
+  cache.set(stats)
+  return stats
+}

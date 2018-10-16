@@ -5,24 +5,24 @@ import * as profilesAPI from '../../api/profiles'
 
 class Badges extends Component {
   state = {
-    profile: null,
+    stats: null,
     loading: true
   }
 
   async componentDidMount () {
-    const profile = await profilesAPI.getCurrent()
-    this.setState({ profile, loading: false })
+    const stats = await profilesAPI.currentProfileStats()
+    this.setState({ stats, loading: false })
   }
 
   render () {
-    const { loading, profile } = this.state
+    const { loading, stats } = this.state
     if (loading) {
       return <LinearProgress color='secondary' />
     }
     return (
       <div>
-        BADGES PAGE HERE
-        <p>Remaining votes: {profile.votes}</p>
+        <p style={{ color: 'orange', fontWeight: 'bold' }}>TODO CSS</p>
+        <pre>{JSON.stringify(stats, null, 2)}</pre>
       </div>
     )
   }

@@ -1,6 +1,6 @@
 {
   "name": "choosabl-api",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "private": true,
   "homepage": "https://github.com/bcolucci/choosabl/tree/master/api",
   "engines": {
