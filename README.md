@@ -52,6 +52,7 @@ Open usefull links for development:
 
     git clone https://github.com/bcolucci/choosabl.git
     cd choosabl \
+      && npm install \
       && cd functions && npm install \
       && cd ../client && npm install
 
@@ -133,11 +134,7 @@ For example:
 
 ## Run on local
 
-    # starts the server side
-    cd functions && npm start
-
-    # starts the client
-    cd client && npm start
+    npm start
 
 ## Build client
 
