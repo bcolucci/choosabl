@@ -115,9 +115,7 @@ class BattleStatsPreviewDialog extends Component {
     const winner =
       stats.photo1.total === stats.photo2.total
         ? 'none'
-        : stats.photo1.total > stats.photo2.total
-          ? 1
-          : 2
+        : stats.photo1.total > stats.photo2.total ? 1 : 2
     const photoClassname = num =>
       classnames({
         'battle-result': true,

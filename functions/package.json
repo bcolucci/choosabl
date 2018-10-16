@@ -1,10 +1,9 @@
 {
   "name": "choosabl-api",
-  "version": "0.1.0-alpha",
+  "version": "0.1.1-2018101500096",
   "private": true,
-  "author": "Brice Colucci <brice.colucci@gmail.com>",
   "homepage": "https://github.com/bcolucci/choosabl/tree/master/api",
-  "main": "index.js",
+  "main": "./src/index.js",
   "engines": {
     "node": "8"
   },
@@ -13,8 +12,7 @@
     "shell": "firebase functions:shell",
     "start": "chokidar 'src/**/*.js' -c 'clear && npm run serve' --initial",
     "deploy": "firebase deploy --only functions --runtime=nodejs8 --trigger-http",
-    "logs": "firebase functions:log",
-    "format": "prettier-standard '**/*.js'"
+    "logs": "firebase functions:log"
   },
   "dependencies": {
     "@google-cloud/vision": "^0.22.1",
@@ -25,22 +23,12 @@
     "firebase-admin": "^6.0.0",
     "firebase-functions": "^2.0.5",
     "firebase-tools": "^5.0.1",
-    "i": "^0.3.6",
     "node-fetch": "^2.2.0",
     "nodemailer": "^4.6.8",
-    "rimraf": "^2.6.2",
     "sillyname": "^0.1.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "husky": "^1.1.2",
-    "chokidar-cli": "^1.2.1",
-    "prettier-standard": "^8.0.1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run format",
-      "pre-push": "npm run format"
-    }
+    "chokidar-cli": "^1.2.1"
   }
 }
