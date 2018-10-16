@@ -1,6 +1,6 @@
 require('./init')
 const { https } = require('firebase-functions')
-const { app } = require('./_app')
+const { app } = require('./app')
 
 require('./collections').forEach(col => require(`./${col}`))
 

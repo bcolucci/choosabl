@@ -1,4 +1,4 @@
-const { auth, createRouter } = require('./_app')
+const { auth, createRouter } = require('./app')
 const get = require('./profiles/get')
 const create = require('./profiles/create')
 const update = require('./profiles/update')

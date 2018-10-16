@@ -1,4 +1,4 @@
-const { auth, createRouter } = require('./_app')
+const { auth, createRouter } = require('./app')
 const isInvited = require('./invitations/isInvited')
 const invited = require('./invitations/invited')
 const create = require('./invitations/create')
