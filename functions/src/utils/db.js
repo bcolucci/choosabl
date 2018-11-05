@@ -8,4 +8,6 @@ const collections = require('../collections').reduce(
   {}
 )
 
-module.exports = { db, ...collections }
+const batch = db.batch.bind(db)
+
+module.exports = { db, batch, ...collections }

@@ -1,7 +1,6 @@
-import ReactGA from 'react-ga'
+import 'autotrack'
 
 const { host } = window.location
-
 const code = (() => {
   if (host === 'choosabl.com') {
     return 'UA-127456637-1'
@@ -12,9 +11,7 @@ const code = (() => {
   return 'UA-XXXXXXXXX-Y'
 })()
 
-ReactGA.initialize(code, {
-  debug: true,
-  testMode: host === 'localhost:3000'
-})
+window.ga('create', code, 'auto')
 
-export default ReactGA
+window.ga('require', 'eventTracker')
+window.ga('require', 'urlChangeTracker')

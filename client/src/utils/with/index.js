@@ -1,4 +1,3 @@
-import withAnalytics from './withAnalytics'
 import withGeoLoc from './withGeoLoc'
 import withIntl from './withIntl'
 import withMsgSnack from './withMsgSnack'
@@ -6,7 +5,6 @@ import withRouter from './withRouter'
 import withStyles from './withStyles'
 
 const bindings = {
-  withAnalytics,
   withGeoLoc,
   withIntl,
   withMsgSnack,

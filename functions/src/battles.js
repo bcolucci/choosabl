@@ -1,27 +1,29 @@
 const { auth, createRouter } = require('./app')
 const idreg = require('./utils/idreg')
-const get = require('./battles/get')
-const stats = require('./battles/stats')
-const create = require('./battles/create')
-const availableForVote = require('./battles/availableForVote')
-const toggleStatus = require('./battles/toggleStatus')
-const remove = require('./battles/remove')
-const isUserBattle = require('./battles/isUserBattleHandler')
+const handlers = require('./battles/handlers')
+const routes = require('./battles/routes')
 
 const router = createRouter('/battles')
-router.get(`/${idreg('battleUID')}?`, auth, get)
-router.get(`/stats/${idreg('battleUID')}`, auth, isUserBattle, stats)
-router.get('/availableForVote', auth, availableForVote)
-
-router.post('/', auth, create)
-
+router.get(`/${idreg('battleUID')}?`, auth, routes.get)
+router.get(
+  `/stats/${idreg('battleUID')}`,
+  auth,
+  handlers.isUserBattle,
+  routes.stats
+)
+router.get('/availableForVote', auth, routes.availableForVote)
+router.post('/', auth, routes.create)
 router.put(
   `/${idreg('battleUID')}/toggleStatus`,
   auth,
-  isUserBattle,
-  toggleStatus
+  handlers.isUserBattle,
+  routes.toggleStatus
 )
-
-router.delete(`/${idreg('battleUID')}`, auth, isUserBattle, remove)
+router.delete(
+  `/${idreg('battleUID')}`,
+  auth,
+  handlers.isUserBattle,
+  routes.remove
+)
 
 module.exports = router

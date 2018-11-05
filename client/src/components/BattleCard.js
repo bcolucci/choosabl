@@ -35,15 +35,11 @@ class BattleCard extends Component {
   }
 
   handleToggleBattleStatus = async () => {
-    const { analytics, battle, moveBattle } = this.props
+    const { battle, moveBattle } = this.props
     this.setState({ moving: true })
     await battlesAPI.toggleBattleStatus(battle)
     this.setState({ moving: false })
     moveBattle(battle)
-    analytics.event({
-      category: 'Battle',
-      action: battle.active ? 'Desactivate' : 'Activate'
-    })
   }
 
   renderFloatingText (text) {
@@ -71,6 +67,9 @@ class BattleCard extends Component {
           this.renderFloatingText(t('saving...'))
         ) : (
           <Button
+            ga-on='click'
+            ga-event-category='Battle'
+            ga-event-action='toggle'
             variant='outlined'
             color='primary'
             onClick={this.handleToggleBattleStatus}
@@ -136,7 +135,6 @@ class BattleCard extends Component {
 }
 
 export default withAll(BattleCard, {
-  withAnalytics: true,
   withStyles: true,
   withIntl: true
 })

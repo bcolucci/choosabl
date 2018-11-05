@@ -1,12 +1,42 @@
 const fetch = require('node-fetch')
 const qs = require('querystring')
 const { auth } = require('firebase-admin')
-const { collections } = require('../utils/db')
-const createProfile = require('./_createProfile')
+const errors = require('../errors')
+const repository = require('./repository')
+const utils = require('./utils')
 
+const get = async (req, res) => {
+  const userUID = req.header('UserUID')
+  const profile = await repository.findById(userUID)
+  res.json(profile || {})
+}
+
+const create = async (req, res) => {
+  const userUID = req.header('UserUID')
+  const { referrer } = req.query
+  const { email } = req.body
+  await repository.silentCreate({ userUID, email, referrer })
+  res.end()
+}
+
+const update = async (req, res) => {
+  const userUID = req.header('UserUID')
+  const { profile } = req.body
+  await repository.update({ userUID, profile })
+  res.end()
+}
+
+const stats = async (req, res) => {
+  const userUID = req.header('UserUID')
+  const stats = await repository.stats(userUID)
+  res.json(stats)
+}
+
+// --- linkedin ---------------------------------------------------------------
+
+// TODO move out
 const clientID = '86wddsl6iks71w'
 const clientSecret = 'O7NgQ0PbLUFYEYTF'
-
 const redirectURI = `${process.env.CLIENT_URL}?linkedin_callback=1`
 
 const askForCode = ({ crsf, res }) => {
@@ -54,17 +84,12 @@ const askForToken = async ({ crsf, code, referrer, res }) => {
     const { emailAddress } = await res.json()
     return emailAddress
   })()
-  const { profilesRef } = collections
-  const profileSnap = await profilesRef
-    .where('email', '==', email)
-    .limit(1)
-    .get()
   let uid = null
-  if (profileSnap.size) {
-    uid = profileSnap.docs[0].id
+  const profile = await repository.findByEmail(email)
+  if (profile) {
+    uid = profile.id
   } else {
-    const { profilesRef } = collections
-    const doc = profilesRef.doc()
+    const doc = await repository.createEmpty()
     uid = doc.id
     try {
       await auth().createUser({
@@ -72,7 +97,10 @@ const askForToken = async ({ crsf, code, referrer, res }) => {
         email,
         emailVerified: true
       })
-      await profilesRef.doc(uid).set(createProfile({ email, referrer }))
+      await repository.create({
+        userUID,
+        profile: createProfile({ email, referrer })
+      })
     } catch (err) {
       return res.redirect(
         `${redirectURI}?${qs.stringify({ state: crsf, error: err.message })}`
@@ -83,7 +111,7 @@ const askForToken = async ({ crsf, code, referrer, res }) => {
   res.redirect(`${redirectURI}?${qs.stringify({ state: crsf, token })}`)
 }
 
-module.exports = (req, res) => {
+const linkedinAuth = (req, res) => {
   const { crsf, code, referrer } = req.query
   if (!code) {
     return askForCode({ crsf, res })
@@ -92,4 +120,12 @@ module.exports = (req, res) => {
     return askForToken({ crsf, code, referrer, res })
   }
   res.status(500).end()
+}
+
+module.exports = {
+  get,
+  create,
+  update,
+  stats,
+  linkedinAuth
 }

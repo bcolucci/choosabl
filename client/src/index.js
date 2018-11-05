@@ -1,4 +1,5 @@
 import 'typeface-roboto'
+import './utils/analytics'
 import './utils/initializeFirebase'
 
 import React from 'react'

@@ -1,12 +1,9 @@
 const { auth, createRouter } = require('./app')
-const isInvited = require('./invitations/isInvited')
-const invited = require('./invitations/invited')
-const create = require('./invitations/create')
+const routes = require('./invitations/routes')
 
 const router = createRouter('/invitations')
-router.get('/', auth, invited)
-router.get('/:invited', auth, isInvited)
-
-router.post('/', auth, create)
+router.get('/', auth, routes.invitedBy)
+router.get('/:invited', auth, routes.isInvited)
+router.post('/', auth, routes.create)
 
 module.exports = router
