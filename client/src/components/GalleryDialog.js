@@ -147,11 +147,7 @@ class GaleryDialog extends Component {
     const { photos, selected, selectionEl } = this.state
     if (!photos.length) {
       return (
-        <Typography
-          variant='subheading'
-          className={classes.spaced}
-          gutterBottom
-        >
+        <Typography variant='subtitle1' className={classes.spaced} gutterBottom>
           {t('gallery:No photo imported yet.')}
         </Typography>
       )
@@ -399,7 +395,7 @@ class GaleryDialog extends Component {
           />
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
-          <Typography variant='subheading'>{t('gallery:Preview:')}</Typography>
+          <Typography variant='subtitle1'>{t('gallery:Preview:')}</Typography>
           {base64 ? (
             <div>
               <Typography variant='caption' gutterBottom>
@@ -566,7 +562,7 @@ class GaleryDialog extends Component {
     return (
       <Grid container>
         <Grid item xs={12} className={classes.spaced}>
-          <Typography variant='subheading'>
+          <Typography variant='subtitle1'>
             {t(
               `gallery:Exactly one face has to be detected in order to import the photo.`
             )}
@@ -666,11 +662,7 @@ class GaleryDialog extends Component {
             <IconButton color='inherit' onClick={this.handleClose}>
               <CloseIcon />
             </IconButton>
-            <Typography
-              variant='title'
-              color='inherit'
-              className={classes.flex}
-            >
+            <Typography variant='h6' color='inherit' className={classes.flex}>
               {t('gallery:Gallery')}
             </Typography>
           </Toolbar>

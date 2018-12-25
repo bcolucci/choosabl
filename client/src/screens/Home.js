@@ -18,7 +18,7 @@ class Home extends PureComponent {
           </Typography>
           <Typography
             color='primary'
-            variant='subheading'
+            variant='subtitle1'
             style={{ fontWeight: 'bold' }}
             gutterBottom
           >
@@ -31,7 +31,7 @@ class Home extends PureComponent {
         </Grid>
         <Grid item xs={6}>
           <Typography
-            variant='subheading'
+            variant='subtitle1'
             gutterBottom
             style={{
               height: '100%',
@@ -48,20 +48,20 @@ class Home extends PureComponent {
           </Typography>
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
-          <Typography variant='subheading' style={pClass} gutterBottom>
+          <Typography variant='subtitle1' style={pClass} gutterBottom>
             Plusieurs études démontrent que vous choisirez une photo qui vous
             désavantage.
           </Typography>
-          <Typography variant='subheading' style={pClass} gutterBottom>
+          <Typography variant='subtitle1' style={pClass} gutterBottom>
             Sur 2, 3 ou 4 photos de votre profil, soyez assurés que les autres
             auront une préférence pour une photo différente de votre propre
             choix.
           </Typography>
-          <Typography variant='subheading' style={pClass} gutterBottom>
+          <Typography variant='subtitle1' style={pClass} gutterBottom>
             C'est ainsi !<br />
             Notre perception fausse notre jugement...
           </Typography>
-          <Typography variant='subheading' style={pClass} gutterBottom>
+          <Typography variant='subtitle1' style={pClass} gutterBottom>
             Il existe une solution très simple pour vous aider :<br />
             CHOOSABL
           </Typography>
@@ -69,7 +69,7 @@ class Home extends PureComponent {
         <Grid item xs={12} className={classes.spaced}>
           <Typography
             color='primary'
-            variant='subheading'
+            variant='subtitle1'
             style={{ fontWeight: 'bold' }}
             gutterBottom
           >
@@ -79,11 +79,11 @@ class Home extends PureComponent {
           <img src='/home-people.png' alt='home people' />
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
-          <Typography variant='subheading' style={pClass} gutterBottom>
+          <Typography variant='subtitle1' style={pClass} gutterBottom>
             Soumettez au vote 2 photos et les autres vous diront celle qui vous
             gratifie le mieux.
           </Typography>
-          <Typography variant='subheading' style={pClass} gutterBottom>
+          <Typography variant='subtitle1' style={pClass} gutterBottom>
             Un échange de bons procédés :<br />
             vous votez pour aider les autres et en retour vous obtenez des
             votes.
@@ -116,7 +116,7 @@ class Home extends PureComponent {
           <img src='/logo-bulle.png' alt='home logo bulle' />
           <Typography
             color='primary'
-            variant='subheading'
+            variant='subtitle1'
             style={{ fontWeight: 'bold', paddingLeft: 10 }}
             gutterBottom
           >

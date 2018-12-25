@@ -35,7 +35,7 @@ class PhotoPreviewDialog extends PureComponent {
             <IconButton color='inherit' onClick={onClose}>
               <CloseIcon />
             </IconButton>
-            <Typography variant='title' color='inherit'>
+            <Typography variant='h6' color='inherit'>
               {innerEllipse(file.name)}
             </Typography>
           </Toolbar>

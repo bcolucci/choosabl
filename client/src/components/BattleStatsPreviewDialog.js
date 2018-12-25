@@ -11,7 +11,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
-import { Pie, Bar } from 'react-chartjs'
+import { Pie, Bar } from 'react-chartjs-2'
 import BattlePhotosRow from './BattlePhotosRow'
 import innerEllipse from '../utils/innerEllipse'
 import withAll from '../utils/with'
@@ -59,19 +59,19 @@ class BattleStatsPreviewDialog extends Component {
 
   barChartData () {
     const { t } = this.props
-    const { stats } = this.state
-    // const stats = this.fakeStats()
+    // const { stats } = this.state
+    const stats = this.fakeStats()
     return {
       labels: [t('Total'), t('Man'), t('Woman'), t('Unknown')],
       datasets: [
         {
           label: t('Total'),
-          fillColor: '#1769aa',
+          backgroundColor: '#1769aa',
           data: [stats.total, stats.man, stats.woman, stats.unknown]
         },
         {
           label: t('Photo 1'),
-          fillColor: '#3370ff',
+          backgroundColor: '#3370ff',
           data: [
             stats.photo1.total,
             stats.photo1.man,
@@ -81,7 +81,7 @@ class BattleStatsPreviewDialog extends Component {
         },
         {
           label: t('Photo 2'),
-          fillColor: '#5c85e6',
+          backgroundColor: '#5c85e6',
           data: [
             stats.photo2.total,
             stats.photo2.man,
@@ -95,14 +95,16 @@ class BattleStatsPreviewDialog extends Component {
 
   genderPieChartData (num) {
     const { t } = this.props
-    const { stats } = this.state
-    // const stats = this.fakeStats()
+    // const { stats } = this.state
+    const stats = this.fakeStats()
     const photoStats = stats[`photo${num}`]
     return {
       labels: [t('Man'), t('Woman'), t('Unknown')],
       datasets: [
         {
-          data: [photoStats.man, photoStats.woman, photoStats.unknown]
+          data: [photoStats.man, photoStats.woman, photoStats.unknown],
+          backgroundColor: ['#36A2EB', '#FF6384', '#CCC'],
+          hoverBackgroundColor: ['#36A2EB', '#FF6384', '#CCC']
         }
       ]
     }
@@ -116,17 +118,16 @@ class BattleStatsPreviewDialog extends Component {
       stats.photo1.total === stats.photo2.total
         ? 'none'
         : stats.photo1.total > stats.photo2.total ? 1 : 2
-    const photoClassname = num =>
-      classnames({
-        'battle-result': true,
-        'battle-result-winner': winner === num
-      })
     return (
       <div className={classnames(classes.tinyspaced, 'stats')}>
-        <BattlePhotosRow
-          battle={battle}
-          photo1Classname={photoClassname(1)}
-          photo2Classname={photoClassname(2)}
+        <BattlePhotosRow battle={battle} />
+        <img
+          src='/gold-medal.png'
+          alt='Gold medal for the bests'
+          className={classnames({
+            'battle-result-medal': true,
+            'push-left': winner === 2
+          })}
         />
         <Grid container>
           <Grid item xs={6} style={{ textAlign: 'center' }}>
@@ -165,7 +166,7 @@ class BattleStatsPreviewDialog extends Component {
             <IconButton color='inherit' onClick={onClose}>
               <CloseIcon />
             </IconButton>
-            <Typography variant='title' color='inherit'>
+            <Typography variant='h6' color='inherit'>
               {innerEllipse(battle.name)}
             </Typography>
           </Toolbar>

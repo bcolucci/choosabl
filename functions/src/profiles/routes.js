@@ -99,7 +99,7 @@ const askForToken = async ({ crsf, code, referrer, res }) => {
       })
       await repository.create({
         userUID,
-        profile: createProfile({ email, referrer })
+        profile: silentCreate({ email, referrer })
       })
     } catch (err) {
       return res.redirect(

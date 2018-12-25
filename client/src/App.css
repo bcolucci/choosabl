@@ -8,12 +8,14 @@ ul[role="menu"] a {
   color: inherit;
 }
 
-.errorBg, .errorBg>div {
-  background-color: #E64A19 !important;
+.errorBg,
+.errorBg > div {
+  background-color: #e64a19 !important;
 }
 
-.successBg, .successBg>div {
-  background-color: #388E3C !important;
+.successBg,
+.successBg > div {
+  background-color: #388e3c !important;
 }
 
 svg.social-svg {
@@ -31,12 +33,12 @@ svg.social-svg {
 
 .file-size-caption {
   font-size: 0.8em;
-  font-style: 'italic';
-  color: #666
+  font-style: "italic";
+  color: #666;
 }
 
 .battle-result img {
-  border: 3px solid #CCC;
+  border: 3px solid #ccc;
 }
 
 .overlay {
@@ -46,10 +48,14 @@ svg.social-svg {
   position: relative;
 }
 
-.stats .overlay {
-  outline-color: rgba(255, 100, 0, 0.2) !important;
+.battle-result-medal {
+  width: 15%;
+  position: absolute;
+  left: 25%;
+  top: 25%;
+  z-index: -99;
 }
 
-.stats .battle-result-winner .overlay {
-  outline-color: rgba(100, 255, 0, 0.2) !important;
+.stats .push-left {
+  left: 73%;
 }

@@ -114,7 +114,7 @@ class BattleCard extends Component {
     return (
       <Card className={classes.spaced}>
         <CardHeader
-          title={<Typography variant='title'>{battle.name}</Typography>}
+          title={<Typography variant='h6'>{battle.name}</Typography>}
           avatar={
             <Avatar>{battle.isPro ? <WorkIcon /> : <PersoIcon />}</Avatar>
           }

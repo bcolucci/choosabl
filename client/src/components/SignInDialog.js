@@ -152,11 +152,7 @@ class SignInDialog extends Component {
             <IconButton color='inherit' onClick={handleClose}>
               <CloseIcon />
             </IconButton>
-            <Typography
-              variant='title'
-              color='inherit'
-              className={classes.flex}
-            >
+            <Typography variant='h6' color='inherit' className={classes.flex}>
               {(() => {
                 switch (tab) {
                   case 'signIn':
