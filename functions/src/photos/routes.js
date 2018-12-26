@@ -3,6 +3,8 @@ const errors = require('../errors')
 const { detectFaces } = require('../utils/vision')
 const repository = require('./repository')
 
+const bucket = storage().app.options.storageBucket
+
 const create = async (req, res) => {
   const { photo } = req.body
   const userUID = req.header('UserUID')

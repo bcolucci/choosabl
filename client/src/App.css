@@ -26,6 +26,10 @@ svg.social-svg {
   margin-right: 5px;
 }
 
+.ReactCrop__crop-selection {
+  touch-action: none;
+}
+
 .ReactCrop__drag-handle {
   width: 40px;
   height: 40px;
@@ -51,9 +55,9 @@ svg.social-svg {
 .battle-result-medal {
   width: 15%;
   position: absolute;
+  top: 9%;
   left: 25%;
-  top: 25%;
-  z-index: -99;
+  opacity: 0.9;
 }
 
 .stats .push-left {

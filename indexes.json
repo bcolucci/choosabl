@@ -1,43 +1,47 @@
 {
   "indexes": [
     {
-      "collectionId": "battles",
+      "collectionGroup": "battles",
+      "queryScope": "COLLECTION",
       "fields": [
         {
           "fieldPath": "active",
-          "mode": "ASCENDING"
+          "order": "ASCENDING"
         },
         {
           "fieldPath": "updatedAt",
-          "mode": "DESCENDING"
+          "order": "DESCENDING"
         }
       ]
     },
     {
-      "collectionId": "battles",
+      "collectionGroup": "photos",
+      "queryScope": "COLLECTION",
       "fields": [
         {
           "fieldPath": "user",
-          "mode": "ASCENDING"
-        },
-        {
-          "fieldPath": "updatedAt",
-          "mode": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionId": "photos",
-      "fields": [
-        {
-          "fieldPath": "user",
-          "mode": "ASCENDING"
+          "order": "ASCENDING"
         },
         {
           "fieldPath": "createdAt",
-          "mode": "DESCENDING"
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "battles",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "user",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "updatedAt",
+          "order": "DESCENDING"
         }
       ]
     }
-  ]
+  ],
+  "fieldOverrides": []
 }

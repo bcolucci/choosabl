@@ -1,9 +1,7 @@
 const fetch = require('node-fetch')
 const qs = require('querystring')
 const { auth } = require('firebase-admin')
-const errors = require('../errors')
 const repository = require('./repository')
-const utils = require('./utils')
 
 const get = async (req, res) => {
   const userUID = req.header('UserUID')

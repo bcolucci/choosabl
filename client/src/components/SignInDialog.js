@@ -317,7 +317,7 @@ class SignInDialog extends Component {
                   })
                 }
               >
-                {t('sign-in-with-provider', {
+                {t('With an account', {
                   provider: 'email'
                 })}
               </Button>

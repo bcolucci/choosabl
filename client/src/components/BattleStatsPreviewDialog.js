@@ -59,8 +59,8 @@ class BattleStatsPreviewDialog extends Component {
 
   barChartData () {
     const { t } = this.props
-    // const { stats } = this.state
-    const stats = this.fakeStats()
+    const { stats } = this.state
+    // const stats = this.fakeStats()
     return {
       labels: [t('Total'), t('Man'), t('Woman'), t('Unknown')],
       datasets: [
@@ -93,12 +93,15 @@ class BattleStatsPreviewDialog extends Component {
     }
   }
 
-  genderPieChartData (num) {
+  genderPieChart (num) {
     const { t } = this.props
-    // const { stats } = this.state
-    const stats = this.fakeStats()
+    const { stats } = this.state
+    // const stats = this.fakeStats()
     const photoStats = stats[`photo${num}`]
-    return {
+    if (photoStats.total === 0) {
+      return <Typography variant='caption'>{t('No vote yet.')}</Typography>
+    }
+    const data = {
       labels: [t('Man'), t('Woman'), t('Unknown')],
       datasets: [
         {
@@ -108,6 +111,7 @@ class BattleStatsPreviewDialog extends Component {
         }
       ]
     }
+    return <Pie width={180} data={data} />
   }
 
   renderContents () {
@@ -131,10 +135,10 @@ class BattleStatsPreviewDialog extends Component {
         />
         <Grid container>
           <Grid item xs={6} style={{ textAlign: 'center' }}>
-            <Pie width={180} data={this.genderPieChartData(1)} />
+            {this.genderPieChart(1)}
           </Grid>
           <Grid item xs={6} style={{ textAlign: 'center' }}>
-            <Pie width={180} data={this.genderPieChartData(2)} />
+            {this.genderPieChart(2)}
           </Grid>
         </Grid>
         <Grid container className={classes.tinyspaced}>

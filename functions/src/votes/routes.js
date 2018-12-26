@@ -24,7 +24,7 @@ const create = async (req, res) => {
   if (vote === errors.NotAllowedToVoteTwice) {
     return res.status(500).json(vote)
   }
-  res.end(vote)
+  res.json(vote)
 }
 
 module.exports = {
