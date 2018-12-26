@@ -147,7 +147,7 @@ class Invite extends Component {
         </Grid>
         <br />
         <Grid item xs={12} className={classes.spaced}>
-          <Typography variant='headline'>{t('Invations sent:')}</Typography>
+          <Typography variant='h5'>{t('Invations sent:')}</Typography>
           {this.renderInvitedList()}
         </Grid>
       </Grid>

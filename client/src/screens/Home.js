@@ -13,7 +13,7 @@ class Home extends PureComponent {
     return (
       <Grid container>
         <Grid item xs={12} className={classes.spaced}>
-          <Typography variant='headline' color='secondary' gutterBottom>
+          <Typography variant='h5' color='secondary' gutterBottom>
             Etes-vous sûre de votre photo de profil ?
           </Typography>
           <Typography
@@ -96,7 +96,7 @@ class Home extends PureComponent {
           style={{ textAlign: 'center' }}
         >
           <Typography
-            variant='headline'
+            variant='h5'
             color='secondary'
             gutterBottom
             style={{
