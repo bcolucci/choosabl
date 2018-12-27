@@ -120,12 +120,10 @@ For example:
 ## Set CORS
 
     # local/test
-    gcloud config set project choosabl-test \
-      && gsutil cors set functions/cors/test.json gs://choosabl-test.appspot.com
+    npm run setcors:test
 
     # prod
-    gcloud config set project choosabl-1e2ea \
-      && gsutil cors set functions/cors/prod.json gs://choosabl-1e2ea.appspot.com    
+    npm run setcors:prod   
 
 ## Install Visual Code deps
 

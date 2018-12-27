@@ -270,28 +270,28 @@ class SignInDialog extends Component {
         >
           <SocialIcon url='https://google.com' />
         </IconButton>
-        <IconButton
+        {/* <IconButton
           className={classes.tinyspaced}
           onClick={this.handleSignInWithProvider(
             new auth.FacebookAuthProvider()
           )}
         >
           <SocialIcon url='https://facebook.com' />
-        </IconButton>
-        <IconButton
+        </IconButton> */}
+        {/* <IconButton
           className={classes.tinyspaced}
           onClick={this.handleSignInWithLinkedIn}
         >
           <SocialIcon url='https://linkedin.com' />
-        </IconButton>
-        <IconButton
+        </IconButton> */}
+        {/* <IconButton
           className={classes.tinyspaced}
           onClick={this.handleSignInWithProvider(
             new auth.TwitterAuthProvider()
           )}
         >
           <SocialIcon url='https://twitter.com' />
-        </IconButton>
+        </IconButton> */}
       </div>
     )
   }

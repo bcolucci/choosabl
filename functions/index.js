@@ -5,7 +5,7 @@ const { app } = require('./src/app')
 
 const corsHandler = require('cors')({ origin: true })
 
-const project = process.env.GCP_PROJECT || 'choosabl-test'
+const project = process.env.GCP_PROJECT || 'choosabl-test-71670'
 Object.assign(process.env, {
   GOOGLE_APPLICATION_CREDENTIALS: `${__dirname}/accounts/${project}.json`,
   CLIENT_URL:

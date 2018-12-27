@@ -1,0 +1,18 @@
+{
+  "test": {
+    "apiKey": "AIzaSyBQj0Yw2gppkmWFADy6KaurlkX2vlGTb-g",
+    "authDomain": "choosabl-test-71670.firebaseapp.com",
+    "databaseURL": "https://choosabl-test-71670.firebaseio.com",
+    "projectId": "choosabl-test-71670",
+    "storageBucket": "choosabl-test-71670.appspot.com",
+    "messagingSenderId": "843858163787"
+  },
+  "prod": {
+    "apiKey": "AIzaSyAUALnZTdkmkHRdOvSabHf1jCwnyx2Se2k",
+    "authDomain": "choosabl-4a2ec.firebaseapp.com",
+    "databaseURL": "https://choosabl-4a2ec.firebaseio.com",
+    "projectId": "choosabl-4a2ec",
+    "storageBucket": "choosabl-4a2ec.appspot.com",
+    "messagingSenderId": "549199114732"
+  }
+}

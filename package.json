@@ -11,6 +11,8 @@
     "deploy": "firebase deploy",
     "switch:prod": "firebase use default",
     "switch:test": "firebase use test",
+    "setcors:prod": "gcloud config set project choosabl-4a2ec && gsutil cors set functions/cors/prod.json gs://choosabl-4a2ec.appspot.com ",
+    "setcors:test": "gcloud config set project choosabl-test-71670 && gsutil cors set functions/cors/test.json gs://choosabl-test-71670.appspot.com",
     "build": "cd client && npm run build",
     "start:client": "cd client && npm start",
     "start:functions": "cd functions && npm start",
