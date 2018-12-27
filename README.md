@@ -1,14 +1,19 @@
 
 # Choosabl
 
-![logo](https://github.com/bcolucci/choosabl/blob/master/client/public/logo254.png?raw=true)
+# URLs
+
+* Dev:
+  * http://localhost:3000 (local)
+  * https://choosabl-test-71670.firebaseapp.com (hosting)
+* Prod:
+  * https://choosabl-4a2ec.firebaseapp.com
+  * https://choosabl.com
 
 # Links referential
 
 | Lien                                                                                                  |
 |-------------------------------------------------------------------------------------------------------|
-| [**PROD**](https://choosabl-1e2ea.firebaseapp.com)
-| [**TEST**](https://choosabl-test.firebaseapp.com) 
 | [Console](https://console.firebase.google.com) 
 | [Material UI](https://material-ui.com/demos/app-bar) 
 | [Material Pickers](https://material-ui-pickers.firebaseapp.com) 
@@ -18,17 +23,14 @@
 | [Flags](https://github.com/wiredmax/react-flags)
 | [Large images](https://commons.wikimedia.org/w/index.php?title=Category:Large_images#mw-category-media)
 | [Vision Console](https://beta-dot-custom-vision.appspot.com)
-| [Charts](http://www.chartjs.org/docs/latest/) - [Components](https://github.com/reactjs/react-chartjs)
+| [Charts](http://www.chartjs.org/docs/latest/) - [Components](https://github.com/jerairrest/react-chartjs-2)
 
 ---
 
 # Accounts
 
-| Network   | Login                   | Password       |
-|------------------------------------------------------|
-| Facebook  | contact@choosabl.com    | 2018@choosabl
-| LinkedIn  | contact@choosabl.com    | 2018@choosabl
-| Google    | mac.choosabl@gmail.com  | 2018@choosabl
+* Facebook, LinkedIn: contact@choosabl.com / 2018@choosabl
+* Google: mac.choosabl@gmail.com / 2018@choosabl
 
 ---
 
@@ -153,8 +155,3 @@ For example:
 
     # test
     npm run switch:test
-
-# Documentation
-
-* Functions: https://github.com/bcolucci/choosabl/blob/master/functions
-* Client: https://github.com/bcolucci/choosabl/blob/master/client
