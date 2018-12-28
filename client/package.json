@@ -2,7 +2,7 @@
   "name": "choosable",
   "version": "0.2.0",
   "private": true,
-  "homepage": "https://choosabl-1e2ea.firebaseapp.com/",
+  "homepage": "https://choosabl-4a2ec.firebaseapp.com/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build && npm run i18n:extract",
