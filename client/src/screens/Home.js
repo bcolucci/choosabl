@@ -3,9 +3,6 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import withAll from '../utils/with'
 
-// TODO
-// not translated
-
 class Home extends PureComponent {
   render () {
     const { classes } = this.props

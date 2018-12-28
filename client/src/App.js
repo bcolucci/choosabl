@@ -9,6 +9,7 @@ import withAll from './utils/with'
 import Header from './components/Header'
 import ProtectedRoutes from './components/ProtectedRoutes'
 import Home from './screens/Home'
+import Legal from './screens/Legal'
 import Vote from './screens/Vote'
 import Battles from './screens/Battles'
 import Profile from './screens/Profile'
@@ -145,6 +146,11 @@ class App extends Component {
           <Header user={user} />
           <main>
             {this.renderProtectedRoutes()}
+            <Route
+              exact
+              path='/legal'
+              render={props => <Legal user={user} />}
+            />
             <Route exact path='/' render={props => <Home user={user} />} />
           </main>
         </MuiPickersUtilsProvider>

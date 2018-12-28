@@ -11,7 +11,7 @@ Object.assign(process.env, {
   CLIENT_URL:
     hostname() === 'localhost'
       ? `https://${project}.firebaseapp.com`
-      : 'http://localhost:3000'
+      : 'https://localhost:3000'
 })
 
 firebase.initializeApp({

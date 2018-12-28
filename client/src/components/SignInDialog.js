@@ -258,10 +258,8 @@ class SignInDialog extends Component {
   }
 
   renderGoogleBtn () {
-    const { classes } = this.props
     return (
       <IconButton
-        className={classes.tinyspaced}
         onClick={this.handleSignInWithProvider(new auth.GoogleAuthProvider())}
       >
         <SocialIcon url='https://google.com' />
@@ -270,10 +268,8 @@ class SignInDialog extends Component {
   }
 
   renderFacebookBtn () {
-    const { classes } = this.props
     return (
       <IconButton
-        className={classes.tinyspaced}
         onClick={this.handleSignInWithProvider(new auth.FacebookAuthProvider())}
       >
         <SocialIcon url='https://facebook.com' />
@@ -282,22 +278,16 @@ class SignInDialog extends Component {
   }
 
   renderLinkedInBtn () {
-    const { classes } = this.props
     return (
-      <IconButton
-        className={classes.tinyspaced}
-        onClick={this.handleSignInWithLinkedIn}
-      >
+      <IconButton onClick={this.handleSignInWithLinkedIn}>
         <SocialIcon url='https://linkedin.com' />
       </IconButton>
     )
   }
 
   renderTwitterBtn () {
-    const { classes } = this.props
     return (
       <IconButton
-        className={classes.tinyspaced}
         onClick={this.handleSignInWithProvider(new auth.TwitterAuthProvider())}
       >
         <SocialIcon url='https://twitter.com' />
@@ -306,15 +296,15 @@ class SignInDialog extends Component {
   }
 
   renderSocialSignIn () {
-    const { t, classes } = this.props
+    const { t } = this.props
     return (
       <div style={{ marginTop: 30 }}>
         <Typography variant='caption' gutterBottom>
           {t('or via social networks:')}
         </Typography>
         {this.renderGoogleBtn()}
-        {/* {this.renderFacebookBtn()} */}
-        {/* {this.renderLinkedInBtn()} */}
+        {this.renderFacebookBtn()}
+        {this.renderLinkedInBtn()}
         {/* {this.renderTwitterBtn()} */}
       </div>
     )
@@ -375,12 +365,5 @@ export default withAll(SignInDialog, {
   withIntl: true,
   withRouter: true,
   withMsgSnack: true,
-  withStyles: {
-    styles: theme => ({
-      socialIcon: {
-        width: '32px !important',
-        height: '32px !important'
-      }
-    })
-  }
+  withStyles: true
 })
