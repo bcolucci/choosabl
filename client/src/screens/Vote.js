@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import Button from '@material-ui/core/Button'
+import Fab from '@material-ui/core/Fab'
 import withAll from '../utils/with'
 import VerifyYourEmail from '../components/VerifyYourEmail'
 import * as battlesAPI from '../api/battles'
@@ -117,8 +117,7 @@ class Vote extends Component {
       >
         {this.renderPhoto(0)}
         {this.renderPhoto(1)}
-        <Button
-          variant='fab'
+        <Fab
           color='secondary'
           style={{
             position: 'absolute',
@@ -127,7 +126,7 @@ class Vote extends Component {
           }}
         >
           {profile.votes}
-        </Button>
+        </Fab>
       </div>
     )
   }

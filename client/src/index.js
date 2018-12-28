@@ -1,4 +1,6 @@
+// import 'lazysizes'
 import 'typeface-roboto'
+
 import './utils/analytics'
 import './utils/initializeFirebase'
 

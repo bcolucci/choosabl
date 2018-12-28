@@ -1,5 +1,5 @@
 const { hostname } = require('os')
-const firebase = require('firebase-admin')
+const admin = require('firebase-admin')
 const { https } = require('firebase-functions')
 const { app } = require('./src/app')
 
@@ -14,12 +14,12 @@ Object.assign(process.env, {
       : 'https://localhost:3000'
 })
 
-firebase.initializeApp({
+admin.initializeApp({
   storageBucket: `gs://${project}.appspot.com`
 })
 
 require('./src/collections').forEach(col => require(`./src/${col}`))
 
-module.exports.v1 = https.onRequest((req, res) => {
+module.exports.v1 = https.onRequest((req, res) =>
   corsHandler(req, res, () => app(req, res))
-})
+)

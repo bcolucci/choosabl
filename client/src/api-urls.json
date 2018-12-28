@@ -2,5 +2,5 @@
   "choosabl.com": "https://us-central1-choosabl-4a2ec.cloudfunctions.net",
   "choosabl-4a2ec.firebaseapp.com": "https://us-central1-choosabl-4a2ec.cloudfunctions.net",
   "choosabl-test-71670.firebaseapp.com": "https://us-central1-choosabl-test-71670.cloudfunctions.net",
-  "localhost:3000": "https://localhost:3000/choosabl-test-71670/us-central1"
+  "localhost:3000": "http://localhost:5000/choosabl-test-71670/us-central1"
 }
