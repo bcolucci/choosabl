@@ -1,10 +1,10 @@
-import { authFetch } from '.'
+import { CACHE_ACTIVATED, authFetch } from '.'
 import cacheNS from '../utils/cacheNS'
 
 export const invitedList = async () => {
   const cache = cacheNS('invitations:invitedList')
   const invited = cache.get([])
-  if (!invited.length) {
+  if (!CACHE_ACTIVATED || !invited.length) {
     const res = await authFetch('invitations')
     const emails = await res.json()
     cache.set(emails)
@@ -17,7 +17,9 @@ export const isInvited = async email => {
   const alreadyInvited = await (await authFetch(`invitations/${email}`)).json()
   if (alreadyInvited) {
     const cache = cacheNS('invitations:invitedList')
-    cache.set([...cache.get([]), email])
+    cache.set(
+      [...cache.get([]), email].filter((v, i, arr) => arr.indexOf(v) === i)
+    )
   }
   return alreadyInvited
 }

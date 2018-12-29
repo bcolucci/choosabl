@@ -1,12 +1,12 @@
 import { storage } from 'firebase'
-import { authFetch } from '.'
+import { CACHE_ACTIVATED, authFetch } from '.'
 import cacheNS from '../utils/cacheNS'
 import * as base64Img from '../utils/base64Img'
 
 export const getAllForCurrentUser = async () => {
   const cache = cacheNS('battles:getAllForCurrentUser')
   const obj = cache.get([])
-  if (obj && obj.length) {
+  if (CACHE_ACTIVATED && obj && obj.length) {
     return obj
   }
   const res = await authFetch('battles/')
@@ -39,7 +39,7 @@ export const toggleBattleStatus = async battle => {
 export const getAvailablesForCurrentUser = async () => {
   const cache = cacheNS('battles:getAvailablesForCurrentUser')
   const obj = cache.get([])
-  if (obj && obj.length) {
+  if (CACHE_ACTIVATED && obj && obj.length) {
     return obj
   }
   const res = await authFetch('battles/availableForVote')

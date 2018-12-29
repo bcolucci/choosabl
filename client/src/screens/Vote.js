@@ -98,6 +98,7 @@ class Vote extends Component {
   render () {
     const { classes, user } = this.props
     const { loading, profile, current } = this.state
+    console.log(user)
     if (!user.emailVerified) {
       return <VerifyYourEmail />
     }

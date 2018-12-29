@@ -1,10 +1,10 @@
-import { authFetch } from '.'
+import { CACHE_ACTIVATED, authFetch } from '.'
 import cacheNS from '../utils/cacheNS'
 
 export const getCurrent = async () => {
   const cache = cacheNS('profiles:getCurrent')
   const obj = cache.get()
-  if (obj) {
+  if (CACHE_ACTIVATED && obj) {
     return obj
   }
   const res = await authFetch('profiles/')
@@ -16,7 +16,7 @@ export const getCurrent = async () => {
 export const createCurrentProfile = async email => {
   const referrer = localStorage.getItem('referrer')
   localStorage.removeItem('referrer')
-  await authFetch(`profiles/?referrer=${referrer}`, {
+  return await authFetch(`profiles/?referrer=${referrer}`, {
     method: 'POST',
     body: { email }
   })
@@ -30,7 +30,7 @@ export const updateCurrent = async profile => {
 export const currentProfileStats = async () => {
   const cache = cacheNS('profiles:currentStats', 30 * 1000)
   const obj = cache.get()
-  if (obj) {
+  if (CACHE_ACTIVATED && obj) {
     return obj
   }
   const res = await authFetch('profiles/stats')
