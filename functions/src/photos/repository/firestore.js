@@ -1,5 +1,5 @@
 const uuid = require('uuid/v4')
-const DB = require('../utils/db')
+const DB = require('../../utils/db')
 
 const create = async ({ userUID, photo }) => {
   const id = uuid()

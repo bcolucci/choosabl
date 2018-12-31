@@ -1,6 +1,6 @@
 const uuid = require('uuid/v4')
-const errors = require('../errors')
-const DB = require('../utils/db')
+const errors = require('../../errors')
+const DB = require('../../utils/db')
 
 const create = async ({ userUID, invited, message }) => {
   const nbInvitations = (await DB.invitationsRef

@@ -3,11 +3,14 @@ const repository = require('./repository')
 const mailer = require('../utils/mailer')
 const invitationMail = require('../mails/invitation')
 
-const create = async (req, res) => {
+const create = async (req, res, next) => {
   const { invited, message } = req.body
   const userUID = req.header('UserUID')
-  const invitation = await repository.create({ userUID, invited, message })
-  const currentUser = await auth().getUser(userUID)
+  const [invitation, currentUser] = await Promise.all([
+    repository.create({ userUID, invited, message }),
+    auth().getUser(userUID)
+  ])
+  setTimeout(() => res.end(invitation), mailer.TIMEOUT)
   mailer.sendMail(
     invitationMail({
       referrer: currentUser,
@@ -16,27 +19,29 @@ const create = async (req, res) => {
     }),
     err => {
       if (err) {
-        error = err
-        return res.status(500).end(err.message)
+        return next(err)
       }
       try {
-        res.end(invitation) // maybe already closed
+        res.json(invitation) // maybe already closed
       } catch (err) {}
     }
   )
-  setTimeout(() => res.end(invitation), 3000)
 }
 
-const invitedBy = async (req, res) => {
+const invitedBy = (req, res, next) => {
   const userUID = req.header('UserUID')
-  const invited = await repository.invitedBy(userUID)
-  res.json(invited)
+  repository
+    .invitedBy(userUID)
+    .then(invited => res.json(invited))
+    .catch(err => next(err))
 }
 
-const isInvited = async (req, res) => {
+const isInvited = (req, res, next) => {
   const { invited } = req.params
-  const isInvited = await repository.isInvited({ userUID, invited })
-  res.json(isInvited)
+  repository
+    .isInvited({ userUID, invited })
+    .then(isInvited => res.json(isInvited))
+    .catch(err => next(err))
 }
 
 module.exports = {

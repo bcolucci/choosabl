@@ -5,26 +5,26 @@ const repository = require('./repository')
 
 const bucket = storage().app.options.storageBucket
 
-const create = async (req, res) => {
+const create = (req, res, next) => {
   const { photo } = req.body
   const userUID = req.header('UserUID')
-  const doc = await repository.create({ userUID, photo })
-  res.json(doc)
+  repository
+    .create({ userUID, photo })
+    .then(doc => res.json(doc))
+    .catch(err => next(err))
 }
 
-const remove = async (req, res) => {
+const remove = async (req, res, next) => {
   const { photoUID, path } = req.params
-  const decodedPath = '/' + Buffer.from(path, 'base64')
-  try {
-    await Promise.all([
-      repository.remove(photoUID),
-      storage()
-        .bucket(bucket)
-        .file(decodedPath)
-        .delete()
-    ])
-  } catch (err) {}
-  res.end()
+  Promise.all([
+    repository.remove(photoUID),
+    storage()
+      .bucket(bucket)
+      .file('/' + Buffer.from(path, 'base64'))
+      .delete()
+  ])
+    .then(() => res.end())
+    .catch(err => next(err))
 }
 
 const face = async (req, res) => {
@@ -45,10 +45,12 @@ const face = async (req, res) => {
   res.json(faceAnnotations.shift())
 }
 
-const get = async (req, res) => {
+const get = (req, res, next) => {
   const userUID = req.header('UserUID')
-  const photos = await repository.findByUser(userUID)
-  res.json(photos)
+  repository
+    .findByUser(userUID)
+    .then(photos => res.json(photos))
+    .catch(err => next(err))
 }
 
 module.exports = {

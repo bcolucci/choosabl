@@ -1,33 +1,40 @@
 const fetch = require('node-fetch')
 const qs = require('querystring')
+const uuid = require('uuid/v4')
 const { auth } = require('firebase-admin')
 const repository = require('./repository')
 
-const get = async (req, res) => {
-  const userUID = req.header('UserUID')
-  const profile = await repository.findById(userUID)
-  res.json(profile || {})
-}
+const get = (req, res, next) =>
+  repository
+    .findById(req.header('UserUID'))
+    .then(profile => res.json(profile || {}))
+    .catch(err => next(err))
 
-const create = async (req, res) => {
+const create = (req, res, next) => {
   const userUID = req.header('UserUID')
   const { referrer } = req.query
   const { email } = req.body
-  await repository.silentCreate({ userUID, email, referrer })
-  res.end()
+  repository
+    .createIfNotExists({ userUID, email, referrer })
+    .then(profile => res.json(profile))
+    .catch(err => next(err))
 }
 
-const update = async (req, res) => {
+const update = (req, res, next) => {
   const userUID = req.header('UserUID')
   const { profile } = req.body
-  await repository.update({ userUID, profile })
-  res.end()
+  repository
+    .update({ userUID, profile })
+    .then(() => res.end())
+    .catch(err => next(err))
 }
 
-const stats = async (req, res) => {
+const stats = (req, res, next) => {
   const userUID = req.header('UserUID')
-  const stats = await repository.stats(userUID)
-  res.json(stats)
+  repository
+    .stats(userUID)
+    .then(stats => res.json(stats))
+    .catch(err => next(err))
 }
 
 // --- linkedin ---------------------------------------------------------------
@@ -82,23 +89,16 @@ const askForToken = async ({ crsf, code, referrer, res }) => {
     const { emailAddress } = await res.json()
     return emailAddress
   })()
-  let uid = null
   const profile = await repository.findByEmail(email)
-  if (profile) {
-    uid = profile.id
-  } else {
-    const doc = await repository.createEmpty()
-    uid = doc.id
+  const uid = profile ? profile.id : uuid()
+  if (!profile) {
     try {
       await auth().createUser({
         uid,
         email,
         emailVerified: true
       })
-      await repository.create({
-        userUID,
-        profile: silentCreate({ email, referrer })
-      })
+      await repository.create({ userUID: uid, email, referrer })
     } catch (err) {
       return res.redirect(
         `${redirectURI}?${qs.stringify({ state: crsf, error: err.message })}`

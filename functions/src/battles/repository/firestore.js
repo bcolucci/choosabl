@@ -1,7 +1,7 @@
 const uuid = require('uuid/v4')
-const errors = require('../errors')
-const { detectBattleFaces } = require('../utils/vision')
-const DB = require('../utils/db')
+const errors = require('../../errors')
+const { detectBattleFaces } = require('../../utils/vision')
+const DB = require('../../utils/db')
 
 const create = async ({ userUID, battle }) => {
   const id = uuid()

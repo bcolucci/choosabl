@@ -1,5 +1,5 @@
-const DB = require('../utils/db')
-const { createProfile } = require('./utils')
+const DB = require('../../utils/db')
+const { createProfile } = require('../utils')
 
 const silentCreate = async ({ userUID, email, referrer }) => {
   const profileSnap = await DB.profilesRef.doc(userUID).get()
