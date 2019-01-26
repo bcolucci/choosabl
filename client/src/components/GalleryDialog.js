@@ -36,6 +36,7 @@ import * as base64Img from '../utils/base64Img'
 import * as photosAPI from '../api/photos'
 
 import 'react-image-crop/dist/ReactCrop.css'
+import { EventEmitter } from 'events'
 
 const aspect = 3.7 / 4
 const photoWidth = 250
@@ -81,29 +82,50 @@ class GaleryDialog extends Component {
     saving: false
   }
 
+  constructor (props) {
+    super(props)
+    this.photosListener = new EventEmitter()
+  }
+
   componentDidMount () {
-    window.addEventListener('resize', this.handleScreenResize, false)
+    this.photosListener.on('rawLoaded', this._handleRawPhotosLoaded)
+    this.photosListener.on('base64Loaded', this._handlePhotosBase64Loaded)
+    window.addEventListener('resize', this.handleScreenResize)
     this.loadPhotos()
   }
 
   componentWillUnmount () {
+    this.photosListener.removeAllListeners()
     window.removeEventListener('resize', this.handleScreenResize)
   }
 
   handleScreenResize = () => this.forceUpdate()
 
+  _handleRawPhotosLoaded = async photos => {
+    this.setState({ photos, loading: false })
+    const base64 = await Promise.all(
+      photos.map(({ path }) =>
+        storage()
+          .ref(path)
+          .getDownloadURL()
+          .then(url => base64Img.download(url))
+      )
+    )
+    this.photosListener.emit('base64Loaded', { photos, base64 })
+  }
+
+  _handlePhotosBase64Loaded = ({ photos, base64 }) =>
+    this.setState({
+      photos: photos.map((photo, idx) => ({
+        ...photo,
+        base64: base64[idx]
+      }))
+    })
+
   async loadPhotos () {
     this.setState({ loading: true })
     const photos = await photosAPI.getForCurrentUser()
-    this.setState({ photos, loading: false })
-    photos.forEach(async (photo, idx) => {
-      const url = await storage()
-        .ref(photo.path)
-        .getDownloadURL()
-      const base64 = await base64Img.download(url)
-      Object.assign(this.state.photos[idx], { base64 })
-      this.forceUpdate()
-    })
+    this.photosListener.emit('rawLoaded', photos)
   }
 
   moveToStep = (inc, updateAttrs = () => ({})) => () =>
@@ -130,7 +152,7 @@ class GaleryDialog extends Component {
     const { selected } = this.state
     const photo = this.state.photos[selected]
     // TODO
-    console.log('Preview', photo)
+    console.log('preview', photo)
     this.handleCloseSelectionMenu()
   }
 

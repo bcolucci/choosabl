@@ -1,4 +1,3 @@
-const uuid = require('uuid/v4')
 const errors = require('../../errors')
 const DB = require('../../utils/spanner')
 

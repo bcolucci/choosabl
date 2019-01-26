@@ -3,8 +3,11 @@ const admin = require('firebase-admin')
 const { https } = require('firebase-functions')
 const { app } = require('./src/app')
 
+global.unique = (v, i, arr) => arr.indexOf(v) === i
+global.pickAttr = attr => obj => obj[attr]
+
 const DEV_PROJECT_ID = 'choosabl-test-71670'
-const REPOSITORY_ENGINE = 'spanner'
+const REPOSITORY_ENGINE = 'mysql'
 const GCP_PROJECT = process.env.GCP_PROJECT || DEV_PROJECT_ID
 const DEV_ENV = GCP_PROJECT === DEV_PROJECT_ID
 const GOOGLE_APPLICATION_CREDENTIALS = `${__dirname}/accounts/${GCP_PROJECT}.json`
@@ -24,11 +27,6 @@ Object.assign(process.env, {
 // console.log(JSON.stringify(process.env, null, 2))
 
 admin.initializeApp({ storageBucket: `gs://${GCP_PROJECT}.appspot.com` })
-
-// TODO move in utils file or use lib (e.g. ramda)
-global.all = ([rows]) => rows
-global.first = ([rows]) => rows[0]
-global.unique = (v, i, arr) => arr.indexOf(v) === i
 
 require('./src/collections').forEach(col => require(`./src/${col}`))
 

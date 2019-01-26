@@ -27,6 +27,10 @@
 
 ---
 
+[Usefull](https://firebase.google.com/docs/functions/beta-v1-diff)
+
+---
+
 # Accounts
 
 * Facebook, LinkedIn: contact@choosabl.com / 2018@choosabl
