@@ -44,7 +44,7 @@ class GenderPicker extends PureComponent {
     return (
       <div>
         <FormLabel component='legend'>Gender</FormLabel>
-        <RadioGroup value={value} onChange={onChange}>
+        <RadioGroup value={value} onChange={onChange} row>
           {this.items.map(this.renderItem)}
         </RadioGroup>
       </div>

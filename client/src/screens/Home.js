@@ -8,7 +8,7 @@ class Home extends PureComponent {
     const { classes } = this.props
     const pClass = { fontWeight: 'bold', color: '#666' }
     return (
-      <Grid container>
+      <Grid className={classes.whiteBg} container>
         <Grid item xs={12} className={classes.spaced}>
           <Typography variant='h5' color='secondary' gutterBottom>
             Etes-vous sûre de votre photo de profil ?

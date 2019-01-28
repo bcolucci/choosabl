@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 const firebase = require('firebase-admin')
 const { createFirebaseAuth } = require('express-firebase-auth')
-const timeHandler = require('./utils/timerHandler')
+// const timeHandler = require('./utils/timerHandler')
 
 const { version } = require('../package.json')
 
@@ -12,7 +12,7 @@ const auth = createFirebaseAuth({ firebase, checkEmailVerified: true })
 
 app.use(bodyParser.json())
 app.use(methodOverride())
-app.use(timeHandler())
+// app.use(timeHandler())
 
 app.get('/ping', (_, res) => res.end('pong'))
 app.get('/version', (_, res) => res.end(version))

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { EventEmitter } from 'events'
 import PropTypes from 'prop-types'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
@@ -29,11 +30,29 @@ class Battles extends Component {
     loading: true
   }
 
-  async componentDidMount () {
+  constructor (props) {
+    super(props)
+    this.customListener = new EventEmitter()
+  }
+
+  componentDidMount () {
+    this.customListener.on('battlesLoaded', this._handleBattlesLoaded)
+    this.loadBattles()
+  }
+
+  async loadBattles () {
     const battles = await battlesAPI.getAllForCurrentUser()
+    this.customListener.emit('battlesLoaded', battles)
+  }
+
+  _handleBattlesLoaded = battles => {
     const actives = battles.filter(({ active }) => active)
     const drafts = battles.filter(({ active }) => !active)
     this.setState({ actives, drafts, loading: false })
+  }
+
+  componentWillUnmount () {
+    this.customListener.removeAllListeners()
   }
 
   moveBattle = dest => (battle, remove = false) => {
@@ -58,7 +77,10 @@ class Battles extends Component {
     return (
       <div>
         <AppBar position='static' color='default'>
-          <Tabs fullWidth value={['actives', 'drafts', 'create'].indexOf(tab)}>
+          <Tabs
+            variant='fullWidth'
+            value={['actives', 'drafts', 'create'].indexOf(tab)}
+          >
             <Tab
               label={t('battles:Actives')}
               onClick={go('/battles/actives')}

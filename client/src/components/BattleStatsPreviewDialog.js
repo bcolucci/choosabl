@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { EventEmitter } from 'events'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import Slide from '@material-ui/core/Slide'
@@ -29,10 +30,26 @@ class BattleStatsPreviewDialog extends Component {
     loading: true
   }
 
-  async componentDidMount () {
+  constructor (props) {
+    super(props)
+    this.customListener = new EventEmitter()
+  }
+
+  componentDidMount () {
+    this.customListener.on('statsLoaded', this._handleStatsLoaded)
+    this.loadStats()
+  }
+
+  async loadStats () {
     const { battle } = this.props
     const stats = await battlesAPI.statsForOne(battle)
-    this.setState({ stats, loading: false })
+    this.customListener.emit('statsLoaded', stats)
+  }
+
+  _handleStatsLoaded = stats => this.setState({ stats, loading: false })
+
+  componentWillUnmount () {
+    this.customListener.removeAllListeners()
   }
 
   // TODO rm

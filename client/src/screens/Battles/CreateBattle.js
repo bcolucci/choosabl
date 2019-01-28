@@ -74,7 +74,7 @@ class CreateBattle extends Component {
             style={{ height: 120 }}
           />
         </Grid>
-        <Grid item xs={6} style={{ display: 'flex', alignItems: 'center' }}>
+        <Grid item xs={5} style={{ display: 'flex', alignItems: 'center' }}>
           <Button
             color='primary'
             variant='outlined'
@@ -102,8 +102,8 @@ class CreateBattle extends Component {
             <TextField
               id='name'
               autoFocus
-              fullWidth
               required
+              fullWidth
               label={t('battles:Name')}
               value={name}
               onChange={({ currentTarget }) => {

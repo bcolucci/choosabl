@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
+import { EventEmitter } from 'events'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import Typography from '@material-ui/core/Typography'
 import Fab from '@material-ui/core/Fab'
 import withAll from '../utils/with'
 import VerifyYourEmail from '../components/VerifyYourEmail'
@@ -23,6 +25,7 @@ class Vote extends Component {
   constructor (props) {
     super(props)
     this.handleScreenResize = this.handleScreenResize.bind(this)
+    this.customListener = new EventEmitter()
   }
 
   async shiftNextBattle () {
@@ -32,26 +35,33 @@ class Vote extends Component {
       const photos = await battlesAPI.downloadPhotos(current)
       Object.assign(current, { photos })
     }
-    this.setState({ battles, current })
+    this.customListener.emit('nextBattleLoaded', { battles, current })
   }
 
-  async componentDidMount () {
-    window.addEventListener('resize', this.handleScreenResize, false)
-    this.setState({ loading: true })
+  componentDidMount () {
+    this.customListener.on(
+      'nextBattleLoaded',
+      this._handleNextBattleLoadedLoaded
+    )
+    window.addEventListener('resize', this.handleScreenResize)
+    this.shiftNextBattle()
+  }
+
+  _handleNextBattleLoadedLoaded = async ({ battles, current }) => {
     const profile = await profilesAPI.getCurrent()
-    await this.shiftNextBattle()
-    this.setState({ profile, loading: false })
+    this.setState({ profile, battles, current, loading: false })
   }
 
   componentWillUnmount () {
+    this.customListener.removeAllListeners()
     window.removeEventListener('resize', this.handleScreenResize)
   }
 
-  handleScreenResize () {
+  handleScreenResize = () => {
     const screenHeight = window.screen.height
     const header = document.querySelector('header')
     if (!header) {
-      return setTimeout(this.handleScreenResize.bind(this), 100)
+      return setTimeout(this.handleScreenResize, 100)
     }
     const headerHeight = document.querySelector('header').clientHeight
     const height = Math.floor((screenHeight - headerHeight - 12) / 2)
@@ -96,9 +106,8 @@ class Vote extends Component {
   }
 
   render () {
-    const { classes, user } = this.props
+    const { t, user, classes } = this.props
     const { loading, profile, current } = this.state
-    console.log(user)
     if (!user.emailVerified) {
       return <VerifyYourEmail />
     }
@@ -106,16 +115,15 @@ class Vote extends Component {
       return <LinearProgress color='secondary' />
     }
     if (!current) {
-      return <p className={classes.spaced}>No battle found.</p>
+      return (
+        <Typography variant='subtitle1' className={classes.spaced} gutterBottom>
+          {t('vote:No more battle found.')}
+        </Typography>
+      )
     }
     setImmediate(() => this.state.height === null && this.handleScreenResize())
     return (
-      <div
-        style={{
-          textAlign: 'center',
-          backgroundColor: '#2a398c'
-        }}
-      >
+      <div style={{ backgroundColor: '#1769aacf', textAlign: 'center' }}>
         {this.renderPhoto(0)}
         {this.renderPhoto(1)}
         <Fab
@@ -134,5 +142,6 @@ class Vote extends Component {
 }
 
 export default withAll(Vote, {
+  withIntl: true,
   withStyles: true
 })

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { EventEmitter } from 'events'
 import PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid'
 import AppBar from '@material-ui/core/AppBar'
@@ -42,14 +43,31 @@ class Profile extends Component {
     newPassword2: ''
   }
 
-  async componentDidMount () {
-    const profile = await profilesAPI.getCurrent()
+  constructor (props) {
+    super(props)
+    this.customListener = new EventEmitter()
+  }
+
+  componentDidMount () {
+    this.customListener.on('profileLoaded', this._handleProfileLoaded)
+    this.loadProfile()
+  }
+
+  componentWillUnmount () {
+    this.customListener.removeAllListeners()
+  }
+
+  _handleProfileLoaded = profile =>
     this.setState(prev => ({
       loading: false,
       username: profile.username || prev.username,
       birthday: profile.birthday || prev.birthday,
       gender: profile.gender || prev.gender
     }))
+
+  async loadProfile () {
+    const profile = await profilesAPI.getCurrent()
+    this.customListener.emit('profileLoaded', profile)
   }
 
   handleChange = (field, synthetic = true) => e => {
@@ -103,8 +121,8 @@ class Profile extends Component {
         <Grid item xs={12} className={classes.spaced}>
           <TextField
             autoFocus
-            fullWidth
             required
+            fullWidth
             label={t('profile:Username')}
             value={username}
             onChange={this.handleChange('username')}
@@ -163,8 +181,8 @@ class Profile extends Component {
         <Grid item xs={12} className={classes.spaced}>
           <TextField
             autoFocus
-            fullWidth
             required
+            fullWidth
             label={t('profile:Current password')}
             value={password}
             type='password'
@@ -173,8 +191,8 @@ class Profile extends Component {
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
           <TextField
-            fullWidth
             required
+            fullWidth
             label={t('profile:New Password')}
             value={newPassword}
             type='password'
@@ -183,8 +201,8 @@ class Profile extends Component {
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
           <TextField
-            fullWidth
             required
+            fullWidth
             label={t('profile:New password check')}
             value={newPassword2}
             type='password'
@@ -222,7 +240,7 @@ class Profile extends Component {
     return (
       <div>
         <AppBar position='static' color='default'>
-          <Tabs fullWidth value={tabValue}>
+          <Tabs variant='fullWidth' value={tabValue}>
             <Tab
               label={t('profile:Profile')}
               onClick={go('/profile')}

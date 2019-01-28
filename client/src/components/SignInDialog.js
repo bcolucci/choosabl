@@ -176,8 +176,8 @@ class SignInDialog extends Component {
               <Grid item xs={12} className={classes.spaced}>
                 <TextField
                   autoFocus
-                  fullWidth
                   required
+                  fullWidth
                   label={t('Email Address')}
                   type='email'
                   value={email}
@@ -192,8 +192,8 @@ class SignInDialog extends Component {
               {tab !== 'forgot' && (
                 <Grid item xs={12} className={classes.spaced}>
                   <TextField
-                    fullWidth
                     required
+                    fullWidth
                     autoComplete='off'
                     label={t('Password')}
                     type='password'

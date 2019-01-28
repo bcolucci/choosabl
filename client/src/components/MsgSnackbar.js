@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { EventEmitter } from 'events'
 import PropTypes from 'prop-types'
 import Snackbar from '@material-ui/core/Snackbar'
 
@@ -19,20 +20,23 @@ class MsgSnackbar extends Component {
     open: true
   }
 
+  constructor (props) {
+    super(props)
+    this.customListener = new EventEmitter()
+  }
+
   componentWillReceiveProps ({ open }) {
     this.setState({ open })
   }
 
-  componentWillUnmount () {
-    this.unmounted = true
-  }
-
   componentDidMount () {
     const { timeout } = this.props
-    setTimeout(
-      () => !this.unmounted && this.setState({ open: false }),
-      Math.max(0, +timeout)
-    )
+    this.customListener.on('timeout', () => this.setState({ open: false }))
+    setTimeout(() => this.customListener.emit('timeout'), Math.max(0, +timeout))
+  }
+
+  componentWillUnmount () {
+    this.customListener.removeAllListeners()
   }
 
   render () {

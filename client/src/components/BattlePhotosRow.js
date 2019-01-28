@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { EventEmitter } from 'events'
 import PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid'
 import withAll from '../utils/with'
@@ -23,10 +24,26 @@ class BattlePhotosRow extends Component {
     loading: true
   }
 
-  async componentDidMount () {
+  constructor (props) {
+    super(props)
+    this.customListener = new EventEmitter()
+  }
+
+  componentDidMount () {
+    this.customListener.on('photosLoaded', this._handlePhotosLoaded)
+    this.loadPhotos()
+  }
+
+  _handlePhotosLoaded = photos => this.setState({ photos, loading: false })
+
+  async loadPhotos () {
     const { battle } = this.props
     const photos = await battlesAPI.downloadPhotos(battle)
-    this.setState({ photos, loading: false })
+    this.customListener.emit('photosLoaded', photos)
+  }
+
+  componentWillUnmount () {
+    this.customListener.removeAllListeners()
   }
 
   renderPhoto = num => {

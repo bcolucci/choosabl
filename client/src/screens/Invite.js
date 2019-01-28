@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { EventEmitter } from 'events'
 import { validate as isValidEmail } from 'email-validator'
 import Grid from '@material-ui/core/Grid'
 import List from '@material-ui/core/List'
@@ -25,14 +26,26 @@ class Invite extends Component {
     loading: true
   }
 
-  async componentDidMount () {
-    await this.refreshInvitedList()
-    this.setState({ loading: false })
+  constructor (props) {
+    super(props)
+    this.customListener = new EventEmitter()
   }
 
-  async refreshInvitedList () {
-    const invitedList = await invitationsAPI.invitedList()
-    this.setState({ invitedList })
+  componentDidMount () {
+    this.customListener.on('listLoaded', this._handleListLoaded)
+    this.loadInvitedList()
+  }
+
+  componentWillUnmount () {
+    this.customListener.removeAllListeners()
+  }
+
+  _handleListLoaded = invitedList =>
+    this.setState({ invitedList, loading: false })
+
+  async loadInvitedList () {
+    const list = await invitationsAPI.invitedList()
+    this.customListener.emit('listLoaded', list)
   }
 
   handleSave = async () => {
@@ -110,8 +123,8 @@ class Invite extends Component {
         <Grid item xs={12} className={classes.spaced}>
           <TextField
             autoFocus
-            fullWidth
             required
+            fullWidth
             label={t('Email Address')}
             type='email'
             value={email}
@@ -122,8 +135,8 @@ class Invite extends Component {
         </Grid>
         <Grid item xs={12} className={classes.spaced}>
           <TextField
-            fullWidth
             multiline
+            fullWidth
             rows={4}
             label={t('Custom message')}
             value={message}

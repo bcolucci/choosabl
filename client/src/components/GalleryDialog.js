@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { auth, storage } from 'firebase'
+import { EventEmitter } from 'events'
 import ReactCrop, { makeAspectCrop } from 'react-image-crop'
 import FileInput from 'react-simple-file-input'
 // import imagetracer from 'imagetracerjs'
@@ -36,7 +37,6 @@ import * as base64Img from '../utils/base64Img'
 import * as photosAPI from '../api/photos'
 
 import 'react-image-crop/dist/ReactCrop.css'
-import { EventEmitter } from 'events'
 
 const aspect = 3.7 / 4
 const photoWidth = 250
@@ -84,18 +84,18 @@ class GaleryDialog extends Component {
 
   constructor (props) {
     super(props)
-    this.photosListener = new EventEmitter()
+    this.customListener = new EventEmitter()
   }
 
   componentDidMount () {
-    this.photosListener.on('rawLoaded', this._handleRawPhotosLoaded)
-    this.photosListener.on('base64Loaded', this._handlePhotosBase64Loaded)
+    this.customListener.on('rawLoaded', this._handleRawPhotosLoaded)
+    this.customListener.on('base64Loaded', this._handlePhotosBase64Loaded)
     window.addEventListener('resize', this.handleScreenResize)
     this.loadPhotos()
   }
 
   componentWillUnmount () {
-    this.photosListener.removeAllListeners()
+    this.customListener.removeAllListeners()
     window.removeEventListener('resize', this.handleScreenResize)
   }
 
@@ -111,7 +111,7 @@ class GaleryDialog extends Component {
           .then(url => base64Img.download(url))
       )
     )
-    this.photosListener.emit('base64Loaded', { photos, base64 })
+    this.customListener.emit('base64Loaded', { photos, base64 })
   }
 
   _handlePhotosBase64Loaded = ({ photos, base64 }) =>
@@ -125,7 +125,7 @@ class GaleryDialog extends Component {
   async loadPhotos () {
     this.setState({ loading: true })
     const photos = await photosAPI.getForCurrentUser()
-    this.photosListener.emit('rawLoaded', photos)
+    this.customListener.emit('rawLoaded', photos)
   }
 
   moveToStep = (inc, updateAttrs = () => ({})) => () =>
@@ -405,6 +405,8 @@ class GaleryDialog extends Component {
           <FileInput
             required
             readAs='buffer'
+            className={classes.btn}
+            style={{ width: '100%' }}
             onProgress={this.handleUploadProgress}
             abortIf={(_, file) => !this.isValideImage(file)}
             onChange={file => {
@@ -688,7 +690,7 @@ class GaleryDialog extends Component {
               {t('gallery:Gallery')}
             </Typography>
           </Toolbar>
-          <Tabs fullWidth value={['select', 'import'].indexOf(tab)}>
+          <Tabs variant='fullWidth' value={['select', 'import'].indexOf(tab)}>
             <Tab
               label='Select'
               onClick={() => this.setState({ tab: 'select' })}
