@@ -41,7 +41,7 @@ const create = async ({ userUID, invited, message }) => {
 }
 
 const invitedBy = userUID =>
-  DB.query('SELECT invited FRON invitations WHERE user = ?', [userUID]).then(
+  DB.query('SELECT invited FROM invitations WHERE user = ?', [userUID]).then(
     rows => rows.map(global.pickAttr('invited'))
   )
 

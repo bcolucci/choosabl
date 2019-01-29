@@ -1,10 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { auth, storage } from 'firebase'
 import { EventEmitter } from 'events'
 import ReactCrop, { makeAspectCrop } from 'react-image-crop'
 import FileInput from 'react-simple-file-input'
-// import imagetracer from 'imagetracerjs'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import AppBar from '@material-ui/core/AppBar'
@@ -90,16 +89,16 @@ class GaleryDialog extends Component {
   componentDidMount () {
     this.customListener.on('rawLoaded', this._handleRawPhotosLoaded)
     this.customListener.on('base64Loaded', this._handlePhotosBase64Loaded)
-    window.addEventListener('resize', this.handleScreenResize)
+    window.addEventListener('resize', this._handleScreenResize)
     this.loadPhotos()
   }
 
   componentWillUnmount () {
     this.customListener.removeAllListeners()
-    window.removeEventListener('resize', this.handleScreenResize)
+    window.removeEventListener('resize', this._handleScreenResize)
   }
 
-  handleScreenResize = () => this.forceUpdate()
+  _handleScreenResize = () => this.forceUpdate()
 
   _handleRawPhotosLoaded = async photos => {
     this.setState({ photos, loading: false })
@@ -175,18 +174,21 @@ class GaleryDialog extends Component {
       )
     }
     const used = selected !== null && this.state.photos[selected].used
+    const cellHeight =
+      window.innerWidth <= 600 ? 150 : window.innerWidth <= 960 ? 250 : 350
     return (
-      <div>
+      <Fragment>
         <GridList
           id='gallery-grid'
-          cellHeight={180}
+          cellHeight={cellHeight}
+          cols={3}
           style={{
             marginTop: 3,
-            width: window.screen.width
+            width: window.innerWidth
           }}
         >
           {photos.map((photo, idx) => (
-            <GridListTile key={idx}>
+            <GridListTile key={idx} cols={1}>
               <img
                 onClick={this.handleSelectPhoto(idx)}
                 src={
@@ -231,7 +233,7 @@ class GaleryDialog extends Component {
             {used && ` (${t('used')})`}
           </MenuItem>
         </Menu>
-      </div>
+      </Fragment>
     )
   }
 
@@ -335,7 +337,7 @@ class GaleryDialog extends Component {
   drawPhoto = async () => {
     const canvas = window.document.querySelector('canvas#face')
     if (!canvas) {
-      return setTimeout(this.drawPhoto, 100)
+      return setTimeout(this.drawPhoto, 300)
     }
     const { file, cropBase64, face } = this.state
     const src = `data:${file.type};base64,${cropBase64}`
@@ -343,17 +345,21 @@ class GaleryDialog extends Component {
       type: file.type,
       base64: cropBase64
     })
-    let resizedWidth = width
     if (height > 200) {
-      resizedWidth = Math.floor(width * 200 / height)
+      const resized = await base64Img.resize({
+        type: file.type,
+        base64: cropBase64,
+        width: Math.floor(width * 200 / height)
+      })
+      return this.setState({ cropBase64: resized })
     }
     const img = new Image()
     img.src = src
-    img.height = 200
-    img.width = resizedWidth
+    img.height = height
+    img.width = width
     img.onload = () => {
-      canvas.height = 200
-      canvas.width = resizedWidth
+      canvas.height = height
+      canvas.width = width
       const ctx = canvas.getContext('2d')
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.drawImage(img, 0, 0)
@@ -382,78 +388,92 @@ class GaleryDialog extends Component {
     const { t, classes } = this.props
     const { customName, file, base64 } = this.state
     return (
-      <Grid container>
-        <Grid item xs={12} className={classes.spaced}>
-          <Typography>{t('gallery:Give it a name:')}</Typography>
-          <TextField
-            autoFocus
-            required
-            fullWidth
-            value={customName}
-            onChange={({ currentTarget }) =>
-              this.setState({ customName: currentTarget.value.substr(0, 50) })
-            }
-          />
-        </Grid>
-        <Grid item xs={12} className={classes.spaced}>
-          <Typography>
-            {t('gallery:Select a photo:')}
-            <span className='file-size-caption' style={{ marginLeft: 5 }}>
-              ({'<='} {prettyBytes(maxPhotoSize)})
-            </span>
-          </Typography>
-          <FileInput
-            required
-            readAs='buffer'
-            className={classes.btn}
-            style={{ width: '100%' }}
-            onProgress={this.handleUploadProgress}
-            abortIf={(_, file) => !this.isValideImage(file)}
-            onChange={file => {
-              if (!file || !this.isValideImage(file)) {
-                this.setState(this.resetImage())
-                return window.document.querySelector('input[type=file]').focus()
+      <Fragment>
+        <Grid container>
+          <Grid item xs={1} />
+          <Grid item xs={11} sm={6} className={classes.spaced}>
+            <Typography>{t('gallery:Give it a name:')}</Typography>
+            <TextField
+              autoFocus
+              required
+              fullWidth
+              value={customName}
+              onChange={({ currentTarget }) =>
+                this.setState({ customName: currentTarget.value.substr(0, 50) })
               }
-              this.setState({ file })
-            }}
-          />
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} className={classes.spaced}>
-          <Typography variant='subtitle1'>{t('gallery:Preview:')}</Typography>
-          {base64 ? (
-            <div>
-              <Typography variant='caption' gutterBottom>
-                {file.name}
-              </Typography>
+        <Grid container>
+          <Grid item xs={1} />
+          <Grid item xs={11} sm={6} className={classes.spaced}>
+            <Typography>
+              {t('gallery:Select a photo:')}
+              <span className='file-size-caption' style={{ marginLeft: 5 }}>
+                ({'<='} {prettyBytes(maxPhotoSize)})
+              </span>
+            </Typography>
+            <FileInput
+              required
+              readAs='buffer'
+              className={classes.btn}
+              style={{ width: '100%' }}
+              onProgress={this.handleUploadProgress}
+              abortIf={(_, file) => !this.isValideImage(file)}
+              onChange={file => {
+                if (!file || !this.isValideImage(file)) {
+                  this.setState(this.resetImage())
+                  return window.document
+                    .querySelector('input[type=file]')
+                    .focus()
+                }
+                this.setState({ file })
+              }}
+            />
+          </Grid>
+        </Grid>
+        <Grid container>
+          <Grid item xs={1} />
+          <Grid item xs={11} sm={6} className={classes.spaced}>
+            <Typography variant='subtitle1'>{t('gallery:Preview:')}</Typography>
+            {base64 ? (
+              <div>
+                <Typography variant='caption' gutterBottom>
+                  {file.name}
+                </Typography>
+                <img
+                  src={`data:${file.type};base64,${base64}`}
+                  alt={`preview ${file.name}`}
+                  style={{ height: '120px' }}
+                />
+              </div>
+            ) : (
               <img
-                src={`data:${file.type};base64,${base64}`}
-                alt={`preview ${file.name}`}
+                src='/noimg.png'
+                alt='preview - please select a file'
                 style={{ height: '120px' }}
               />
-            </div>
-          ) : (
-            <img
-              src='/noimg.png'
-              alt='preview - please select a file'
-              style={{ height: '120px' }}
-            />
-          )}
+            )}
+          </Grid>
         </Grid>
-        <Grid item xs={12} className={classes.spaced}>
-          <Button
-            color='primary'
-            variant='contained'
-            disabled={!file}
-            onClick={this.moveToStep(+1, () => ({
-              crop: defaultCrop(),
-              pixelCrop: null,
-              cropBase64: null
-            }))}
-          >
-            Next
-          </Button>
+        <Grid container>
+          <Grid item xs={1} />
+          <Grid item xs={11} sm={6} className={classes.spaced}>
+            <Button
+              color='primary'
+              variant='contained'
+              disabled={!file}
+              onClick={this.moveToStep(+1, () => ({
+                crop: defaultCrop(),
+                pixelCrop: null,
+                cropBase64: null
+              }))}
+            >
+              Next
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
+      </Fragment>
     )
   }
 
@@ -498,47 +518,48 @@ class GaleryDialog extends Component {
     const { t, classes } = this.props
     const { file, base64, crop, cropBase64, isValidCrop } = this.state
     return (
-      <Grid container>
-        <Grid
-          item
-          xs={12}
-          className={classes.spaced}
-          style={{ textAlign: 'center' }}
-        >
-          <Typography variant='caption' gutterBottom>
-            {file.name}
-          </Typography>
-          <ReactCrop
-            keepSelection
-            crop={crop}
-            src={`data:${file.type};base64,${base64}`}
-            style={{ height: '200px' }}
-            imageStyle={{ height: '100%' }}
-            onChange={crop => this.setState({ crop })}
-            onComplete={this.handleCropUpdate}
-            onImageLoaded={this.handleCropImageLoaded}
-          />
+      <Fragment>
+        <Grid container>
+          <Grid item xs={1} />
+          <Grid item className={classes.spaced}>
+            <Typography variant='caption' gutterBottom>
+              {file.name}
+            </Typography>
+            <ReactCrop
+              keepSelection
+              crop={crop}
+              src={`data:${file.type};base64,${base64}`}
+              style={{ height: '200px' }}
+              imageStyle={{ height: '100%' }}
+              onChange={crop => this.setState({ crop })}
+              onComplete={this.handleCropUpdate}
+              onImageLoaded={this.handleCropImageLoaded}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} className={classes.spaced}>
-          <Button
-            color='primary'
-            onClick={this.moveToStep(-1, () => ({
-              file: null,
-              base64: null
-            }))}
-          >
-            {t('Back')}
-          </Button>
-          <Button
-            color='primary'
-            variant='contained'
-            disabled={!cropBase64 || !isValidCrop}
-            onClick={this.moveToStep(+1)}
-          >
-            {t('Next')}
-          </Button>
+        <Grid container>
+          <Grid item xs={1} />
+          <Grid item className={classes.spaced}>
+            <Button
+              color='primary'
+              onClick={this.moveToStep(-1, () => ({
+                file: null,
+                base64: null
+              }))}
+            >
+              {t('Back')}
+            </Button>
+            <Button
+              color='primary'
+              variant='contained'
+              disabled={!cropBase64 || !isValidCrop}
+              onClick={this.moveToStep(+1)}
+            >
+              {t('Next')}
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
+      </Fragment>
     )
   }
 
@@ -584,59 +605,63 @@ class GaleryDialog extends Component {
     const { file, detectingFace, face, saving } = this.state
     setImmediate(this.drawPhoto)
     return (
-      <Grid container>
-        <Grid item xs={12} className={classes.spaced}>
-          <Typography variant='subtitle1'>
-            {t(
-              `gallery:Exactly one face has to be detected in order to import the photo.`
-            )}
-          </Typography>
+      <Fragment>
+        <Grid container>
+          <Grid item xs={1} />
+          <Grid item className={classes.spaced}>
+            <Typography variant='subtitle1'>
+              {t(
+                `gallery:Exactly one face has to be detected in order to import the photo.`
+              )}
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid
-          item
-          xs={12}
-          className={classes.spaced}
-          style={{ textAlign: 'center' }}
-        >
-          <Typography variant='caption' gutterBottom>
-            {file.name}
-          </Typography>
-          <canvas id='face' />
+        <Grid container>
+          <Grid item xs={1} />
+          <Grid item className={classes.spaced}>
+            <Typography variant='caption' gutterBottom>
+              {file.name}
+            </Typography>
+            <canvas id='face' />
+          </Grid>
         </Grid>
-        <Grid item xs={12} className={classes.spaced}>
-          <Button
-            color='primary'
-            onClick={this.moveToStep(-1, () => ({
-              crop: defaultCrop(),
-              pixelCrop: null,
-              cropBase64: null,
-              face: null,
-              detectingFace: false
-            }))}
-          >
-            {t('Back')}
-          </Button>
-          <Button
-            disabled={detectingFace || !!face}
-            color='primary'
-            variant='contained'
-            onClick={this.handleDetectFace}
-          >
-            {detectingFace
-              ? t('gallery:Detecting...')
-              : t('gallery:Detect face')}
-          </Button>
-          <Button
-            disabled={!face || saving}
-            color='primary'
-            variant='contained'
-            onClick={this.handleImport}
-            style={{ marginLeft: 5 }}
-          >
-            {saving ? t('gallery:Importing...') : t('gallery:Import')}
-          </Button>
+        <Grid container>
+          <Grid item xs={1} />
+          <Grid item className={classes.spaced}>
+            <Button
+              color='primary'
+              onClick={this.moveToStep(-1, () => ({
+                crop: defaultCrop(),
+                pixelCrop: null,
+                cropBase64: null,
+                face: null,
+                detectingFace: false
+              }))}
+            >
+              {t('Back')}
+            </Button>
+            <Button
+              disabled={detectingFace || !!face}
+              color='primary'
+              variant='contained'
+              onClick={this.handleDetectFace}
+            >
+              {detectingFace
+                ? t('gallery:Detecting...')
+                : t('gallery:Detect face')}
+            </Button>
+            <Button
+              disabled={!face || saving}
+              color='primary'
+              variant='contained'
+              onClick={this.handleImport}
+              style={{ marginLeft: 5 }}
+            >
+              {saving ? t('gallery:Importing...') : t('gallery:Import')}
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
+      </Fragment>
     )
   }
 
@@ -649,20 +674,22 @@ class GaleryDialog extends Component {
       this.renderDetectFaceStep
     ]
     return (
-      <div>
-        <Stepper activeStep={step} alternativeLabel>
-          {[
-            t('gallery:Select a photo'),
-            t('gallery:Crop it!'),
-            t('gallery:Face detection')
-          ].map((label, idx) => (
-            <Step key={idx} disabled={idx === 0 && !photos.length}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-        {fns[step]()}
-      </div>
+      <Grid container>
+        <Grid item xs={12} sm={10} md={8}>
+          <Stepper activeStep={step} alternativeLabel>
+            {[
+              t('gallery:Select a photo'),
+              t('gallery:Crop it!'),
+              t('gallery:Face detection')
+            ].map((label, idx) => (
+              <Step key={idx} disabled={idx === 0 && !photos.length}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          {fns[step]()}
+        </Grid>
+      </Grid>
     )
   }
 

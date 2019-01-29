@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { EventEmitter } from 'events'
 import PropTypes from 'prop-types'
 import AppBar from '@material-ui/core/AppBar'
@@ -75,11 +75,11 @@ class Battles extends Component {
     const moveBattle = this.moveBattle.bind(this)
     const go = goto(this.props)
     return (
-      <div>
+      <Fragment>
         <AppBar position='static' color='default'>
           <Tabs
             variant='fullWidth'
-            value={['actives', 'drafts', 'create'].indexOf(tab)}
+            value={Math.max(0, ['actives', 'drafts', 'create'].indexOf(tab))}
           >
             <Tab
               label={t('battles:Actives')}
@@ -110,7 +110,7 @@ class Battles extends Component {
           </Tabs>
         </AppBar>
         <div className={classes.spaced}>
-          {tab === 'actives' && (
+          {['', 'actives'].includes(tab) && (
             <ListBattles
               active
               battles={actives}
@@ -126,7 +126,7 @@ class Battles extends Component {
           )}
           {tab === 'create' && <CreateBattle />}
         </div>
-      </div>
+      </Fragment>
     )
   }
 }

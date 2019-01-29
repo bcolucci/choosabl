@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import withAll from '../../utils/with'
+import Grid from '@material-ui/core/Grid'
 import BattleCard from '../../components/BattleCard'
 import PhotoPreviewDialog from '../../components/PhotoPreviewDialog'
 import BattleStatsPreviewDialog from '../../components/BattleStatsPreviewDialog'
@@ -33,42 +34,45 @@ class ListBattles extends Component {
 
   render () {
     const { preview, showStats, deleting, deleted } = this.state
-    const { active, battles, moveBattle } = this.props
+    const { classes, active, battles, moveBattle } = this.props
     return (
-      <section>
-        {battles
-          .filter(battle => !deleted.includes(battle.id))
-          .map((battle, idx) => (
-            <BattleCard
-              key={idx}
-              active={active}
-              deleting={deleting.includes(battle.id)}
-              battle={battle}
-              moveBattle={moveBattle}
-              onDelete={this.handleDeleteBattle}
-              onPreview={this.handlePreview}
-              onStats={this.handleStats}
+      <Grid container>
+        <Grid item xs={12} sm={8} md={4} lg={3} className={classes.spaced}>
+          {battles
+            .filter(battle => !deleted.includes(battle.id))
+            .map((battle, idx) => (
+              <BattleCard
+                key={idx}
+                active={active}
+                deleting={deleting.includes(battle.id)}
+                battle={battle}
+                moveBattle={moveBattle}
+                onDelete={this.handleDeleteBattle}
+                onPreview={this.handlePreview}
+                onStats={this.handleStats}
+              />
+            ))}
+          {!!showStats && (
+            <BattleStatsPreviewDialog
+              open
+              battle={showStats}
+              onClose={() => this.setState({ showStats: null })}
             />
-          ))}
-        {!!showStats && (
-          <BattleStatsPreviewDialog
-            open
-            battle={showStats}
-            onClose={() => this.setState({ showStats: null })}
-          />
-        )}
-        {!!preview && (
-          <PhotoPreviewDialog
-            open
-            {...preview}
-            onClose={() => this.setState({ preview: null })}
-          />
-        )}
-      </section>
+          )}
+          {!!preview && (
+            <PhotoPreviewDialog
+              open
+              {...preview}
+              onClose={() => this.setState({ preview: null })}
+            />
+          )}
+        </Grid>
+      </Grid>
     )
   }
 }
 
 export default withAll(ListBattles, {
-  withIntl: true
+  withIntl: true,
+  withStyles: true
 })

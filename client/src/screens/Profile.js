@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { EventEmitter } from 'events'
 import PropTypes from 'prop-types'
 import Grid from '@material-ui/core/Grid'
@@ -29,7 +29,7 @@ class Profile extends Component {
   }
 
   static defaultProps = {
-    tab: 'profile'
+    tab: ''
   }
 
   state = {
@@ -82,11 +82,11 @@ class Profile extends Component {
     this.setState({ saving: true })
     const { t, tab, history, showSuccess, showError } = this.props
     try {
-      if (tab === 'profile') {
+      if (tab === '') {
         const { username, birthday, gender } = this.state
         profilesAPI.updateCurrent({ username, birthday, gender })
         this.props.showSuccess(t('profile:Your profile has been saved!'))
-      } else if (tab === 'updatePassword') {
+      } else if (tab === 'password') {
         const { currentUser } = auth()
         const { password, newPassword, newPassword2 } = this.state
         await currentUser.reauthenticateWithCredential(
@@ -114,58 +114,73 @@ class Profile extends Component {
     const { username, birthday, gender } = this.state
     const [provider] = user.providerData
     return (
-      <Grid container>
-        <Grid item xs={12} className={classes.spaced}>
-          <Typography style={{ fontStyle: 'italic' }}>{user.email}</Typography>
+      <Fragment>
+        <Grid container>
+          <Grid item xs={12} className={classes.spaced}>
+            <Typography style={{ fontStyle: 'italic' }}>
+              {user.email}
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid item xs={12} className={classes.spaced}>
-          <TextField
-            autoFocus
-            required
-            fullWidth
-            label={t('profile:Username')}
-            value={username}
-            onChange={this.handleChange('username')}
-          />
+        <Grid container>
+          <Grid item xs={12} sm={6} className={classes.spaced}>
+            <TextField
+              autoFocus
+              required
+              fullWidth
+              label={t('profile:Username')}
+              value={username}
+              onChange={this.handleChange('username')}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} className={classes.spaced}>
-          <DatePicker
-            disableFuture
-            fullWidth
-            label={t('profile:Birthday')}
-            value={birthday}
-            initialFocusedDate={maxBirthdayDate}
-            maxDate={maxBirthdayDate}
-            minDate={subYears(maxBirthdayDate, 100)}
-            onChange={this.handleChange('birthday', false)}
-          />
+        <Grid container>
+          <Grid item xs={12} sm={6} className={classes.spaced}>
+            <DatePicker
+              disableFuture
+              fullWidth
+              label={t('profile:Birthday')}
+              value={birthday}
+              initialFocusedDate={maxBirthdayDate}
+              maxDate={maxBirthdayDate}
+              minDate={subYears(maxBirthdayDate, 100)}
+              onChange={this.handleChange('birthday', false)}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} className={classes.spaced}>
-          <GenderPicker value={gender} onChange={this.handleChange('gender')} />
+        <Grid container>
+          <Grid item xs={12} sm={6} className={classes.spaced}>
+            <GenderPicker
+              value={gender}
+              onChange={this.handleChange('gender')}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} className={classes.spaced}>
-          {saving ? (
-            <CircularProgress />
-          ) : (
-            <Button
-              variant='contained'
-              color='primary'
-              onClick={this.handleSave}
-            >
-              {t('Save')}
-            </Button>
-          )}
-          {provider &&
-            provider.providerId === 'password' && (
-            <Button
-              color='primary'
-              onClick={() => history.push('/profile/password')}
-            >
-              {t('profile:Update password')}
-            </Button>
-          )}
+        <Grid container>
+          <Grid item xs={12} sm={6} className={classes.spaced}>
+            {saving ? (
+              <CircularProgress />
+            ) : (
+              <Button
+                variant='contained'
+                color='primary'
+                onClick={this.handleSave}
+              >
+                {t('Save')}
+              </Button>
+            )}
+            {provider &&
+              provider.providerId === 'password' && (
+              <Button
+                color='primary'
+                onClick={() => history.push('/profile/password')}
+              >
+                {t('profile:Update password')}
+              </Button>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
+      </Fragment>
     )
   }
 
@@ -174,58 +189,66 @@ class Profile extends Component {
     const { saving } = this.state
     const { password, newPassword, newPassword2 } = this.state
     return (
-      <Grid container>
-        <Typography style={{ fontStyle: 'italic' }} className={classes.spaced}>
+      <Fragment>
+        <Typography variant='h6' className={classes.spaced}>
           {t('profile:Update your password:')}
         </Typography>
-        <Grid item xs={12} className={classes.spaced}>
-          <TextField
-            autoFocus
-            required
-            fullWidth
-            label={t('profile:Current password')}
-            value={password}
-            type='password'
-            onChange={this.handleChange('password')}
-          />
+        <Grid container>
+          <Grid item xs={12} sm={6} className={classes.spaced}>
+            <TextField
+              autoFocus
+              required
+              fullWidth
+              label={t('profile:Current password')}
+              value={password}
+              type='password'
+              onChange={this.handleChange('password')}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} className={classes.spaced}>
-          <TextField
-            required
-            fullWidth
-            label={t('profile:New Password')}
-            value={newPassword}
-            type='password'
-            onChange={this.handleChange('newPassword')}
-          />
+        <Grid container>
+          <Grid item xs={12} sm={6} className={classes.spaced}>
+            <TextField
+              required
+              fullWidth
+              label={t('profile:New Password')}
+              value={newPassword}
+              type='password'
+              onChange={this.handleChange('newPassword')}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} className={classes.spaced}>
-          <TextField
-            required
-            fullWidth
-            label={t('profile:New password check')}
-            value={newPassword2}
-            type='password'
-            onChange={this.handleChange('newPassword2')}
-          />
+        <Grid container>
+          <Grid item xs={12} sm={6} className={classes.spaced}>
+            <TextField
+              required
+              fullWidth
+              label={t('profile:New password check')}
+              value={newPassword2}
+              type='password'
+              onChange={this.handleChange('newPassword2')}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} className={classes.spaced}>
-          {saving ? (
-            <CircularProgress />
-          ) : (
-            <Button
-              variant='contained'
-              color='primary'
-              onClick={this.handleSave}
-            >
-              {t('save')}
+        <Grid container>
+          <Grid item xs={12} sm={6} className={classes.spaced}>
+            {saving ? (
+              <CircularProgress />
+            ) : (
+              <Button
+                variant='contained'
+                color='primary'
+                onClick={this.handleSave}
+              >
+                {t('save')}
+              </Button>
+            )}
+            <Button color='primary' onClick={() => history.push('/profile')}>
+              {t('cancel')}
             </Button>
-          )}
-          <Button color='primary' onClick={() => history.push('/profile')}>
-            {t('cancel')}
-          </Button>
+          </Grid>
         </Grid>
-      </Grid>
+      </Fragment>
     )
   }
 
@@ -235,7 +258,7 @@ class Profile extends Component {
     if (loading) {
       return <LinearProgress color='secondary' />
     }
-    const tabValue = ['profile', 'updatePassword'].includes(tab) ? 0 : 1
+    const tabValue = ['', 'password'].includes(tab) ? 0 : 1
     const go = goto(this.props)
     return (
       <div>
@@ -256,8 +279,8 @@ class Profile extends Component {
           </Tabs>
         </AppBar>
         <div className={classes.spaced}>
-          {tab === 'profile' && this.renderProfile()}
-          {tab === 'updatePassword' && this.renderUpdatePassword()}
+          {tab === '' && this.renderProfile()}
+          {tab === 'password' && this.renderUpdatePassword()}
           {tab === 'badges' && <Badges user={this.props.user} />}
         </div>
       </div>

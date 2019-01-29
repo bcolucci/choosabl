@@ -58,7 +58,7 @@ class Vote extends Component {
   }
 
   handleScreenResize = () => {
-    const screenHeight = window.screen.height
+    const screenHeight = window.innerWidth
     const header = document.querySelector('header')
     if (!header) {
       return setTimeout(this.handleScreenResize, 100)

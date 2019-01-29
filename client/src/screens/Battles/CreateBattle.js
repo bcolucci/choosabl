@@ -25,6 +25,16 @@ class CreateBattle extends Component {
     saving: false
   }
 
+  componentDidMount () {
+    window.addEventListener('resize', this._handleScreenResize)
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('resize', this._handleScreenResize)
+  }
+
+  _handleScreenResize = () => this.forceUpdate()
+
   handleSave = async () => {
     const { t, showSuccess, showError } = this.props
     const { name, isPro, photo1, photo2 } = this.state
@@ -62,9 +72,13 @@ class CreateBattle extends Component {
     const { t, classes } = this.props
     const { photo1, photo2 } = this.state
     const photo = num === 1 ? photo1 : photo2
+    const btnText =
+      window.innerWidth <= 600
+        ? t('battles:Select')
+        : t('battles:Select a photo')
     return (
       <Grid container className={classes.spaced}>
-        <Grid item xs={6}>
+        <Grid item xs={6} sm={4}>
           <Typography>{t('Photo #{{num}}:', { num })}</Typography>
           <img
             alt={`battle choice #${num}`}
@@ -74,13 +88,18 @@ class CreateBattle extends Component {
             style={{ height: 120 }}
           />
         </Grid>
-        <Grid item xs={5} style={{ display: 'flex', alignItems: 'center' }}>
+        <Grid
+          item
+          xs={6}
+          sm={2}
+          style={{ display: 'flex', alignItems: 'center' }}
+        >
           <Button
             color='primary'
             variant='outlined'
             onClick={() => this.setState({ openedGallery: num })}
           >
-            {t('battles:Select a photo')}
+            {btnText}
           </Button>
         </Grid>
       </Grid>
@@ -98,7 +117,7 @@ class CreateBattle extends Component {
     return (
       <div className={classes.spaced}>
         <Grid container>
-          <Grid item xs={12} className={classes.spaced}>
+          <Grid item xs={12} sm={6} className={classes.spaced}>
             <TextField
               id='name'
               autoFocus

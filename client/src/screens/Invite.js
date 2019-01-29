@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { EventEmitter } from 'events'
 import { validate as isValidEmail } from 'email-validator'
 import Grid from '@material-ui/core/Grid'
@@ -116,54 +116,58 @@ class Invite extends Component {
       return <LinearProgress color='secondary' />
     }
     return (
-      <Grid container>
-        <Typography className={classes.spaced}>
-          {t('Please enter the email of the one you want to invite:')}
-        </Typography>
-        <Grid item xs={12} className={classes.spaced}>
-          <TextField
-            autoFocus
-            required
-            fullWidth
-            label={t('Email Address')}
-            type='email'
-            value={email}
-            onChange={({ currentTarget }) =>
-              this.setState({ email: currentTarget.value })
-            }
-          />
+      <Fragment>
+        <Grid container>
+          <Grid item xs={12} sm={6} className={classes.spaced}>
+            <TextField
+              autoFocus
+              required
+              fullWidth
+              label={t('Email Address')}
+              type='email'
+              value={email}
+              onChange={({ currentTarget }) =>
+                this.setState({ email: currentTarget.value })
+              }
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} className={classes.spaced}>
-          <TextField
-            multiline
-            fullWidth
-            rows={4}
-            label={t('Custom message')}
-            value={message}
-            onChange={({ currentTarget }) =>
-              this.setState({ message: currentTarget.value.substr(0, 300) })
-            }
-          />
+        <Grid container>
+          <Grid item xs={12} sm={6} className={classes.spaced}>
+            <TextField
+              multiline
+              fullWidth
+              rows={4}
+              label={t('Custom message')}
+              value={message}
+              onChange={({ currentTarget }) =>
+                this.setState({ message: currentTarget.value.substr(0, 300) })
+              }
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} className={classes.spaced}>
-          {saving ? (
-            <CircularProgress />
-          ) : (
-            <Button
-              onClick={this.handleSave}
-              color='primary'
-              variant='contained'
-            >
-              {t('invite')}
-            </Button>
-          )}
+        <Grid container>
+          <Grid item xs={12} sm={6} className={classes.spaced}>
+            {saving ? (
+              <CircularProgress />
+            ) : (
+              <Button
+                onClick={this.handleSave}
+                color='primary'
+                variant='contained'
+              >
+                {t('invite')}
+              </Button>
+            )}
+          </Grid>
         </Grid>
-        <br />
-        <Grid item xs={12} className={classes.spaced}>
-          <Typography variant='h5'>{t('Invations sent:')}</Typography>
-          {this.renderInvitedList()}
+        <Grid container>
+          <Grid item xs={12} sm={6} className={classes.spaced}>
+            <Typography variant='h5'>{t('Invations sent:')}</Typography>
+            {this.renderInvitedList()}
+          </Grid>
         </Grid>
-      </Grid>
+      </Fragment>
     )
   }
 }

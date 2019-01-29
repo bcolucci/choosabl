@@ -17,7 +17,7 @@ export default theme => ({
   },
   paper: {
     ...theme.mixins.gutters(),
-    marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit,
     padding: theme.spacing.unit
   },
   btn: {

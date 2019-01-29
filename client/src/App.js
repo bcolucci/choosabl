@@ -14,6 +14,7 @@ import Vote from './screens/Vote'
 import Battles from './screens/Battles'
 import Profile from './screens/Profile'
 import Invite from './screens/Invite'
+import Admin from './screens/Admin'
 import Splash from './components/Splash'
 import { apiURL } from './api'
 import { createCurrentProfile } from './api/profiles'
@@ -94,8 +95,20 @@ class App extends Component {
     if (token) {
       localStorage.removeItem('linkedin_crsf')
       auth().signInWithCustomToken(token)
-      // history.push('/')
     }
+  }
+
+  tabRoutes (base, tabs, WrappedComponent) {
+    const { user } = this.state
+    const pathOf = (base, tab) => '/' + (tab ? [base, tab] : [base]).join('/')
+    return [...tabs, null].map((tab, idx) => (
+      <Route
+        exact
+        key={idx}
+        path={pathOf(base, tab)}
+        render={() => <WrappedComponent user={user} tab={tab || ''} />}
+      />
+    ))
   }
 
   renderProtectedRoutes () {
@@ -104,32 +117,9 @@ class App extends Component {
       <ProtectedRoutes user={user}>
         <Route path='/vote' render={() => <Vote user={user} />} />
         <Route path='/invite' render={() => <Invite user={user} />} />
-        <Route
-          path='/battles/actives'
-          render={() => <Battles user={user} tab='actives' />}
-        />
-        <Route
-          path='/battles/drafts'
-          render={() => <Battles user={user} tab='drafts' />}
-        />
-        <Route
-          path='/battles/create'
-          render={() => <Battles user={user} tab='create' />}
-        />
-        <Route exact path='/battles' render={() => <Battles user={user} />} />
-        <Route
-          path='/profile/password'
-          render={() => <Profile user={user} tab='updatePassword' />}
-        />
-        <Route
-          path='/profile/badges'
-          render={() => <Profile user={user} tab='badges' />}
-        />
-        <Route
-          exact
-          path='/profile'
-          render={() => <Profile user={user} tab='profile' />}
-        />
+        {this.tabRoutes('battles', ['actives', 'drafts', 'create'], Battles)}
+        {this.tabRoutes('profile', ['password', 'badges'], Profile)}
+        {this.tabRoutes('admin', ['dashboard', 'photos'], Admin)}
       </ProtectedRoutes>
     )
   }

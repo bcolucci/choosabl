@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { EventEmitter } from 'events'
+import Grid from '@material-ui/core/Grid'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
@@ -68,15 +69,18 @@ class Badges extends Component {
   }
 
   render () {
+    const { classes } = this.props
     const { loading } = this.state
     if (loading) {
       return <LinearProgress color='secondary' />
     }
     return (
-      <div>
-        {this.renderBattlesInfo()}
-        {this.renderVotesInfo()}
-      </div>
+      <Grid container>
+        <Grid item xs={12} sm={8} className={classes.spaced}>
+          {this.renderBattlesInfo()}
+          {this.renderVotesInfo()}
+        </Grid>
+      </Grid>
     )
   }
 }

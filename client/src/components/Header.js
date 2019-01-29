@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { auth } from 'firebase'
@@ -32,6 +32,11 @@ class Header extends Component {
     isSignInDiagOpened: false
   }
 
+  constructor (props) {
+    super(props)
+    this.userMenuBtn = React.createRef()
+  }
+
   componentDidMount () {
     i18n.on('languageChanged', this.handleLangChange)
   }
@@ -54,8 +59,7 @@ class Header extends Component {
   handleCloseMenus = () => this.setState({ userMenuEl: null, langMenuEl: null })
 
   renderUserMenu () {
-    const { userMenuEl } = this.state
-    const { lang } = this.state
+    const { userMenuEl, lang } = this.state
     const { t } = this.props
     return (
       <ClickAwayListener onClickAway={this.handleCloseMenus}>
@@ -119,15 +123,22 @@ class Header extends Component {
     )
   }
 
+  clickDiv (el) {
+    console.log(el)
+    el.click()
+  }
+
   render () {
     const { user, classes, history } = this.props
-    const { userMenuEl } = this.state
-    const { isSignInDiagOpened } = this.state
+    const { userMenuEl, isSignInDiagOpened } = this.state
     const authenticated = !!user
     const goto = href => e => {
       e.preventDefault()
       history.push(href)
     }
+    // setTimeout(() => {
+    //   console.log(this.userMenuBtn.current)
+    // }, 500)
     return (
       <header className={classes.root}>
         <AppBar position='static'>
@@ -148,7 +159,7 @@ class Header extends Component {
               </Button>
             )}
             {authenticated && (
-              <div>
+              <Fragment>
                 <Button color='inherit' onClick={goto('/vote')}>
                   <ThumbsUpIcon />
                 </Button>
@@ -157,6 +168,7 @@ class Header extends Component {
                 </Button>
                 <Button
                   color='inherit'
+                  ref={this.userMenuBtn}
                   aria-owns={userMenuEl ? 'fade-menu' : null}
                   aria-haspopup='true'
                   onClick={({ currentTarget }) =>
@@ -171,7 +183,7 @@ class Header extends Component {
                 </Button>
                 {this.renderUserMenu()}
                 {this.renderLangMenu()}
-              </div>
+              </Fragment>
             )}
           </Toolbar>
         </AppBar>
