@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS battles (
   photo2 VARCHAR (50) NOT NULL,
   active BOOL NOT NULL,
   isPro BOOL NOT NULL,
-  publishedAt TIMESTAMP,
+  publishedAt DATETIME,
   updatedAt DATETIME NOT NULL,
   createdAt DATETIME NOT NULL,
   INDEX (user),

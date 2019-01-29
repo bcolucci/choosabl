@@ -60,7 +60,7 @@ class Badges extends Component {
           <strong>{battles.total}</strong>
         </Typography>
         <Typography component='p'>
-          With <strong>{battles.active}</strong> active battles and{' '}
+          With <strong>{battles.actives}</strong> active battles and{' '}
           <strong>{battles.draft}</strong> drafts.
         </Typography>
       </Paper>
