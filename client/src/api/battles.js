@@ -25,6 +25,7 @@ export const createForCurrentUser = async battle => {
   const newBattle = await res.json()
   const cache = cacheNS('battles:getAllForCurrentUser')
   cache.set([newBattle, ...cache.get([])])
+  return newBattle
 }
 
 export const toggleBattleStatus = async battle => {

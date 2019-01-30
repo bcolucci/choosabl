@@ -45,6 +45,7 @@ class App extends Component {
         if (!localStorage.getItem(user.uid)) {
           await createCurrentProfile()
           localStorage.setItem(user.uid, '1')
+          this.props.events.signIn()
         }
       } else {
         localStorage.clear()
@@ -100,23 +101,25 @@ class App extends Component {
 
   tabRoutes (base, tabs, WrappedComponent) {
     const { user } = this.state
+    const props = { ...this.props, user }
     const pathOf = (base, tab) => '/' + (tab ? [base, tab] : [base]).join('/')
     return [...tabs, null].map((tab, idx) => (
       <Route
         exact
         key={idx}
         path={pathOf(base, tab)}
-        render={() => <WrappedComponent user={user} tab={tab || ''} />}
+        render={() => <WrappedComponent {...props} tab={tab || ''} />}
       />
     ))
   }
 
   renderProtectedRoutes () {
     const { user } = this.state
+    const props = { ...this.props, user }
     return (
       <ProtectedRoutes user={user}>
-        <Route path='/vote' render={() => <Vote user={user} />} />
-        <Route path='/invite' render={() => <Invite user={user} />} />
+        <Route path='/vote' render={() => <Vote {...props} />} />
+        <Route path='/invite' render={() => <Invite {...props} />} />
         {this.tabRoutes('battles', ['actives', 'drafts', 'create'], Battles)}
         {this.tabRoutes('profile', ['password', 'badges'], Profile)}
         {this.tabRoutes('admin', ['dashboard', 'photos'], Admin)}
@@ -126,6 +129,7 @@ class App extends Component {
 
   render () {
     const { user, loading } = this.state
+    const props = { ...this.props, user }
     if (loading) {
       return <Splash />
     }
@@ -133,15 +137,11 @@ class App extends Component {
       <MuiThemeProvider theme={theme}>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <CssBaseline />
-          <Header user={user} />
+          <Header {...props} />
           <main>
             {this.renderProtectedRoutes()}
-            <Route
-              exact
-              path='/legal'
-              render={props => <Legal user={user} />}
-            />
-            <Route exact path='/' render={props => <Home user={user} />} />
+            <Route exact path='/legal' render={() => <Legal {...props} />} />
+            <Route exact path='/' render={() => <Home {...props} />} />
           </main>
         </MuiPickersUtilsProvider>
       </MuiThemeProvider>
@@ -150,7 +150,8 @@ class App extends Component {
 }
 
 export default withAll(App, {
-  withRouter: true,
   withStyles: true,
-  withIntl: true
+  withIntl: true,
+  withRouter: true,
+  withTracker: true
 })

@@ -35,9 +35,10 @@ class BattleCard extends Component {
   }
 
   handleToggleBattleStatus = async () => {
-    const { battle, moveBattle } = this.props
+    const { events, battle, moveBattle } = this.props
     this.setState({ moving: true })
     await battlesAPI.toggleBattleStatus(battle)
+    events.update(battle.active ? 'desactivate' : 'activate', battle.id)
     this.setState({ moving: false })
     moveBattle(battle)
   }
@@ -136,5 +137,6 @@ class BattleCard extends Component {
 
 export default withAll(BattleCard, {
   withStyles: true,
-  withIntl: true
+  withIntl: true,
+  withTracker: true
 })

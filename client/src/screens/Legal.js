@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import withAll from '../utils/with'
 
 class Legal extends PureComponent {
   render () {
@@ -16,6 +15,4 @@ class Legal extends PureComponent {
   }
 }
 
-export default withAll(Legal, {
-  withStyles: true
-})
+export default Legal

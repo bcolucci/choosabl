@@ -1,9 +1,8 @@
-import React, { PureComponent, Fragment } from 'react'
+import React, { Component, Fragment } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import withAll from '../utils/with'
 
-class Home extends PureComponent {
+class Home extends Component {
   render () {
     const { classes } = this.props
     const pClass = { fontWeight: 'bold', color: '#666' }
@@ -142,7 +141,4 @@ class Home extends PureComponent {
   }
 }
 
-export default withAll(Home, {
-  // withIntl: true,
-  withStyles: true
-})
+export default Home

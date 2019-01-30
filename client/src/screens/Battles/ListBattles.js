@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import withAll from '../../utils/with'
 import Grid from '@material-ui/core/Grid'
 import BattleCard from '../../components/BattleCard'
 import PhotoPreviewDialog from '../../components/PhotoPreviewDialog'
@@ -22,9 +21,11 @@ class ListBattles extends Component {
   }
 
   handleDeleteBattle = async battle => {
+    const { events, moveBattle } = this.props
     this.setState(prev => ({ deleting: [...prev.deleting, battle.id] }))
     await battlesAPI.deleteOne(battle)
-    this.props.moveBattle(battle, true)
+    events.delete(battle.id)
+    moveBattle(battle, true)
     this.setState(prev => ({ deleted: [...prev.deleted, battle.id] }))
   }
 
@@ -72,7 +73,4 @@ class ListBattles extends Component {
   }
 }
 
-export default withAll(ListBattles, {
-  withIntl: true,
-  withStyles: true
-})
+export default ListBattles

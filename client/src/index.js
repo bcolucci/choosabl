@@ -1,7 +1,6 @@
-// import 'lazysizes'
 import 'typeface-roboto'
 
-import './utils/analytics'
+import './utils/initializeAnalytics'
 import './utils/initializeFirebase'
 
 import React from 'react'

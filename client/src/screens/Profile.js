@@ -289,8 +289,5 @@ class Profile extends Component {
 }
 
 export default withAll(Profile, {
-  withRouter: true,
-  withStyles: true,
-  withMsgSnack: true,
-  withIntl: true
+  withMsgSnack: true
 })

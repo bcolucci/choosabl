@@ -14,10 +14,10 @@ import SignInIcon from '@material-ui/icons/PermIdentity'
 import PhotoLibrary from '@material-ui/icons/PhotoLibrary'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import Divider from '@material-ui/core/Divider'
-import withAll from '../utils/with'
 import i18n from '../utils/initializeI18n'
 import FlagIcon from './FlagIcon'
 import SignInDialog from './SignInDialog'
+import goto from '../utils/goto'
 import { langs } from '../i18n.config'
 
 class Header extends Component {
@@ -50,8 +50,10 @@ class Header extends Component {
     this.setState({ lang })
   }
 
-  handleSignOut = () => {
-    auth().signOut()
+  handleSignOut = async () => {
+    const { events, user } = this.props
+    await auth().signOut()
+    events.signOut(user.uid)
     this.handleCloseMenus()
     this.props.history.push('/')
   }
@@ -123,31 +125,27 @@ class Header extends Component {
     )
   }
 
-  clickDiv (el) {
-    console.log(el)
-    el.click()
-  }
-
   render () {
-    const { user, classes, history } = this.props
+    const { user, classes } = this.props
     const { userMenuEl, isSignInDiagOpened } = this.state
     const authenticated = !!user
-    const goto = href => e => {
-      e.preventDefault()
-      history.push(href)
-    }
-    // setTimeout(() => {
-    //   console.log(this.userMenuBtn.current)
-    // }, 500)
+    const go = goto(this.props)
     return (
       <header className={classes.root}>
         <AppBar position='static'>
           <Toolbar>
-            <p className={classes.title}>
+            <p
+              style={{
+                flexGrow: 1,
+                margin: 0,
+                marginTop: '5px',
+                cursor: 'pointer'
+              }}
+            >
               <img
                 src='/logo-bar.png'
                 alt='Choosabl header logo'
-                onClick={goto('/')}
+                onClick={go('/')}
               />
             </p>
             {!authenticated && (
@@ -160,10 +158,10 @@ class Header extends Component {
             )}
             {authenticated && (
               <Fragment>
-                <Button color='inherit' onClick={goto('/vote')}>
+                <Button color='inherit' onClick={go('/vote')}>
                   <ThumbsUpIcon />
                 </Button>
-                <Button color='inherit' onClick={goto('/battles')}>
+                <Button color='inherit' onClick={go('/battles')}>
                   <PhotoLibrary />
                 </Button>
                 <Button
@@ -198,17 +196,4 @@ class Header extends Component {
   }
 }
 
-export default withAll(Header, {
-  withIntl: true,
-  withRouter: true,
-  withStyles: {
-    styles: theme => ({
-      title: {
-        flexGrow: 1,
-        margin: 0,
-        marginTop: '5px',
-        cursor: 'pointer'
-      }
-    })
-  }
-})
+export default Header

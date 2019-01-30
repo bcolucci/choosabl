@@ -3,13 +3,15 @@ import withIntl from './withIntl'
 import withMsgSnack from './withMsgSnack'
 import withRouter from './withRouter'
 import withStyles from './withStyles'
+import withTracker from './withTracker'
 
 const bindings = {
   withGeoLoc,
   withIntl,
   withMsgSnack,
   withRouter,
-  withStyles
+  withStyles,
+  withTracker
 }
 
 export default (component, opts = {}) =>

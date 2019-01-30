@@ -4,7 +4,6 @@ import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
-import withAll from '../utils/with'
 import goto from '../utils/goto'
 
 class Admin extends Component {
@@ -63,7 +62,4 @@ class Admin extends Component {
   }
 }
 
-export default withAll(Admin, {
-  withRouter: true,
-  withStyles: true
-})
+export default Admin

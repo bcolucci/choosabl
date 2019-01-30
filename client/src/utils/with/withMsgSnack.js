@@ -7,17 +7,17 @@ export default () => WrappedComponent => {
       msg: null
     }
 
-    showError (message, cbk) {
+    showError = (message, cbk) => {
       this.setState({ msg: { type: 'error', message } })
       this.cbk = cbk
     }
 
-    showSuccess (message, cbk) {
+    showSuccess = (message, cbk) => {
       this.setState({ msg: { type: 'success', message } })
       this.cbk = cbk
     }
 
-    closeMsg () {
+    closeMsg = () => {
       this.setState({ msg: null })
       if (this.cbk) {
         this.cbk()
@@ -26,17 +26,21 @@ export default () => WrappedComponent => {
 
     render () {
       const { msg } = this.state
-      const onClose = this.closeMsg.bind(this)
       return (
         <div>
           <WrappedComponent
             {...this.props}
-            showError={this.showError.bind(this)}
-            showSuccess={this.showSuccess.bind(this)}
-            closeMsg={onClose}
+            showError={this.showError}
+            showSuccess={this.showSuccess}
+            closeMsg={this.closeMsg}
           />
           {msg && (
-            <MsgSnackbar {...this.props} {...msg} open onClose={onClose} />
+            <MsgSnackbar
+              {...this.props}
+              {...msg}
+              open
+              onClose={this.closeMsg}
+            />
           )}
         </div>
       )

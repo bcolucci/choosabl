@@ -36,7 +36,7 @@ class CreateBattle extends Component {
   _handleScreenResize = () => this.forceUpdate()
 
   handleSave = async () => {
-    const { t, showSuccess, showError } = this.props
+    const { t, events, showSuccess, showError } = this.props
     const { name, isPro, photo1, photo2 } = this.state
     const trimName = name.trim()
     if (!trimName.length) {
@@ -54,12 +54,13 @@ class CreateBattle extends Component {
     }
     this.setState({ saving: true })
     try {
-      await battlesAPI.createForCurrentUser({
+      const newBattle = await battlesAPI.createForCurrentUser({
         name: trimName,
         photo1: photo1.id,
         photo2: photo2.id,
         isPro
       })
+      events.create(newBattle.id)
       showSuccess(t('battles:Battle has been created in drafts.'))
       setTimeout(() => this.props.history.push('/battles/drafts'), 1500)
     } catch (err) {
@@ -176,8 +177,5 @@ class CreateBattle extends Component {
 }
 
 export default withAll(CreateBattle, {
-  withStyles: true,
-  withIntl: true,
-  withRouter: true,
   withMsgSnack: true
 })

@@ -11,7 +11,6 @@ import DraftIcon from '@material-ui/icons/Drafts'
 import AddIcon from '@material-ui/icons/AddCircle'
 import ListBattles from './Battles/ListBattles'
 import CreateBattle from './Battles/CreateBattle'
-import withAll from '../utils/with'
 import goto from '../utils/goto'
 import * as battlesAPI from '../api/battles'
 
@@ -112,6 +111,7 @@ class Battles extends Component {
         <div className={classes.spaced}>
           {['', 'actives'].includes(tab) && (
             <ListBattles
+              {...this.props}
               active
               battles={actives}
               moveBattle={moveBattle('drafts')}
@@ -119,20 +119,17 @@ class Battles extends Component {
           )}
           {tab === 'drafts' && (
             <ListBattles
+              {...this.props}
               active={false}
               battles={drafts}
               moveBattle={moveBattle('actives')}
             />
           )}
-          {tab === 'create' && <CreateBattle />}
+          {tab === 'create' && <CreateBattle {...this.props} />}
         </div>
       </Fragment>
     )
   }
 }
 
-export default withAll(Battles, {
-  withIntl: true,
-  withRouter: true,
-  withStyles: true
-})
+export default Battles

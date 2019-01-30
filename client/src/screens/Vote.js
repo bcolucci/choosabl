@@ -3,7 +3,6 @@ import { EventEmitter } from 'events'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Typography from '@material-ui/core/Typography'
 import Fab from '@material-ui/core/Fab'
-import withAll from '../utils/with'
 import VerifyYourEmail from '../components/VerifyYourEmail'
 import * as battlesAPI from '../api/battles'
 import * as votesAPI from '../api/votes'
@@ -141,7 +140,4 @@ class Vote extends Component {
   }
 }
 
-export default withAll(Vote, {
-  withIntl: true,
-  withStyles: true
-})
+export default Vote

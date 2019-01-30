@@ -173,7 +173,5 @@ class Invite extends Component {
 }
 
 export default withAll(Invite, {
-  withStyles: true,
-  withIntl: true,
   withMsgSnack: true
 })
