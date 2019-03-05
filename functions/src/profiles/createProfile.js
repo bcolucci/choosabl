@@ -1,6 +1,6 @@
 const sillyname = require('sillyname')
 
-const createProfile = ({ uuid, email, referrer }) => {
+module.exports = ({ uuid, email, referrer }) => {
   const now = new Date()
   const username = `${sillyname()} ${Math.ceil(Math.random() * 99)}`
   return {
@@ -14,8 +14,4 @@ const createProfile = ({ uuid, email, referrer }) => {
     createdAt: now,
     updatedAt: now
   }
-}
-
-module.exports = {
-  createProfile
 }

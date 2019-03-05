@@ -5,5 +5,6 @@ const router = createRouter('/invitations')
 router.get('/', auth, routes.invitedBy)
 router.get('/:invited', auth, routes.isInvited)
 router.post('/', auth, routes.create)
+router.delete('/', auth, routes.remove)
 
 module.exports = router

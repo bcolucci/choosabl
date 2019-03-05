@@ -1,15 +1,14 @@
 const errors = require('../errors')
-const DB = require('../utils/db')
+const repository = require('./repository')
 
 const isUserPhoto = async (req, res, next) => {
   const userUID = req.header('UserUID')
   const { photoUID } = req.params
-  const snap = await DB.photosRef.doc(photoUID).get()
-  if (!snap.exists) {
+  const photo = await repository.findById(photoUID)
+  if (!photo) {
     res.status(404)
     return next(errors.NotFound)
   }
-  const photo = snap.data()
   if (photo.user !== userUID) {
     res.status(500)
     return next(errors.AccessDenied)

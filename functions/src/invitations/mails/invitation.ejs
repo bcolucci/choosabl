@@ -1,0 +1,21 @@
+<p>
+  <strong>Choosabl.com</strong><br/>
+  Invitation
+</p>
+<hr/>
+
+<p>Hi!</p>
+<p>
+  You have been invited to join Choosabl community by:
+  <em><%= referrer.displayName || referrer.email %></em>
+</p>
+
+<% if (message) { %>
+  <p><strong>Invitation message:</strong></p>
+  <pre><%- message %></pre>
+<% } %>
+
+<p>
+  Please click on the link to register:<br/>
+  <a href="<%= invitationLink %>"><%= invitationLink %></a>
+</p>

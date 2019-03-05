@@ -1,6 +1,6 @@
 const uuid = require('uuid/v4')
-const errors = require('../../errors')
-const DB = require('../../utils/mysql')
+const errors = require('../errors')
+const DB = require('../utils/mysql')
 
 const MAX_INVITATIONS = 500
 const MAX_MESSAGE_LENGTH = 300
@@ -12,7 +12,7 @@ const getNbUserInvitations = userUID =>
 
 const isInvited = ({ userUID, invited }) =>
   DB.queryFirstScalar(
-    'SELECT 1 FROM invitations WHERE user = ? invited = ? LIMIT 1',
+    'SELECT COUNT(*) FROM invitations WHERE user = ? AND invited = ?',
     [userUID, invited]
   ).then(res => res > 0)
 
@@ -41,12 +41,17 @@ const create = async ({ userUID, invited, message }) => {
 }
 
 const invitedBy = userUID =>
-  DB.query('SELECT invited FROM invitations WHERE user = ?', [userUID]).then(
-    rows => rows.map(global.pickAttr('invited'))
-  )
+  DB.query(
+    'SELECT invited FROM invitations WHERE user = ? ORDER BY createdAt DESC LIMIT ?',
+    [userUID, MAX_INVITATIONS]
+  ).then(rows => rows.map(global.pickAttr('invited')))
+
+const remove = ({ userUID, invited }) =>
+  DB.delete('invitations', { user: userUID, invited })
 
 module.exports = {
   isInvited,
   create,
-  invitedBy
+  invitedBy,
+  remove
 }

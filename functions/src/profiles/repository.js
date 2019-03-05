@@ -1,5 +1,5 @@
-const { createProfile } = require('../utils')
-const DB = require('../../utils/mysql')
+const createProfile = require('./createProfile')
+const DB = require('../utils/mysql')
 
 const createIfNotExists = async ({ userUID, email, referrer }) => {
   const exists = await findById(userUID)

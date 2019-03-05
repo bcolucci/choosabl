@@ -73,7 +73,7 @@ const update = async (table, updates, ids) => {
   const sql = `
     UPDATE ${table}
     SET ${mapToQmark(updates).join(',')}
-    WHERE ${mapToQmark(ids).join(',')}
+    WHERE ${mapToQmark(ids).join(' AND ')}
   `
   const conn = await createConnection()
   const res = await conn.execute(sql, values)
@@ -82,7 +82,7 @@ const update = async (table, updates, ids) => {
 }
 
 const _delete = async (table, ids) => {
-  const sql = `DELETE FROM ${table} WHERE ${mapToQmark(ids).join(',')}`
+  const sql = `DELETE FROM ${table} WHERE ${mapToQmark(ids).join(' AND ')}`
   const conn = await createConnection()
   const res = await conn.execute(sql, Object.values(ids))
   conn.close()

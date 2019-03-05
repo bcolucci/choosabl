@@ -32,3 +32,12 @@ export const invite = async ({ email, message }) => {
   const cache = cacheNS('invitations:invitedList')
   cache.set([...cache.get([]), email])
 }
+
+export const deleteOne = async email => {
+  await authFetch('invitations', {
+    method: 'DELETE',
+    body: { invited: email }
+  })
+  const cache = cacheNS('invitations:invitedList')
+  cache.set(cache.get([]).filter(e => e !== email))
+}

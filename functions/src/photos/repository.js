@@ -1,5 +1,5 @@
 const uuid = require('uuid/v4')
-const DB = require('../../utils/mysql')
+const DB = require('../utils/mysql')
 
 const create = async ({ userUID, photo }) => {
   const now = new Date()
@@ -16,6 +16,9 @@ const create = async ({ userUID, photo }) => {
 
 const remove = photoUID => DB.delete('photos', { id: photoUID })
 
+const findById = photoUID =>
+  DB.queryFirst('SELECT * FROM photos WHERE id = ?', [photoUID])
+
 const findUserUsedPhotoUIDs = userUID =>
   DB.query('SELECT photo1, photo2 FROM battles WHERE user = ?', [userUID])
     .then(rows =>
@@ -23,11 +26,10 @@ const findUserUsedPhotoUIDs = userUID =>
         .reduce((acc, { photo1, photo2 }) => [...acc, photo1, photo2], [])
         .filter(global.unique)
     )
-    .then(
-      photoUIDs =>
-        photoUIDs.length
-          ? DB.query('SELECT id FROM photos WHERE id IN (?)', [photoUIDs])
-          : []
+    .then(photoUIDs =>
+      photoUIDs.length
+        ? DB.query('SELECT id FROM photos WHERE id IN (?)', [photoUIDs])
+        : []
     )
     .then(rows => rows.map(global.pickAttr('id')))
 
@@ -46,5 +48,6 @@ const findByUser = userUID =>
 module.exports = {
   create,
   remove,
+  findById,
   findByUser
 }

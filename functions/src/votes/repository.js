@@ -1,5 +1,5 @@
-const errors = require('../../errors')
-const DB = require('../../utils/mysql')
+const errors = require('../errors')
+const DB = require('../utils/mysql')
 
 const didUserAlreadyVoteForBattle = ({ userUID, battleUID }) =>
   DB.queryFirstScalar(

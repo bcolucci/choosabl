@@ -58,3 +58,8 @@ svg.social-svg {
 .stats .push-left {
   left: 73%;
 }
+
+.vote-container {
+  background-color: #1769aacf;
+  text-align: center;
+}

@@ -7,7 +7,6 @@ global.unique = (v, i, arr) => arr.indexOf(v) === i
 global.pickAttr = attr => obj => obj[attr]
 
 const DEV_PROJECT_ID = 'choosabl-test-71670'
-const REPOSITORY_ENGINE = 'mysql'
 const GCP_PROJECT = process.env.GCP_PROJECT || DEV_PROJECT_ID
 const DEV_ENV = GCP_PROJECT === DEV_PROJECT_ID
 const GOOGLE_APPLICATION_CREDENTIALS = `${__dirname}/accounts/${GCP_PROJECT}.json`
@@ -19,7 +18,6 @@ const CLIENT_URL =
 
 Object.assign(process.env, {
   GCP_PROJECT,
-  REPOSITORY_ENGINE,
   DEV_ENV,
   GOOGLE_APPLICATION_CREDENTIALS,
   CLIENT_URL

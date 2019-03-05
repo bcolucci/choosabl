@@ -57,7 +57,7 @@ class Vote extends Component {
   }
 
   handleScreenResize = () => {
-    const screenHeight = window.innerWidth
+    const screenHeight = window.innerHeight
     const header = document.querySelector('header')
     if (!header) {
       return setTimeout(this.handleScreenResize, 100)
@@ -96,7 +96,7 @@ class Vote extends Component {
         style={{
           height,
           opacity: this.state[`photo${num + 1}Opacity`],
-          marginTop: num === 0 ? 4 : 0
+          marginTop: num === 0 ? 5 : 0
         }}
         onMouseOver={this.handleOnPhotoOver(num)}
         onClick={id && this.handleChoosePhoto(current, num)}
@@ -122,7 +122,7 @@ class Vote extends Component {
     }
     setImmediate(() => this.state.height === null && this.handleScreenResize())
     return (
-      <div style={{ backgroundColor: '#1769aacf', textAlign: 'center' }}>
+      <div className='vote-container'>
         {this.renderPhoto(0)}
         {this.renderPhoto(1)}
         <Fab

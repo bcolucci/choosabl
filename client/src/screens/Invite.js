@@ -12,6 +12,7 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import EmailIcon from '@material-ui/icons/Email'
+import DeleteIcon from '@material-ui/icons/Delete'
 import Typography from '@material-ui/core/Typography'
 import withAll from '../utils/with'
 import VerifyYourEmail from '../components/VerifyYourEmail'
@@ -22,6 +23,7 @@ class Invite extends Component {
     email: '',
     message: '',
     invitedList: [],
+    inDeletion: null,
     saving: false,
     loading: true
   }
@@ -67,7 +69,7 @@ class Invite extends Component {
       this.setState({ email: '', message: '' })
       showSuccess(t('{{email}} has been invited. Thank you!', { email }))
       setImmediate(() => document.querySelector('input[type=email]').focus())
-      this.refreshInvitedList()
+      this.loadInvitedList()
     } catch (err) {
       showError(err.message)
     }
@@ -79,9 +81,17 @@ class Invite extends Component {
     window.alert(t('Not implemented yet.'))
   }
 
+  handleDelete = email => async () => {
+    this.setState({ inDeletion: email })
+    await invitationsAPI.deleteOne(email)
+    this.props.events.delete(email.replace('@', ' '))
+    const invitedList = this.state.invitedList.filter(e => e !== email)
+    this.setState({ invitedList, inDeletion: null })
+  }
+
   renderInvitedList () {
     const { t } = this.props
-    const { invitedList } = this.state
+    const { invitedList, inDeletion } = this.state
     if (!invitedList.length) {
       return (
         <Typography style={{ marginTop: 5 }}>
@@ -91,16 +101,25 @@ class Invite extends Component {
     }
     return (
       <List>
-        {invitedList.map((email, idx) => (
-          <ListItem key={idx}>
-            <ListItemText primary={email} />
-            <ListItemSecondaryAction>
-              <IconButton>
-                <EmailIcon onClick={this.handleReInvite} />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
+        {invitedList.map((email, idx) => {
+          const disabled = inDeletion === email
+          return (
+            <ListItem key={idx} disabled={disabled}>
+              <ListItemText primary={email} />
+              <ListItemSecondaryAction>
+                <IconButton onClick={this.handleReInvite} disabled={disabled}>
+                  <EmailIcon />
+                </IconButton>
+                <IconButton
+                  onClick={this.handleDelete(email)}
+                  disabled={disabled}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          )
+        })}
       </List>
     )
   }
